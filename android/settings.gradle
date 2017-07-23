@@ -1,0 +1,3 @@
+rootProject.name = 'RecipeBox'
+
+include ':app'
