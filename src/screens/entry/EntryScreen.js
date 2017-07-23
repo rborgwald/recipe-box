@@ -1,19 +1,19 @@
 /* @flow */
 import React, { Component } from 'react';
-import { TextInput, ScrollView, Keyboard } from 'react-native';
 import EntryScreenBackground from './components/EntryScreenBackground';
 
 export class EntryScreen extends Component<any, Props, void> {
+  static navigationOptions = {
+    header: null,
+  };
+
   render() {
+    const { navigate } = this.props.navigation;
+
     return (
-      <EntryScreenBackground>
-        <ScrollView
-          horizontal
-          scrollEnabled={false}
-          keyboardShouldPersistTaps="always"
-        >
-        </ScrollView>
-      </EntryScreenBackground>
+      <EntryScreenBackground
+        onSearchPress={() => navigate('Search')}
+      />
     );
   }
 }

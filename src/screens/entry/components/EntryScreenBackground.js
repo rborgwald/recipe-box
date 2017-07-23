@@ -6,6 +6,8 @@ import {
   StatusBar,
   View,
   KeyboardAvoidingView,
+  Button,
+  Alert
 } from 'react-native';
 import { isIos } from '../../../utils/device';
 // $FlowIssue
@@ -18,48 +20,47 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   backgroundImage: {
     flex: 1,
     width: '100%',
     height: '100%',
     alignSelf: 'stretch',
-    resizeMode: 'cover',
+    resizeMode: 'cover'
   },
   logoContainer: {
     alignItems: 'center',
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    paddingTop: 100
   },
   strideLogo: {
-    flex: isIos() ? 1 : null,
-    resizeMode: 'contain',
+    resizeMode: 'contain'
   },
+  buttonContainer: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  button: {
+    backgroundColor: 'red'
+  }
 });
 
-const makeKeyboardWrapper = children =>
-  isIos()
-    ? <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        <View style={styles.logoContainer}>
-          <Image style={styles.strideLogo} source={logo} />
-          {children}
-        </View>
-      </KeyboardAvoidingView>
-    : <View style={{ width: '100%', height: '100%' }}>
-        <View style={styles.logoContainer}>
-          <View style={{ height: '40%', justifyContent: 'center' }}>
-            <Image style={styles.strideLogo} source={logo} />
-          </View>
-          {children}
-        </View>
-      </View>;
-
-const EntryScreenBackground = ({ children }: { children: React.Element<*> }) =>
+const EntryScreenBackground = ({ onSearchPress }: { onSearchPress: Function }) =>
   <View style={styles.container}>
     <StatusBar barStyle="light-content" />
     <Image source={backgroundImage} style={styles.backgroundImage}>
-      {makeKeyboardWrapper(children)}
+      <View style={styles.logoContainer}>
+        <Image style={styles.strideLogo} source={logo} />
+      </View>
+      <View style={styles.buttonContainer}>
+        <Button
+          color="red"
+          onPress={onSearchPress}
+          title="Search Recipes"
+        />
+      </View>
     </Image>
   </View>;
 
