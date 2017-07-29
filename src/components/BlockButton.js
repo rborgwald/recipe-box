@@ -32,7 +32,7 @@ const BlockButton = ({
   onPress: Function,
 }) =>
   <TouchableHighlight
-    style={styles.container}
+    style={[styles.container, style]}
     onPress={onPress}
     underlayColor='#bbb'
     activeOpacity={1}
