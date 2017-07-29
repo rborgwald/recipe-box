@@ -41,6 +41,9 @@ const styles = StyleSheet.create({
   clearButton: {
     fontSize: 14,
   },
+  searchResultsWrapper: {
+    margin: 20,
+  },
 });
 
 const Search = ({
@@ -67,6 +70,7 @@ const Search = ({
         underlineColorAndroid="rgba(0,0,0,0)"
         onChangeText={onTextChange}
         placeholderTextColor="#666"
+        onSubmitEditing={onSearchRecipe}
       />
       <View style={styles.searchButtonContainer}>
         <BlockButton style={styles.searchButton} text="Search" onPress={onSearchRecipe} />
@@ -80,7 +84,7 @@ const Search = ({
     <View style={styles.searchResultsWrapper}>
       <FlatList
         data={recipes}
-        renderItem={({ item }) => <RecipePreview {...item} />}
+        renderItem={({item}) => <RecipePreview {...item} />}
         ItemSeparatorComponent={Divider}
       />
     </View>

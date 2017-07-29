@@ -1,5 +1,6 @@
 /* @flow */
 import React, { Component } from 'react';
+import { Keyboard } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import Search from './components/Search';
 import { getAllRecipes, searchRecipes } from '../../api/recipe/recipes';
@@ -31,7 +32,7 @@ export class SearchScreen extends Component<any, Props, void> {
     } else {
       this.setState({ results: []});
     }
-
+    Keyboard.dismiss();
   };
 
   handleTextChange = (text: string) => {
@@ -41,6 +42,7 @@ export class SearchScreen extends Component<any, Props, void> {
   handleClear = () => {
     this.setState({ searchString: ''});
     this.setState({ results: []});
+    Keyboard.dismiss();
   };
 
   render() {

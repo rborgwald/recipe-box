@@ -8,7 +8,7 @@ const Divider = ({ style }: { style?: View.propTypes.style }) =>
       {
         width: '100%',
         height: 1.5,
-        backgroundColor: '#D6D6D6',
+        backgroundColor: '#666',
         opacity: 0.1,
         alignSelf: 'center',
       },
