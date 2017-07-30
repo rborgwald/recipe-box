@@ -48,8 +48,9 @@ export const makeDetails = (source: string, volume: string, page: number) => {
   return details;
 };
 
-const RecipePreview = ({ recipe }: { recipe: Recipe }) =>
-  <TouchableHighlight>
+const RecipePreview = ({ recipe, onViewRecipe }: { recipe: Recipe, onViewRecipe: Function }) =>
+  <TouchableHighlight
+    onPress={onViewRecipe} >
     <View style={styles.container}>
       <View style={styles.recipeInfo}>
         <Text style={styles.text}>

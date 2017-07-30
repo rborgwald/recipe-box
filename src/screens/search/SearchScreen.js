@@ -5,6 +5,7 @@ import { StackNavigator } from 'react-navigation';
 import Search from './components/Search';
 import { getAllRecipes, searchRecipes } from '../../api/recipe/recipes';
 import { Recipe } from '../../api/recipe/model';
+import RecipeDetailsScreen from '../recipe-details/RecipeDetailsScreen';
 
 type State = {
   searchString: string,
@@ -30,7 +31,7 @@ export class SearchScreen extends Component<any, Props, void> {
         this.setState({ results: recipes });
       });
     } else {
-      this.setState({ results: []});
+      this.setState({ results: [] });
     }
     Keyboard.dismiss();
   };
@@ -40,8 +41,8 @@ export class SearchScreen extends Component<any, Props, void> {
   };
 
   handleClear = () => {
-    this.setState({ searchString: ''});
-    this.setState({ results: []});
+    this.setState({ searchString: '' });
+    this.setState({ results: [] });
     Keyboard.dismiss();
   };
 
@@ -51,9 +52,9 @@ export class SearchScreen extends Component<any, Props, void> {
       key: recipe.id,
       recipe,
       onViewRecipe: () => {
+        console.log('in onViewRecipe: ' + recipe.name);
         navigation.navigate('RecipeDetailsScreen', {
-          recipe: recipe.name,
-          orderNumber: load.orderNumber,
+          recipeName: recipe.name,
         });
       },
     }));
@@ -70,8 +71,13 @@ export class SearchScreen extends Component<any, Props, void> {
   }
 }
 
-export default StackNavigator({
+const RecipeNav = StackNavigator({
   Search: {
     screen: SearchScreen,
   },
+  RecipeDetailsScreen: {
+    screen: RecipeDetailsScreen,
+  }
 });
+
+export default RecipeNav;
