@@ -5,7 +5,11 @@ import backArrow from '../../images/back.png';
 import type { NavigationScreenProp } from 'react-navigation';
 import RecipeDetails from './components/RecipeDetails';
 import ImageButton from '../../components/ImageButton';
+import { Recipe } from '../../api/recipe/model';
 
+type State = {
+  recipe: Recipe,
+};
 export default class RecipeDetailsScreen extends Component<any, Props, void> {
   static navigationOptions = ({ navigation }) => ({
     headerTitle: 'Recipe Details',
@@ -17,10 +21,13 @@ export default class RecipeDetailsScreen extends Component<any, Props, void> {
     ),
   });
 
+  state = {
+    recipe: undefined,
+  };
+
   render() {
     const {
-      navigation: { state: { params: { recipeName } } },
-      recipe
+      navigation: { state: { params: { recipe } } },
     } = this.props;
 
     return recipe === undefined

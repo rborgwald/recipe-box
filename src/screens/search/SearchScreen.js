@@ -54,7 +54,7 @@ export class SearchScreen extends Component<any, Props, void> {
       onViewRecipe: () => {
         console.log('in onViewRecipe: ' + recipe.name);
         navigation.navigate('RecipeDetailsScreen', {
-          recipeName: recipe.name,
+          recipe: recipe,
         });
       },
     }));
