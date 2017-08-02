@@ -27,18 +27,39 @@ const styles = StyleSheet.create({
 
 const RecipeDetails = ({
   recipe,
+  onNameChange,
+  onSourceChange,
+  onVolumeChange,
+  onPageChange,
   onUpdate,
   onDelete,
 }: {
   recipe: Recipe,
+  onNameChange: Function,
+  onSourceChange: Function,
+  onVolumeChange: Function,
+  onPageChange: Function,
   onUpdate: Function,
   onDelete: Function,
 }) =>
   <View style={styles.container}>
-    <TextRowInput headerText="Name" contentText={recipe.name} />
-    <TextRowInput headerText="Source" contentText={recipe.source} />
-    <TextRowInput headerText="Volume" contentText={recipe.volume} />
     <TextRowInput
+      onChangeText={onNameChange}
+      headerText="Name"
+      contentText={recipe.name}
+    />
+    <TextRowInput
+      onChangeText={onSourceChange}
+      headerText="Source"
+      contentText={recipe.source}
+    />
+    <TextRowInput
+      onChangeText={onVolumeChange}
+      headerText="Volume"
+      contentText={recipe.volume}
+    />
+    <TextRowInput
+      onChangeText={onPageChange}
       headerText="Page"
       contentText={recipe.page ? recipe.page.toString() : ''}
     />

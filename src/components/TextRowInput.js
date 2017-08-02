@@ -23,11 +23,13 @@ const TextRowInput = ({
   contentStyle,
   headerText,
   contentText,
+  onChangeText,
 }: {
   headerStyle?: Text.propTypes.style,
   contentStyle?: Text.propTypes.style,
   headerText: string,
   contentText: string,
+  onChangeText: Function,
 }) =>
   <View style={styles.container}>
     <Text style={[styles.header, headerStyle]}>
@@ -39,7 +41,7 @@ const TextRowInput = ({
       autoCorrect={false}
       autoCapitalize="none"
       underlineColorAndroid="rgba(0,0,0,0)"
-      onChangeText={() => {}}
+      onChangeText={onChangeText}
       placeholderTextColor="#666"
       onSubmitEditing={() => {}}
     />
