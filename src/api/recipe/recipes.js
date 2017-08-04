@@ -24,9 +24,9 @@ export const getAllRecipes = (): Promise<*> =>
   });
 
 export const updateRecipe = (recipe: Recipe): Promise<*> => {
-  console.log('in api: ' + JSON.stringify(recipe));
+  console.log('recipe to update: ' + JSON.stringify(recipe));
 
-  fetch(recipeUrl + '/' + recipe.id, {
+  return fetch(recipeUrl + '/' + recipe.id, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ export const updateRecipe = (recipe: Recipe): Promise<*> => {
     const responseJson = await response.json();
     if (status !== 200 && status !== 404) throw Error(responseJson.message);
     if (status === 404) return [];
-    console.log('after update: ' + JSON.stringify(responseJson));
+    console.log('response: ' + JSON.stringify(responseJson));
     return responseJson;
-  });
+  })
 };

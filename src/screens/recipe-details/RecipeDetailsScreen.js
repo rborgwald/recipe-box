@@ -5,7 +5,7 @@ import backArrow from '../../images/back.png';
 import type { NavigationScreenProp } from 'react-navigation';
 import RecipeDetails from './components/RecipeDetails';
 import ImageButton from '../../components/ImageButton';
-import { Recipe } from '../../api/recipe/model';
+import {Recipe, SearchCriterion} from '../../api/recipe/model';
 import { updateRecipe } from '../../api/recipe/recipes';
 
 type State = {
@@ -47,13 +47,21 @@ export default class RecipeDetailsScreen extends Component<any, Props, void> {
     this.setState({ recipe: recipe });
   };
 
+  handleMealTypeChange = (itemValue: string, itemIndex: string) => {
+    const { navigation: { state: { params: { recipe } } } } = this.props;
+
+    recipe.mealType = {};
+    recipe.mealType.id = parseInt(itemValue);
+
+    this.setState({ recipe: recipe });
+  };
+
   handleOnUpdate = () => {
     if (this.state.recipe) {
-      console.log('handle on update: ' + JSON.stringify(this.state.recipe));
-      updateRecipe(this.state.recipe).then(recipe => {
-        console.log('Updated recipe: ' + JSON.stringify(recipe));
-      });
+      updateRecipe(this.state.recipe).then(() => {});
     }
+    const { navigation } = this.props;
+    navigation.goBack();
   };
 
   handleOnDelete = () => {
@@ -73,6 +81,7 @@ export default class RecipeDetailsScreen extends Component<any, Props, void> {
           onSourceChange={this.handleSourceChange}
           onVolumeChange={this.handleVolumeChange}
           onPageChange={this.handlePageChange}
+          onMealTypeChange={this.handleMealTypeChange}
           onUpdate={this.handleOnUpdate}
           onDelete={this.handleOnDelete}
         />;

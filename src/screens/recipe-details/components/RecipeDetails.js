@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Picker } from 'react-native';
 import { Recipe } from '../../../api/recipe/model';
 import TextRowInput from '../../../components/TextRowInput';
 import BlockButton from '../../../components/BlockButton';
+import TypeDropDown from '../../../components/TypeDropDown';
 
 const styles = StyleSheet.create({
   container: {
@@ -31,6 +32,7 @@ const RecipeDetails = ({
   onSourceChange,
   onVolumeChange,
   onPageChange,
+  onMealTypeChange,
   onUpdate,
   onDelete,
 }: {
@@ -39,6 +41,7 @@ const RecipeDetails = ({
   onSourceChange: Function,
   onVolumeChange: Function,
   onPageChange: Function,
+  onMealTypeChange: Function,
   onUpdate: Function,
   onDelete: Function,
 }) =>
@@ -62,6 +65,12 @@ const RecipeDetails = ({
       onChangeText={onPageChange}
       headerText="Page"
       contentText={recipe.page ? recipe.page.toString() : ''}
+    />
+    <TypeDropDown
+      title="Meal Type"
+      selectedValue={recipe.mealType ? recipe.mealType.id : null}
+      onValueChange={onMealTypeChange}
+      options={['Breakfast', 'Lunch', 'Dinner', 'Snack', 'Dessert']}
     />
     <View style={styles.buttonContainer}>
       <BlockButton
