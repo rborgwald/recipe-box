@@ -5,10 +5,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     justifyContent: 'center',
-    height: 32,
-    width: '25%',
-    borderRadius: 32 / 2,
-    borderWidth: 1,
+    height: 40,
+    width: '33%',
+    borderRadius: 40 / 2,
+    borderWidth: 0,
     backgroundColor: 'blue',
   },
   text: {

@@ -4,7 +4,6 @@ import { View, StyleSheet, Text, TextInput } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'center',
   },
   header: {
     fontSize: 22,
@@ -12,6 +11,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    height: 40,
     fontSize: 18,
     fontWeight: '300',
     marginLeft: 10,
@@ -36,7 +36,7 @@ const TextRowInput = ({
       {headerText}:
     </Text>
     <TextInput
-      style={[styles.content, contentStyle]}
+      style={[styles.content, contentStyle, {margin: 0}]}
       value={contentText}
       autoCorrect={false}
       autoCapitalize="none"

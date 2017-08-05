@@ -1,16 +1,34 @@
 import React from 'react';
 import { View, Text, StyleSheet, Picker } from 'react-native';
+import ModalDropdown from 'react-native-modal-dropdown';
 import { Recipe } from '../../../api/recipe/model';
 import TextRowInput from '../../../components/TextRowInput';
 import BlockButton from '../../../components/BlockButton';
 import TypeDropDown from '../../../components/TypeDropDown';
 import { SearchCriterion } from '../../../api/recipe/model';
+import BadgeSelector from '../../../components/BadgeSelector';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
     margin: 15,
+  },
+  infoWrapper: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 15,
+  },
+  detailsContainer: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  badgeContainer: {
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginTop: 10,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -61,50 +79,60 @@ const RecipeDetails = ({
   onDelete: Function,
 }) =>
   <View style={styles.container}>
-    <TextRowInput
-      onChangeText={onNameChange}
-      headerText="Name"
-      contentText={recipe.name}
-    />
-    <TextRowInput
-      onChangeText={onSourceChange}
-      headerText="Source"
-      contentText={recipe.source}
-    />
-    <TextRowInput
-      onChangeText={onVolumeChange}
-      headerText="Volume"
-      contentText={recipe.volume}
-    />
-    <TextRowInput
-      onChangeText={onPageChange}
-      headerText="Page"
-      contentText={recipe.page ? recipe.page.toString() : ''}
-    />
-    <TypeDropDown
-      title="Meal Type"
-      selectedValue={recipe.mealType ? recipe.mealType.id : null}
-      onValueChange={onMealTypeChange}
-      options={mealTypes.map(mealType => mealType.description)}
-    />
-    <TypeDropDown
-      title="Cuisine"
-      selectedValue={recipe.cuisineType ? recipe.cuisineType.id : null}
-      onValueChange={onCuisineTypeChange}
-      options={cuisineTypes.map(cuisineType => cuisineType.description)}
-    />
-    <TypeDropDown
-      title="Preparation"
-      selectedValue={recipe.preparationType ? recipe.preparationType.id : null}
-      onValueChange={onPreparationTypeChange}
-      options={preparationTypes.map(preparationType => preparationType.description)}
-    />
-    <TypeDropDown
-      title="Protein"
-      selectedValue={recipe.proteinType ? recipe.proteinType.id : null}
-      onValueChange={onProteinTypeChange}
-      options={proteinTypes.map(proteinType => proteinType.description)}
-    />
+    <View style={styles.infoWrapper}>
+      <View style={styles.detailsContainer}>
+        <TextRowInput
+          onChangeText={onNameChange}
+          headerText="Name"
+          contentText={recipe.name}
+        />
+        <TextRowInput
+          onChangeText={onSourceChange}
+          headerText="Source"
+          contentText={recipe.source}
+        />
+        <TextRowInput
+          onChangeText={onVolumeChange}
+          headerText="Volume"
+          contentText={recipe.volume}
+        />
+        <TextRowInput
+          onChangeText={onPageChange}
+          headerText="Page"
+          contentText={recipe.page ? recipe.page.toString() : ''}
+        />
+      </View>
+      <View style={styles.badgeContainer}>
+        <BadgeSelector
+          searchCriterion={recipe.mealType}
+          backgroundColor="#6b7a8f"
+          defaultText="- Meal -"
+          onValueChange={onMealTypeChange}
+          options={mealTypes}
+        />
+        <BadgeSelector
+          searchCriterion={recipe.cuisineType}
+          backgroundColor="#f7882f"
+          defaultText="- Cuisine -"
+          onValueChange={onCuisineTypeChange}
+          options={cuisineTypes}
+        />
+        <BadgeSelector
+          searchCriterion={recipe.preparationType}
+          backgroundColor="#f7c331"
+          defaultText="- Prep -"
+          onValueChange={onPreparationTypeChange}
+          options={preparationTypes}
+        />
+        <BadgeSelector
+          searchCriterion={recipe.proteinType}
+          backgroundColor="#dcc7aa"
+          defaultText="- Protein -"
+          onValueChange={onProteinTypeChange}
+          options={proteinTypes}
+        />
+      </View>
+    </View>
     <View style={styles.buttonContainer}>
       <BlockButton
         style={styles.updateButton}

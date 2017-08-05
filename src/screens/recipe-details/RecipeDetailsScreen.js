@@ -48,7 +48,7 @@ export class RecipeDetailsScreen extends Component<any, Props, void> {
     this.setState({ recipe: recipe });
   };
 
-  handleMealTypeChange = (itemValue: string, itemIndex: string) => {
+  handleMealTypeChange = (itemValue: string, itemIndex?: string) => {
     const { navigation: { state: { params: { recipe } } } } = this.props;
 
     recipe.mealType = null;
@@ -56,7 +56,7 @@ export class RecipeDetailsScreen extends Component<any, Props, void> {
       recipe.mealType = {};
       recipe.mealType.id = parseInt(itemValue);
     }
-
+    console.log('recipe: ' + JSON.stringify(recipe));
     this.setState({ recipe: recipe });
   };
 
