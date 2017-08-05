@@ -1,20 +1,27 @@
+// @flow
 import React, { Component } from 'react';
-import { Text, View, AppRegistry } from 'react-native';
+import { Provider } from 'react-redux';
 import SplashScreen from './screens/splash/SplashScreen';
-import SearchScreen from './screens/search/SearchScreen';
-import AdminScreen from './screens/admin/AdminScreen';
 import ModalNavigator from './navigators/ModalNavigator';
+import { store } from './store/store';
 import { StackNavigator } from 'react-navigation';
 
-const RecipeBox = StackNavigator(
+const RecipeBoxNav = StackNavigator(
   {
     Splash: { screen: SplashScreen },
     ModalNavigator: { screen: ModalNavigator },
-
   },
   {
     headerMode: 'none',
   },
 );
 
-AppRegistry.registerComponent('RecipeBox', () => RecipeBox);
+export default class App extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <RecipeBoxNav />
+      </Provider>
+    );
+  }
+}

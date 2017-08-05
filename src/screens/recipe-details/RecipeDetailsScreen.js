@@ -50,11 +50,51 @@ export default class RecipeDetailsScreen extends Component<any, Props, void> {
   handleMealTypeChange = (itemValue: string, itemIndex: string) => {
     const { navigation: { state: { params: { recipe } } } } = this.props;
 
-    recipe.mealType = {};
-    recipe.mealType.id = parseInt(itemValue);
+    recipe.mealType = null;
+    if (parseInt(itemValue) !== 0) {
+      recipe.mealType = {};
+      recipe.mealType.id = parseInt(itemValue);
+    }
 
     this.setState({ recipe: recipe });
   };
+
+  handleCuisineTypeChange = (itemValue: string, itemIndex: string) => {
+    const { navigation: { state: { params: { recipe } } } } = this.props;
+
+    recipe.cuisineType = null;
+    if(parseInt(itemValue) !== 0) {
+      recipe.cuisineType = {};
+      recipe.cuisineType.id = parseInt(itemValue);
+    }
+
+    this.setState({ recipe: recipe });
+  };
+
+  handlePreparationTypeChange = (itemValue: string, itemIndex: string) => {
+    const { navigation: { state: { params: { recipe } } } } = this.props;
+
+    recipe.preparationType = null;
+    if(parseInt(itemValue) !== 0) {
+      recipe.preparationType = {};
+      recipe.preparationType.id = parseInt(itemValue);
+    }
+
+    this.setState({ recipe: recipe });
+  };
+
+  handleProteinTypeChange = (itemValue: string, itemIndex: string) => {
+    const { navigation: { state: { params: { recipe } } } } = this.props;
+
+    recipe.proteinType = null;
+    if(parseInt(itemValue) !== 0) {
+      recipe.proteinType = {};
+      recipe.proteinType.id = parseInt(itemValue);
+    }
+
+    this.setState({ recipe: recipe });
+  };
+
 
   handleOnUpdate = () => {
     if (this.state.recipe) {
@@ -82,6 +122,9 @@ export default class RecipeDetailsScreen extends Component<any, Props, void> {
           onVolumeChange={this.handleVolumeChange}
           onPageChange={this.handlePageChange}
           onMealTypeChange={this.handleMealTypeChange}
+          onCuisineTypeChange={this.handleCuisineTypeChange}
+          onPreparationTypeChange={this.handlePreparationTypeChange}
+          onProteinTypeChange={this.handleProteinTypeChange}
           onUpdate={this.handleOnUpdate}
           onDelete={this.handleOnDelete}
         />;

@@ -9,14 +9,14 @@ const styles = StyleSheet.create({
   },
   titleWrapper: {
     alignContent: 'center',
-    marginRight: 5
+    marginRight: 5,
   },
   title: {
     fontSize: 18,
     fontWeight: '500',
   },
   picker: {
-    width: 100,
+    width: 150,
   }
 });
 

@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     margin: 5,
   },
   updateButton: {
@@ -33,6 +33,9 @@ const RecipeDetails = ({
   onVolumeChange,
   onPageChange,
   onMealTypeChange,
+  onCuisineTypeChange,
+  onPreparationTypeChange,
+  onProteinTypeChange,
   onUpdate,
   onDelete,
 }: {
@@ -42,6 +45,9 @@ const RecipeDetails = ({
   onVolumeChange: Function,
   onPageChange: Function,
   onMealTypeChange: Function,
+  onCuisineTypeChange: Function,
+  onPreparationTypeChange: Function,
+  onProteinTypeChange: Function,
   onUpdate: Function,
   onDelete: Function,
 }) =>
@@ -71,6 +77,43 @@ const RecipeDetails = ({
       selectedValue={recipe.mealType ? recipe.mealType.id : null}
       onValueChange={onMealTypeChange}
       options={['Breakfast', 'Lunch', 'Dinner', 'Snack', 'Dessert']}
+    />
+    <TypeDropDown
+      title="Cuisine"
+      selectedValue={recipe.cuisineType ? recipe.cuisineType.id : null}
+      onValueChange={onCuisineTypeChange}
+      options={['American', 'Mexican', 'Chinese', 'Italian', 'Cajun', 'French', 'Indian']}
+    />
+    <TypeDropDown
+      title="Preparation"
+      selectedValue={recipe.preparationType ? recipe.preparationType.id : null}
+      onValueChange={onPreparationTypeChange}
+      options={[
+        'Grill',
+        'Soup',
+        'Stew',
+        'Crockpot',
+        'Bake',
+        'Roast',
+        'One Pot',
+      ]}
+    />
+    <TypeDropDown
+      title="Protein"
+      selectedValue={recipe.proteinType ? recipe.proteinType.id : null}
+      onValueChange={onProteinTypeChange}
+      options={[
+        'Chicken',
+        'Beef',
+        'Pork',
+        'Venison',
+        'Egg',
+        'Tofu',
+        'Vegetable',
+        'Fish',
+        'Shrimp',
+        'Lobster',
+      ]}
     />
     <View style={styles.buttonContainer}>
       <BlockButton
