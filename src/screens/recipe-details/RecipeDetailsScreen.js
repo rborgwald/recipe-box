@@ -1,17 +1,18 @@
 /* @flow */
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 // $FlowIssue
 import backArrow from '../../images/back.png';
 import type { NavigationScreenProp } from 'react-navigation';
 import RecipeDetails from './components/RecipeDetails';
 import ImageButton from '../../components/ImageButton';
-import {Recipe, SearchCriterion} from '../../api/recipe/model';
+import { Recipe, SearchCriterion } from '../../api/recipe/model';
 import { updateRecipe } from '../../api/recipe/recipes';
 
 type State = {
   recipe: Recipe,
 };
-export default class RecipeDetailsScreen extends Component<any, Props, void> {
+export class RecipeDetailsScreen extends Component<any, Props, void> {
   static navigationOptions = ({ navigation }) => ({
     headerTitle: 'Recipe Details',
     headerLeft: (
@@ -63,7 +64,7 @@ export default class RecipeDetailsScreen extends Component<any, Props, void> {
     const { navigation: { state: { params: { recipe } } } } = this.props;
 
     recipe.cuisineType = null;
-    if(parseInt(itemValue) !== 0) {
+    if (parseInt(itemValue) !== 0) {
       recipe.cuisineType = {};
       recipe.cuisineType.id = parseInt(itemValue);
     }
@@ -75,7 +76,7 @@ export default class RecipeDetailsScreen extends Component<any, Props, void> {
     const { navigation: { state: { params: { recipe } } } } = this.props;
 
     recipe.preparationType = null;
-    if(parseInt(itemValue) !== 0) {
+    if (parseInt(itemValue) !== 0) {
       recipe.preparationType = {};
       recipe.preparationType.id = parseInt(itemValue);
     }
@@ -87,14 +88,13 @@ export default class RecipeDetailsScreen extends Component<any, Props, void> {
     const { navigation: { state: { params: { recipe } } } } = this.props;
 
     recipe.proteinType = null;
-    if(parseInt(itemValue) !== 0) {
+    if (parseInt(itemValue) !== 0) {
       recipe.proteinType = {};
       recipe.proteinType.id = parseInt(itemValue);
     }
 
     this.setState({ recipe: recipe });
   };
-
 
   handleOnUpdate = () => {
     if (this.state.recipe) {
@@ -117,6 +117,10 @@ export default class RecipeDetailsScreen extends Component<any, Props, void> {
       ? null
       : <RecipeDetails
           recipe={recipe}
+          mealTypes={this.props.mealTypes}
+          cuisineTypes={this.props.cuisineTypes}
+          proteinTypes={this.props.proteinTypes}
+          preparationTypes={this.props.preparationTypes}
           onNameChange={this.handleNameChange}
           onSourceChange={this.handleSourceChange}
           onVolumeChange={this.handleVolumeChange}
@@ -130,3 +134,12 @@ export default class RecipeDetailsScreen extends Component<any, Props, void> {
         />;
   }
 }
+
+const mapStateToProps = state => ({
+  mealTypes: state.mealTypes,
+  cuisineTypes: state.cuisineTypes,
+  proteinTypes: state.proteinTypes,
+  preparationTypes: state.preparationTypes,
+});
+
+export default connect(mapStateToProps)(RecipeDetailsScreen);

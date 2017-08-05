@@ -2,7 +2,7 @@
 import { createStore } from 'redux';
 import * as actions from './actions';
 import type { Action } from './actions';
-import {SearchCriterion} from "../api/recipe/model";
+import { SearchCriterion } from '../api/recipe/model';
 
 export type State = {
   +mealTypes: SearchCriterion[],
@@ -52,7 +52,6 @@ export const reducer = (state: State = initialState, action: Action) => {
     }
   }
 };
-
 
 export type Store = {
   dispatch: Action => Action,

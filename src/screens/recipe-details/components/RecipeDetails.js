@@ -4,6 +4,7 @@ import { Recipe } from '../../../api/recipe/model';
 import TextRowInput from '../../../components/TextRowInput';
 import BlockButton from '../../../components/BlockButton';
 import TypeDropDown from '../../../components/TypeDropDown';
+import { SearchCriterion } from '../../../api/recipe/model';
 
 const styles = StyleSheet.create({
   container: {
@@ -28,6 +29,10 @@ const styles = StyleSheet.create({
 
 const RecipeDetails = ({
   recipe,
+  mealTypes,
+  cuisineTypes,
+  proteinTypes,
+  preparationTypes,
   onNameChange,
   onSourceChange,
   onVolumeChange,
@@ -40,6 +45,10 @@ const RecipeDetails = ({
   onDelete,
 }: {
   recipe: Recipe,
+  mealTypes: SearchCriterion[],
+  cuisineTypes: SearchCriterion[],
+  proteinTypes: SearchCriterion[],
+  preparationTypes: SearchCriterion[],
   onNameChange: Function,
   onSourceChange: Function,
   onVolumeChange: Function,
@@ -76,44 +85,25 @@ const RecipeDetails = ({
       title="Meal Type"
       selectedValue={recipe.mealType ? recipe.mealType.id : null}
       onValueChange={onMealTypeChange}
-      options={['Breakfast', 'Lunch', 'Dinner', 'Snack', 'Dessert']}
+      options={mealTypes.map(mealType => mealType.description)}
     />
     <TypeDropDown
       title="Cuisine"
       selectedValue={recipe.cuisineType ? recipe.cuisineType.id : null}
       onValueChange={onCuisineTypeChange}
-      options={['American', 'Mexican', 'Chinese', 'Italian', 'Cajun', 'French', 'Indian']}
+      options={cuisineTypes.map(cuisineType => cuisineType.description)}
     />
     <TypeDropDown
       title="Preparation"
       selectedValue={recipe.preparationType ? recipe.preparationType.id : null}
       onValueChange={onPreparationTypeChange}
-      options={[
-        'Grill',
-        'Soup',
-        'Stew',
-        'Crockpot',
-        'Bake',
-        'Roast',
-        'One Pot',
-      ]}
+      options={preparationTypes.map(preparationType => preparationType.description)}
     />
     <TypeDropDown
       title="Protein"
       selectedValue={recipe.proteinType ? recipe.proteinType.id : null}
       onValueChange={onProteinTypeChange}
-      options={[
-        'Chicken',
-        'Beef',
-        'Pork',
-        'Venison',
-        'Egg',
-        'Tofu',
-        'Vegetable',
-        'Fish',
-        'Shrimp',
-        'Lobster',
-      ]}
+      options={proteinTypes.map(proteinType => proteinType.description)}
     />
     <View style={styles.buttonContainer}>
       <BlockButton
