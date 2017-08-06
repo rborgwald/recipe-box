@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
 });
 
 const BadgeSelector = ({
+  ref,
   searchCriterion,
   backgroundColor,
   defaultText,
@@ -28,30 +29,36 @@ const BadgeSelector = ({
   onValueChange,
   options,
 }: {
-  searchCriterion: SearchCriterion,
+  ref?: ModalDropdown,
+  searchCriterion?: SearchCriterion,
   backgroundColor: string,
   defaultText: string,
   style?: ModalDropdown.propTypes.style,
   textStyle?: Text.propTypes.style,
   onValueChange: Function,
   options: SearchCriterion[],
-}) =>
-  <ModalDropdown
-    style={[styles.container, { backgroundColor: backgroundColor }]}
-    textStyle={[styles.selectionText, textStyle]}
-    defaultValue={searchCriterion ? searchCriterion.description : defaultText}
-    defaultIndex={searchCriterion ? searchCriterion.id : 0}
-    options={[defaultText].concat(
-      options
-        .sort((a, b) => {
-          return a.id - b.id;
-        })
-        .map(option => option.description),
-    )}
-    onSelect={idx => {
-      console.log('selected index: ' + idx);
-      onValueChange(idx);
-    }}
-  />;
+}) => {
+  console.log('rendering badge: ' + JSON.stringify(searchCriterion));
+
+  return (
+    <ModalDropdown
+      style={[styles.container, { backgroundColor: backgroundColor }]}
+      textStyle={[styles.selectionText, textStyle]}
+      defaultValue={searchCriterion ? searchCriterion.description : defaultText}
+      defaultIndex={searchCriterion ? searchCriterion.id : 0}
+      options={[defaultText].concat(
+        options
+          .sort((a, b) => {
+            return a.id - b.id;
+          })
+          .map(option => option.description),
+      )}
+      onSelect={idx => {
+        console.log('selected index: ' + idx);
+        onValueChange(idx);
+      }}
+    />
+  );
+};
 
 export default BadgeSelector;

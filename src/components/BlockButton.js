@@ -7,7 +7,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 40,
     width: '33%',
-    borderRadius: 40 / 2,
     borderWidth: 0,
     backgroundColor: 'blue',
   },

@@ -1,15 +1,18 @@
 // @flow
 import React from 'react';
 import { View, Text, StyleSheet, TextInput, FlatList } from 'react-native';
+import ModalDropdown from 'react-native-modal-dropdown';
 import BlockButton from '../../../components/BlockButton';
-import { Recipe } from '../../../api/recipe/model';
+import {Recipe, SearchCriterion} from '../../../api/recipe/model';
 import Divider from '../../../components/Divider';
 import RecipePreview from './RecipePreview';
 import WordButton from '../../../components/WordButton';
+import BadgeSelector from '../../../components/BadgeSelector';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
   },
   searchInputWrapper: {
     flexDirection: 'row',
@@ -30,6 +33,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     margin: 5,
   },
+  badgeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 10,
+  },
   searchButtonContainer: {
     flexDirection: 'column',
     alignItems: 'center',
@@ -47,17 +56,35 @@ const styles = StyleSheet.create({
 });
 
 const Search = ({
+  mealTypes,
+  cuisineTypes,
+  proteinTypes,
+  preparationTypes,
   onTextChange,
+  onMealTypeChange,
+  onCuisineTypeChange,
+  onPreparationTypeChange,
+  onProteinTypeChange,
   onSearchRecipe,
   onClearSearch,
   recipes = [],
   value,
+  mealType,
 }: {
+  mealTypes: SearchCriterion[],
+  cuisineTypes: SearchCriterion[],
+  proteinTypes: SearchCriterion[],
+  preparationTypes: SearchCriterion[],
   onTextChange: Function,
+  onMealTypeChange: Function,
+  onCuisineTypeChange: Function,
+  onPreparationTypeChange: Function,
+  onProteinTypeChange: Function,
   onSearchRecipe: Function,
   onClearSearch: Function,
   recipes: Recipe[],
   value: string,
+  mealType: SearchCriterion,
 }) =>
   <View style={styles.container}>
     <View style={styles.searchInputWrapper}>
@@ -80,6 +107,33 @@ const Search = ({
           onPress={onClearSearch}
         />
       </View>
+    </View>
+    <View style={styles.badgeContainer}>
+      <BadgeSelector
+        searchCriterion={mealType ? mealType : undefined}
+        backgroundColor="#6b7a8f"
+        defaultText="Any meal type"
+        onValueChange={onMealTypeChange}
+        options={mealTypes}
+      />
+      <BadgeSelector
+        backgroundColor="#f7882f"
+        defaultText="Any cuisine"
+        onValueChange={onCuisineTypeChange}
+        options={cuisineTypes}
+      />
+      <BadgeSelector
+        backgroundColor="#f7c331"
+        defaultText="Any prep"
+        onValueChange={onPreparationTypeChange}
+        options={preparationTypes}
+      />
+      <BadgeSelector
+        backgroundColor="#dcc7aa"
+        defaultText="Any protein"
+        onValueChange={onProteinTypeChange}
+        options={proteinTypes}
+      />
     </View>
     <View style={styles.searchResultsWrapper}>
       <FlatList
