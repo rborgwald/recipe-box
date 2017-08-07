@@ -18,7 +18,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 20,
+    margin: 15,
+    marginBottom: 5,
   },
   text: {
     fontSize: 24,
@@ -27,7 +28,6 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     height: 40,
-    // width: '75%',
     flex: 6,
     borderColor: '#666',
     borderWidth: 1,
@@ -37,21 +37,29 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 10,
+    margin: 10,
   },
   searchButtonContainer: {
     flexDirection: 'column',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     width: '25%',
   },
   searchButton: {
     width: '100%',
   },
+  clearButtonContainer: {
+    width: '100%',
+  },
   clearButton: {
-    fontSize: 14,
+    fontSize: 16,
+    textAlign: 'right',
+    marginRight: 45
   },
   searchResultsWrapper: {
-    margin: 20,
+    margin: 10,
+    marginTop: 0,
+    marginBottom: 160,
   },
 });
 
@@ -97,12 +105,14 @@ const Search = ({
           text="Search"
           onPress={onSearchRecipe}
         />
-        <WordButton
-          style={styles.clearButton}
-          text="Clear"
-          onPress={onClearSearch}
-        />
       </View>
+    </View>
+    <View style={styles.clearButtonContainer}>
+      <WordButton
+        style={styles.clearButton}
+        text="Clear"
+        onPress={onClearSearch}
+      />
     </View>
     <View style={styles.badgeContainer}>
       <BadgeSelector
