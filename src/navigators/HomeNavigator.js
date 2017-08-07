@@ -59,19 +59,15 @@ export class HomeNavWrapper extends Component<any, Props, void> {
     // TODO: figure out how to handle error(s)
 
     getMealTypes().then(types => {
-      console.log('mealtypes: ' + JSON.stringify(types));
       dispatch(setMealTypes(types));
     });
     getCuisineTypes().then(types => {
-      console.log('cuisinetypes: ' + JSON.stringify(types));
       dispatch(setCuisineTypes(types));
     });
     getProteinTypes().then(types => {
-      console.log('proteintypes: ' + JSON.stringify(types));
       dispatch(setProteinTypes(types));
     });
     getPreparationTypes().then(types => {
-      console.log('preparationtypes: ' + JSON.stringify(types));
       dispatch(setPreparationTypes(types));
     });
   };

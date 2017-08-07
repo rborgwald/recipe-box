@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Keyboard } from 'react-native';
 import { StackNavigator } from 'react-navigation';
+import ModalDropdown from 'react-native-modal-dropdown';
 import { connect } from 'react-redux';
 import Search from './components/Search';
 import { getAllRecipes, searchRecipes } from '../../api/recipe/recipes';
@@ -20,6 +21,11 @@ export class SearchScreen extends Component<any, Props, State> {
   static navigationOptions = {
     title: 'Search',
   };
+
+  mealTypeRef: ModalDropdown;
+  cuisineTypeRef: ModalDropdown;
+  preparationTypeRef: ModalDropdown;
+  proteinTypeRef: ModalDropdown;
 
   state = {
     searchString: '',
@@ -61,8 +67,6 @@ export class SearchScreen extends Component<any, Props, State> {
         value: proteinType ? proteinType.name : undefined,
       },
     ];
-
-    console.log('queryParams: ' + JSON.stringify(queryParams));
 
     searchRecipes(queryParams).then(recipes => {
       console.log('Matching recipes: ' + JSON.stringify(recipes));
@@ -112,7 +116,38 @@ export class SearchScreen extends Component<any, Props, State> {
       proteinType: undefined,
       results: [],
     });
+    console.log('mealTypeRef: ' + this.mealTypeRef);
+    if (this.mealTypeRef) {
+      console.log('select(0)');
+      this.mealTypeRef.select(0);
+    }
+    if (this.cuisineTypeRef) {
+      this.cuisineTypeRef.select(0);
+    }
+    if (this.preparationTypeRef) {
+      this.preparationTypeRef.select(0);
+    }
+    if (this.proteinTypeRef) {
+      this.proteinTypeRef.select(0);
+    }
+
     Keyboard.dismiss();
+  };
+
+  handleMealTypeRef = (ref: ModalDropdown) => {
+    this.mealTypeRef = ref;
+  };
+
+  handleCuisineTypeRef = (ref: ModalDropdown) => {
+    this.cuisineTypeRef = ref;
+  };
+
+  handlePreparationTypeRef = (ref: ModalDropdown) => {
+    this.preparationTypeRef = ref;
+  };
+
+  handleProteinTypeRef = (ref: ModalDropdown) => {
+    this.proteinTypeRef = ref;
   };
 
   render() {
@@ -124,6 +159,37 @@ export class SearchScreen extends Component<any, Props, State> {
       proteinTypes,
     } = this.props;
 
+    const types = [
+      {
+        name: 'mealTypes',
+        values: mealTypes,
+        value: this.state.mealType,
+        callback: this.handleMealTypeChange,
+        ref: this.handleMealTypeRef,
+      },
+      {
+        name: 'cuisineTypes',
+        values: cuisineTypes,
+        value: this.state.cuisineType,
+        callback: this.handleCuisineTypeChange,
+        ref: this.handleCuisineTypeRef,
+      },
+      {
+        name: 'preparationTypes',
+        values: preparationTypes,
+        value: this.state.preparationType,
+        callback: this.handlePreparationTypeChange,
+        ref: this.handlePreparationTypeRef,
+      },
+      {
+        name: 'proteinTypes',
+        values: proteinTypes,
+        value: this.state.proteinType,
+        callback: this.handleProteinTypeChange,
+        ref: this.handleProteinTypeRef,
+      },
+    ];
+
     const data = this.state.results.map(recipe => ({
       key: recipe.id,
       recipe,
@@ -134,24 +200,14 @@ export class SearchScreen extends Component<any, Props, State> {
       },
     }));
 
-    console.log('state: ' + JSON.stringify(this.state.mealType));
-
     return (
       <Search
-        mealTypes={mealTypes}
-        cuisineTypes={cuisineTypes}
-        proteinTypes={proteinTypes}
-        preparationTypes={preparationTypes}
+        types={types}
         onTextChange={this.handleTextChange}
-        onMealTypeChange={this.handleMealTypeChange}
-        onCuisineTypeChange={this.handleCuisineTypeChange}
-        onPreparationTypeChange={this.handlePreparationTypeChange}
-        onProteinTypeChange={this.handleProteinTypeChange}
         onSearchRecipe={this.handleSearchRecipe}
         onClearSearch={this.handleClear}
         recipes={data}
-        value={this.state.searchString}
-        mealType={this.state.mealType}
+        textValue={this.state.searchString}
       />
     );
   }
