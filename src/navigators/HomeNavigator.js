@@ -23,7 +23,7 @@ export const HomeNav = TabNavigator(
     Search: {
       screen: SearchScreen,
     },
-    Manage: {
+    Add: {
       screen: AdminScreen,
     },
   },

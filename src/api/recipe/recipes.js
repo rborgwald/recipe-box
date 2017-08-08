@@ -61,7 +61,24 @@ export const updateRecipe = (recipe: Recipe): Promise<*> => {
     const responseJson = await response.json();
     if (status !== 200 && status !== 404) throw Error(responseJson.message);
     if (status === 404) return [];
-    console.log('response: ' + JSON.stringify(responseJson));
     return responseJson;
   });
+};
+
+export const createRecipe = (recipe: Recipe): Promise<*> => {
+  console.log('recipe to create: ' + JSON.stringify(recipe));
+
+  return fetch(recipeUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(recipe),
+  }).then(async response => {
+    const { status } = response;
+    const responseJson = await response.json();
+    if (status !== 200 && status !== 404) throw Error(responseJson.message);
+    if (status === 404) return [];
+    return responseJson;
+  })
 };

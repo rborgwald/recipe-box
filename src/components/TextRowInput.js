@@ -28,7 +28,7 @@ const TextRowInput = ({
   headerStyle?: Text.propTypes.style,
   contentStyle?: Text.propTypes.style,
   headerText: string,
-  contentText: string,
+  contentText?: string,
   onChangeText: Function,
 }) =>
   <View style={styles.container}>
