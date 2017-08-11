@@ -7,7 +7,7 @@ import type { NavigationScreenProp } from 'react-navigation';
 import RecipeDetails from './components/RecipeDetails';
 import ImageButton from '../../components/ImageButton';
 import { Recipe, SearchCriterion } from '../../api/recipe/model';
-import { updateRecipe } from '../../api/recipe/recipes';
+import { updateRecipe, deleteRecipe } from '../../api/recipe/recipes';
 
 type State = {
   recipe: Recipe,
@@ -105,9 +105,12 @@ export class RecipeDetailsScreen extends Component<any, Props, void> {
   };
 
   handleOnDelete = () => {
-    if (this.state.recipe) {
-      console.log('handle on delete: ' + JSON.stringify(this.state.recipe));
+    const { navigation: { state: { params: { recipe } } } } = this.props;
+    if (recipe) {
+      deleteRecipe(recipe).then(() => {});
     }
+    const { navigation } = this.props;
+    navigation.goBack();
   };
 
   render() {
