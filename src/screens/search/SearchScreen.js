@@ -4,6 +4,8 @@ import { Keyboard } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import ModalDropdown from 'react-native-modal-dropdown';
 import { connect } from 'react-redux';
+import type { State as StoreState } from '../../store/store';
+import { setRecipes } from '../../store/actions';
 import Search from './components/Search';
 import { getAllRecipes, searchRecipes } from '../../api/recipe/recipes';
 import { Recipe, SearchCriterion } from '../../api/recipe/model';
@@ -15,8 +17,18 @@ type State = {
   cuisineType: SearchCriterion,
   preparationType: SearchCriterion,
   proteinType: SearchCriterion,
-  results: Recipe[],
 };
+
+type Props = {
+  dispatch: $PropertyType<Store, 'dispatch'>,
+  navigation: NavigationScreenProp,
+  results: $PropertyType<StoreState, 'recipes'>,
+  mealTypes: $PropertyType<StoreState, 'mealTypes'>,
+  cuisineTypes: $PropertyType<StoreState, 'cuisineTypes'>,
+  preparationTypes: $PropertyType<StoreState, 'preparationTypes'>,
+  proteinTypes: $PropertyType<StoreState, 'proteinTypes'>,
+};
+
 export class SearchScreen extends Component<any, Props, State> {
   static navigationOptions = {
     title: 'Search',
@@ -33,7 +45,6 @@ export class SearchScreen extends Component<any, Props, State> {
     cuisineType: undefined,
     preparationType: undefined,
     proteinType: undefined,
-    results: [],
   };
 
   handleSearchRecipe = () => {
@@ -70,7 +81,9 @@ export class SearchScreen extends Component<any, Props, State> {
 
     searchRecipes(queryParams).then(recipes => {
       console.log('Matching recipes: ' + JSON.stringify(recipes));
-      this.setState({ results: recipes });
+      const { dispatch } = this.props;
+      dispatch(setRecipes(recipes));
+      // this.setState({ results: recipes });
     });
     Keyboard.dismiss();
   };
@@ -108,17 +121,17 @@ export class SearchScreen extends Component<any, Props, State> {
   };
 
   handleClear = () => {
+    const { dispatch } = this.props;
     this.setState({
       searchString: '',
       mealType: undefined,
       cuisineType: undefined,
       preparationType: undefined,
       proteinType: undefined,
-      results: [],
     });
-    console.log('mealTypeRef: ' + this.mealTypeRef);
+    dispatch(setRecipes([]));
+
     if (this.mealTypeRef) {
-      console.log('select(0)');
       this.mealTypeRef.select(0);
     }
     if (this.cuisineTypeRef) {
@@ -157,6 +170,7 @@ export class SearchScreen extends Component<any, Props, State> {
       cuisineTypes,
       preparationTypes,
       proteinTypes,
+      results,
     } = this.props;
 
     const types = [
@@ -190,7 +204,7 @@ export class SearchScreen extends Component<any, Props, State> {
       },
     ];
 
-    const data = this.state.results.map(recipe => ({
+    const data = results.map(recipe => ({
       key: recipe.id,
       recipe,
       onViewRecipe: () => {
@@ -214,6 +228,7 @@ export class SearchScreen extends Component<any, Props, State> {
 }
 
 const mapStateToProps = state => ({
+  results: state.recipes,
   mealTypes: state.mealTypes,
   cuisineTypes: state.cuisineTypes,
   proteinTypes: state.proteinTypes,

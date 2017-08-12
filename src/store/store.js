@@ -2,9 +2,11 @@
 import { createStore } from 'redux';
 import * as actions from './actions';
 import type { Action } from './actions';
-import { SearchCriterion } from '../api/recipe/model';
+import { SearchCriterion, Recipe } from '../api/recipe/model';
 
 export type State = {
+  +recipe: Recipe,
+  +recipes: Recipe[],
   +mealTypes: SearchCriterion[],
   +cuisineTypes: SearchCriterion[],
   +proteinTypes: SearchCriterion[],
@@ -12,6 +14,8 @@ export type State = {
 };
 
 const initialState: State = {
+  recipe: {},
+  recipes: [],
   mealTypes: [],
   cuisineTypes: [],
   proteinTypes: [],
@@ -43,6 +47,18 @@ export const reducer = (state: State = initialState, action: Action) => {
       return {
         ...state,
         preparationTypes: payload,
+      };
+    }
+    case actions.SET_RECIPE: {
+      return {
+        ...state,
+        recipe: payload,
+      };
+    }
+    case actions.SET_RECIPES: {
+      return {
+        ...state,
+        recipes: payload,
       };
     }
     default: {

@@ -1,16 +1,38 @@
 // @flow
 import type { State } from './store';
 
+export const SET_RECIPE: 'SET_RECIPE' = 'SET_RECIPE';
+export const SET_RECIPES: 'SET_RECIPES' = 'SET_RECIPES';
 export const SET_MEAL_TYPES: 'SET_MEAL_TYPES' = 'SET_MEAL_TYPES';
 export const SET_CUISINE_TYPES: 'SET_CUISINE_TYPES' = 'SET_CUISINE_TYPES';
 export const SET_PROTEIN_TYPES: 'SET_PROTEIN_TYPES' = 'SET_PROTEIN_TYPES';
 export const SET_PREPARATION_TYPES: 'SET_PREPARATION_TYPES' = 'SET_PREPARATION_TYPES';
 
 export type Action =
+  | SetRecipe
+  | SetRecipes
   | SetMealTypesAction
   | SetCuisineTypesAction
   | SetProteinTypesAction
   | SetPreparationTypesAction;
+
+type SetRecipeAction = {
+  type: typeof SET_RECIPE,
+  payload: $PropertyType<State, 'recipe'>,
+};
+export const setRecipe = (recipe: $PropertyType<State, 'recipe'>) => ({
+  type: SET_RECIPE,
+  payload: recipe,
+});
+
+type SetRecipesAction = {
+  type: typeof SET_RECIPES,
+  payload: $PropertyType<State, 'recipes'>,
+};
+export const setRecipes = (recipes: $PropertyType<State, 'recipes'>) => ({
+  type: SET_RECIPES,
+  payload: recipes,
+});
 
 type SetMealTypesAction = {
   type: typeof SET_MEAL_TYPES,
