@@ -43,6 +43,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     margin: 5,
   },
+  errorMessage: {
+  color: '#e74c3c',
+    backgroundColor: 'transparent',
+    alignSelf: 'center',
+    paddingBottom: 15,
+},
 });
 
 const RecipeDetails = ({
@@ -61,6 +67,7 @@ const RecipeDetails = ({
   onProteinTypeChange,
   onUpdate,
   onDelete,
+  errorMessage,
 }: {
   recipe: Recipe,
   mealTypes: SearchCriterion[],
@@ -77,6 +84,7 @@ const RecipeDetails = ({
   onProteinTypeChange: Function,
   onUpdate: Function,
   onDelete: Function,
+  errorMessage: string
 }) =>
   <View style={styles.container}>
     <View style={styles.infoWrapper}>
@@ -145,6 +153,9 @@ const RecipeDetails = ({
         onPress={onDelete}
       />
     </View>
+    <Text style={styles.errorMessage}>
+      {errorMessage}
+    </Text>
   </View>;
 
 export default RecipeDetails;

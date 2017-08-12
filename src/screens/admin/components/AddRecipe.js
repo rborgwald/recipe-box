@@ -42,6 +42,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     margin: 5,
   },
+  errorMessage: {
+    color: '#e74c3c',
+    backgroundColor: 'transparent',
+    alignSelf: 'center',
+    paddingBottom: 15,
+  },
 });
 
 const AddRecipe = ({
@@ -53,6 +59,7 @@ const AddRecipe = ({
   onClear,
   recipe,
   types,
+  errorMessage,
 }: {
   onNameChange: Function,
   onSourceChange: Function,
@@ -69,6 +76,7 @@ const AddRecipe = ({
       ref: ModalDropdown,
     },
   ],
+  errorMessage: string,
 }) =>
   <ScrollView style={styles.container}>
     <View style={styles.infoWrapper}>
@@ -140,7 +148,9 @@ const AddRecipe = ({
       />
       <BlockButton style={styles.clearButton} text="Clear" onPress={onClear} />
     </View>
-    <View style={{ height: 60 }} />
+    <Text style={styles.errorMessage}>
+      {errorMessage}
+    </Text>
   </ScrollView>;
 
 export default AddRecipe;

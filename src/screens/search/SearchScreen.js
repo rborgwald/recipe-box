@@ -17,6 +17,7 @@ type State = {
   cuisineType: SearchCriterion,
   preparationType: SearchCriterion,
   proteinType: SearchCriterion,
+  errorMessage: string,
 };
 
 type Props = {
@@ -45,6 +46,7 @@ export class SearchScreen extends Component<any, Props, State> {
     cuisineType: undefined,
     preparationType: undefined,
     proteinType: undefined,
+    errorMessage: '',
   };
 
   handleSearchRecipe = () => {
@@ -83,7 +85,8 @@ export class SearchScreen extends Component<any, Props, State> {
       console.log('Matching recipes: ' + JSON.stringify(recipes));
       const { dispatch } = this.props;
       dispatch(setRecipes(recipes));
-      // this.setState({ results: recipes });
+    }).catch(error => {
+      this.setState({ errorMessage: error.message });
     });
     Keyboard.dismiss();
   };
@@ -144,6 +147,8 @@ export class SearchScreen extends Component<any, Props, State> {
       this.proteinTypeRef.select(0);
     }
 
+    this.setState({ errorMessage: '' });
+
     Keyboard.dismiss();
   };
 
@@ -172,6 +177,8 @@ export class SearchScreen extends Component<any, Props, State> {
       proteinTypes,
       results,
     } = this.props;
+
+    const { errorMessage } = this.state;
 
     const types = [
       {
@@ -222,6 +229,7 @@ export class SearchScreen extends Component<any, Props, State> {
         onClearSearch={this.handleClear}
         recipes={data}
         textValue={this.state.searchString}
+        errorMessage={errorMessage}
       />
     );
   }

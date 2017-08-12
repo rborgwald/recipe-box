@@ -54,12 +54,18 @@ const styles = StyleSheet.create({
   clearButton: {
     fontSize: 16,
     textAlign: 'right',
-    marginRight: 45
+    marginRight: 45,
   },
   searchResultsWrapper: {
     margin: 10,
     marginTop: 0,
-    marginBottom: 160,
+    marginBottom: 165,
+  },
+  errorMessage: {
+    color: '#e74c3c',
+    backgroundColor: 'transparent',
+    alignSelf: 'center',
+    paddingBottom: 15,
   },
 });
 
@@ -70,6 +76,7 @@ const Search = ({
   onClearSearch,
   recipes = [],
   textValue,
+  errorMessage,
 }: {
   types: [
     {
@@ -85,6 +92,7 @@ const Search = ({
   onClearSearch: Function,
   recipes: Recipe[],
   textValue: string,
+  errorMessage: string,
 }) =>
   <View style={styles.container}>
     <View style={styles.searchInputWrapper}>
@@ -163,6 +171,9 @@ const Search = ({
         options={types.find(type => type.name === 'proteinTypes').values}
       />
     </View>
+    <Text style={styles.errorMessage}>
+      {errorMessage}
+    </Text>
     <View style={styles.searchResultsWrapper}>
       <FlatList
         data={recipes}

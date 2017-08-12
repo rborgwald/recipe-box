@@ -13,7 +13,7 @@ import { Recipe, SearchCriterion } from '../../api/recipe/model';
 import { updateRecipe, deleteRecipe } from '../../api/recipe/recipes';
 
 type State = {
-  recipe: Recipe,
+  errorMessage: string,
 };
 
 type Props = {
@@ -24,13 +24,17 @@ type Props = {
   preparationTypes: $PropertyType<StoreState, 'preparationTypes'>,
   proteinTypes: $PropertyType<StoreState, 'proteinTypes'>,
 }
-export class RecipeDetailsScreen extends Component<any, Props, void> {
+export class RecipeDetailsScreen extends Component<any, Props, State> {
   static navigationOptions = ({ navigation }) => ({
     headerTitle: 'Recipe Details',
     headerLeft: (
       <ImageButton onPress={() => navigation.goBack()} icon={backArrow} />
     ),
   });
+
+  state = {
+    errorMessage: '',
+  };
 
   handleNameChange = (newName: string) => {
     const { navigation: { state: { params: { recipe } } } } = this.props;
@@ -105,17 +109,19 @@ export class RecipeDetailsScreen extends Component<any, Props, void> {
   };
 
   handleOnUpdate = () => {
-    const { recipes, dispatch } = this.props;
-    if (this.state.recipe) {
-      updateRecipe(this.state.recipe).then(() => {
-        const newRecipes = filter(recipes, (recipe) => { return recipe.id !== this.state.recipe.id});
-        newRecipes.push(this.state.recipe);
+    const { recipes, dispatch, navigation: { state: { params: { recipe } } } } = this.props;
+    if (recipe) {
+      updateRecipe(recipe).then(() => {
+        const newRecipes = filter(recipes, (rec) => { return rec.id !== recipe.id});
+        newRecipes.push(recipe);
         dispatch(setRecipes(newRecipes));
+
+        const { navigation } = this.props;
+        navigation.goBack();
+      }).catch(error => {
+        this.setState({ errorMessage: error.message });
       });
     }
-
-    const { navigation } = this.props;
-    navigation.goBack();
   };
 
   handleOnDelete = () => {
@@ -124,15 +130,19 @@ export class RecipeDetailsScreen extends Component<any, Props, void> {
       deleteRecipe(recipe).then(() => {
         const newRecipes = filter(recipes, (rec) => { return rec.id !== recipe.id});
         dispatch(setRecipes(newRecipes));
+
+        const { navigation } = this.props;
+        navigation.goBack();
+      }).catch(error => {
+        this.setState({ errorMessage: error.message });
       });
     }
 
-    const { navigation } = this.props;
-    navigation.goBack();
   };
 
   render() {
     const { navigation: { state: { params: { recipe } } } } = this.props;
+    const { errorMessage } = this.state;
 
     return recipe === undefined
       ? null
@@ -152,6 +162,7 @@ export class RecipeDetailsScreen extends Component<any, Props, void> {
           onProteinTypeChange={this.handleProteinTypeChange}
           onUpdate={this.handleOnUpdate}
           onDelete={this.handleOnDelete}
+          errorMessage={errorMessage}
         />;
   }
 }

@@ -14,9 +14,16 @@ type Props = {
   dispatch: $PropertyType<Store, 'dispatch'>,
   recipe: $PropertyType<StoreState, 'recipe'>,
 };
-export class AdminScreen extends Component<any, Props, void> {
+
+type State = {
+  errorMessage: string,
+};
+export class AdminScreen extends Component<any, Props, State> {
   static navigationOptions = {
     title: 'Add Recipes',
+  };
+  state = {
+    errorMessage: '',
   };
 
   mealTypeRef: ModalDropdown;
@@ -119,7 +126,10 @@ export class AdminScreen extends Component<any, Props, void> {
 
     createRecipe(recipe).then(response => {
       console.log('Created Recipe: ' + JSON.stringify(response));
+      this.setState({ errorMessage: '' });
       this.handleClearRecipe();
+    }).catch(error => {
+      this.setState({ errorMessage: error.message });
     });
 
     Keyboard.dismiss();
@@ -142,6 +152,8 @@ export class AdminScreen extends Component<any, Props, void> {
       this.proteinTypeRef.select(0);
     }
 
+    this.setState({ errorMessage: '' });
+
     Keyboard.dismiss();
   };
 
@@ -153,6 +165,8 @@ export class AdminScreen extends Component<any, Props, void> {
       preparationTypes,
       proteinTypes,
     } = this.props;
+
+    const { errorMessage } = this.state;
 
     const types = [
       {
@@ -191,6 +205,7 @@ export class AdminScreen extends Component<any, Props, void> {
         onSave={this.handleSaveRecipe}
         onClear={this.handleClearRecipe}
         recipe={recipe}
+        errorMessage={errorMessage}
       />
     );
   }
