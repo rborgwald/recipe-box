@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { View, Text, StyleSheet, Picker } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import ModalDropdown from 'react-native-modal-dropdown';
 import TextRowInput from '../../../components/TextRowInput';
 import BlockButton from '../../../components/BlockButton';
@@ -70,7 +70,7 @@ const AddRecipe = ({
     },
   ],
 }) =>
-  <View style={styles.container}>
+  <ScrollView style={styles.container}>
     <View style={styles.infoWrapper}>
       <View style={styles.detailsContainer}>
         <TextRowInput
@@ -140,6 +140,7 @@ const AddRecipe = ({
       />
       <BlockButton style={styles.clearButton} text="Clear" onPress={onClear} />
     </View>
-  </View>;
+    <View style={{ height: 60 }} />
+  </ScrollView>;
 
 export default AddRecipe;
