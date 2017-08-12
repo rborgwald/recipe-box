@@ -132,7 +132,12 @@ const AddRecipe = ({
       />
     </View>
     <View style={styles.buttonContainer}>
-      <BlockButton style={styles.saveButton} text="Save" onPress={onSave} />
+      <BlockButton
+        style={styles.saveButton}
+        text="Save"
+        onPress={onSave}
+        disabled={!recipe.name || !recipe.source}
+      />
       <BlockButton style={styles.clearButton} text="Clear" onPress={onClear} />
     </View>
   </View>;

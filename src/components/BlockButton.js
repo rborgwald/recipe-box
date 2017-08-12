@@ -15,7 +15,10 @@ const styles = StyleSheet.create({
     textAlignVertical: 'bottom',
     fontWeight: '600',
     fontSize: 16,
-    color: '#FFF'
+    color: '#FFF',
+  },
+  disabled: {
+    backgroundColor: 'grey',
   },
 });
 
@@ -24,19 +27,27 @@ const BlockButton = ({
   text,
   textStyle,
   onPress,
+  disabled,
 }: {
   style?: TouchableHighlight.propTypes.style,
   text: string,
   textStyle?: Text.propTypes.style,
   onPress: Function,
+  disabled?: boolean,
 }) =>
   <TouchableHighlight
-    style={[styles.container, style]}
-    onPress={onPress}
-    underlayColor='#bbb'
+    style={[
+      styles.container,
+      style,
+      disabled ? { backgroundColor: 'grey' } : {},
+    ]}
+    onPress={disabled ? () => {} : onPress}
+    underlayColor={disabled ? 'grey' : '#bbb'}
     activeOpacity={1}
   >
-    <Text style={[styles.text, textStyle]}>{text}</Text>
+    <Text style={[styles.text, textStyle]}>
+      {text}
+    </Text>
   </TouchableHighlight>;
 
 export default BlockButton;
