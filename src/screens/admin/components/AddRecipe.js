@@ -1,10 +1,11 @@
 // @flow
 import React from 'react';
 import { View, Text, StyleSheet, Picker } from 'react-native';
+import ModalDropdown from 'react-native-modal-dropdown';
 import TextRowInput from '../../../components/TextRowInput';
 import BlockButton from '../../../components/BlockButton';
 import BadgeSelector from '../../../components/BadgeSelector';
-import { SearchCriterion } from '../../../api/recipe/model';
+import { SearchCriterion, Recipe } from '../../../api/recipe/model';
 
 const styles = StyleSheet.create({
   container: {
@@ -48,76 +49,91 @@ const AddRecipe = ({
   onSourceChange,
   onVolumeChange,
   onPageChange,
-  onMealTypeChange,
-  onCusineTypeChange,
-  onPreparationTypeChange,
-  onProteinTypeChange,
   onSave,
-  name,
-  source,
-  volume,
-  page,
-  mealTypes,
-  cuisineTypes,
-  preparationTypes,
-  proteinTypes,
+  onClear,
+  recipe,
+  types,
 }: {
   onNameChange: Function,
   onSourceChange: Function,
   onVolumeChange: Function,
   onPageChange: Function,
-  onMealTypeChange: Function,
-  onCusineTypeChange: Function,
-  onPreparationTypeChange: Function,
-  onProteinTypeChange: Function,
   onSave: Function,
-  name: string,
-  source: string,
-  volume: string,
-  page: string,
-  mealTypes: SearchCriterion[],
-  cuisineTypes: SearchCriterion[],
-  preparationTypes: SearchCriterion[],
-  proteinTypes: SearchCriterion[],
+  onClear: Function,
+  recipe: Recipe,
+  types: [
+    {
+      name: string,
+      values: SearchCriterion[],
+      callback: Function,
+      ref: ModalDropdown,
+    },
+  ],
 }) =>
   <View style={styles.container}>
     <View style={styles.infoWrapper}>
       <View style={styles.detailsContainer}>
-        <TextRowInput onChangeText={onNameChange} headerText="Name" value={name} />
-        <TextRowInput onChangeText={onSourceChange} headerText="Source" value={source} />
-        <TextRowInput onChangeText={onVolumeChange} headerText="Volume" value={volume} />
-        <TextRowInput onChangeText={onPageChange} headerText="Page" value={page} />
+        <TextRowInput
+          onChangeText={onNameChange}
+          headerText="Name"
+          contentText={recipe ? recipe.name : ''}
+        />
+        <TextRowInput
+          onChangeText={onSourceChange}
+          headerText="Source"
+          contentText={recipe ? recipe.source : ''}
+        />
+        <TextRowInput
+          onChangeText={onVolumeChange}
+          headerText="Volume"
+          contentText={recipe ? recipe.volume : ''}
+        />
+        <TextRowInput
+          onChangeText={onPageChange}
+          headerText="Page"
+          contentText={recipe ? recipe.page : ''}
+        />
       </View>
     </View>
     <View style={styles.badgeContainer}>
       <BadgeSelector
+        childRef={types.find(type => type.name === 'mealTypes').ref}
         backgroundColor="#6b7a8f"
         defaultText="- Meal -"
-        onValueChange={onMealTypeChange}
-        options={mealTypes}
+        onValueChange={types.find(type => type.name === 'mealTypes').callback}
+        options={types.find(type => type.name === 'mealTypes').values}
       />
       <BadgeSelector
+        childRef={types.find(type => type.name === 'cuisineTypes').ref}
         backgroundColor="#f7882f"
         defaultText="- Cuisine -"
-        onValueChange={onCusineTypeChange}
-        options={cuisineTypes}
+        onValueChange={
+          types.find(type => type.name === 'cuisineTypes').callback
+        }
+        options={types.find(type => type.name === 'cuisineTypes').values}
       />
       <BadgeSelector
+        childRef={types.find(type => type.name === 'preparationTypes').ref}
         backgroundColor="#f7c331"
         defaultText="- Prep -"
-        onValueChange={onPreparationTypeChange}
-        options={preparationTypes}
+        onValueChange={
+          types.find(type => type.name === 'preparationTypes').callback
+        }
+        options={types.find(type => type.name === 'preparationTypes').values}
       />
       <BadgeSelector
+        childRef={types.find(type => type.name === 'proteinTypes').ref}
         backgroundColor="#dcc7aa"
         defaultText="- Protein -"
-        onValueChange={onProteinTypeChange}
-        options={proteinTypes}
+        onValueChange={
+          types.find(type => type.name === 'proteinTypes').callback
+        }
+        options={types.find(type => type.name === 'proteinTypes').values}
       />
     </View>
     <View style={styles.buttonContainer}>
       <BlockButton style={styles.saveButton} text="Save" onPress={onSave} />
-      <BlockButton style={styles.clearButton} text="Clear" onPress={() => {console.log('implement clear')}} />
+      <BlockButton style={styles.clearButton} text="Clear" onPress={onClear} />
     </View>
   </View>;
 

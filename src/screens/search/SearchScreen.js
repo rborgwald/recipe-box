@@ -4,7 +4,7 @@ import { Keyboard } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import ModalDropdown from 'react-native-modal-dropdown';
 import { connect } from 'react-redux';
-import type { State as StoreState } from '../../store/store';
+import type { Store, State as StoreState } from '../../store/store';
 import { setRecipes } from '../../store/actions';
 import Search from './components/Search';
 import { getAllRecipes, searchRecipes } from '../../api/recipe/recipes';

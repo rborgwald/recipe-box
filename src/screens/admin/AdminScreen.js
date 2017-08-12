@@ -3,44 +3,69 @@ import React, { Component } from 'react';
 import { Keyboard } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import { connect } from 'react-redux';
+import type { Store } from '../../store/store';
+import { setRecipe } from '../../store/actions';
+
 import AddRecipe from './components/AddRecipe';
 import type { Recipe } from '../../api/recipe/model';
 import { createRecipe } from '../../api/recipe/recipes';
 
-type State = {
-  recipe: Recipe,
+type Props = {
+  dispatch: $PropertyType<Store, 'dispatch'>,
+  recipe: $PropertyType<StoreState, 'recipe'>,
 };
-export class AdminScreen extends Component<any, Props, State> {
+export class AdminScreen extends Component<any, Props, void> {
   static navigationOptions = {
     title: 'Add Recipes',
   };
 
-  state = {
-    recipe: {},
+  mealTypeRef: ModalDropdown;
+  cuisineTypeRef: ModalDropdown;
+  preparationTypeRef: ModalDropdown;
+  proteinTypeRef: ModalDropdown;
+
+  handleMealTypeRef = (ref: ModalDropdown) => {
+    this.mealTypeRef = ref;
+  };
+
+  handleCuisineTypeRef = (ref: ModalDropdown) => {
+    this.cuisineTypeRef = ref;
+  };
+
+  handlePreparationTypeRef = (ref: ModalDropdown) => {
+    this.preparationTypeRef = ref;
+  };
+
+  handleProteinTypeRef = (ref: ModalDropdown) => {
+    this.proteinTypeRef = ref;
   };
 
   handleNameChange = (text: string) => {
-    const newRecipe: Recipe = { ...this.state.recipe };
+    const { dispatch, recipe } = this.props;
+    const newRecipe: Recipe = { ...recipe };
     newRecipe.name = text;
-    this.setState({ recipe: newRecipe });
+    dispatch(setRecipe(newRecipe));
   };
 
   handleSourceChange = (text: string) => {
-    const newRecipe: Recipe = { ...this.state.recipe };
+    const { dispatch, recipe } = this.props;
+    const newRecipe: Recipe = { ...recipe };
     newRecipe.source = text;
-    this.setState({ recipe: newRecipe });
+    dispatch(setRecipe(newRecipe));
   };
 
   handleVolumeChange = (text: string) => {
-    const newRecipe: Recipe = { ...this.state.recipe };
+    const { dispatch, recipe } = this.props;
+    const newRecipe: Recipe = { ...recipe };
     newRecipe.volume = text;
-    this.setState({ recipe: newRecipe });
+    dispatch(setRecipe(newRecipe));
   };
 
   handlePageChange = (text: string) => {
-    const newRecipe: Recipe = { ...this.state.recipe };
+    const { dispatch, recipe } = this.props;
+    const newRecipe: Recipe = { ...recipe };
     newRecipe.page = text;
-    this.setState({ recipe: newRecipe });
+    dispatch(setRecipe(newRecipe));
   };
 
   handleMealTypeChange = (idx: string) => {
@@ -48,9 +73,10 @@ export class AdminScreen extends Component<any, Props, State> {
       type => type.id === parseInt(idx),
     );
 
-    const newRecipe = { ...this.state.recipe };
+    const { recipe, dispatch } = this.props;
+    const newRecipe = { ...recipe };
     newRecipe.mealType = newType;
-    this.setState({ recipe: newRecipe });
+    dispatch(setRecipe(newRecipe));
   };
 
   handleCuisineTypeChange = (idx: string) => {
@@ -58,9 +84,10 @@ export class AdminScreen extends Component<any, Props, State> {
       type => type.id === parseInt(idx),
     );
 
-    const newRecipe = { ...this.state.recipe };
+    const { recipe, dispatch } = this.props;
+    const newRecipe = { ...recipe };
     newRecipe.cuisineType = newType;
-    this.setState({ recipe: newRecipe });
+    dispatch(setRecipe(newRecipe));
   };
 
   handlePreparationTypeChange = (idx: string) => {
@@ -68,9 +95,10 @@ export class AdminScreen extends Component<any, Props, State> {
       type => type.id === parseInt(idx),
     );
 
-    const newRecipe = { ...this.state.recipe };
+    const { recipe, dispatch } = this.props;
+    const newRecipe = { ...recipe };
     newRecipe.preparationType = newType;
-    this.setState({ recipe: newRecipe });
+    dispatch(setRecipe(newRecipe));
   };
 
   handleProteinTypeChange = (idx: string) => {
@@ -78,31 +106,80 @@ export class AdminScreen extends Component<any, Props, State> {
       type => type.id === parseInt(idx),
     );
 
-    const newRecipe = { ...this.state.recipe };
+    const { recipe, dispatch } = this.props;
+    const newRecipe = { ...recipe };
     newRecipe.proteinType = newType;
-    this.setState({ recipe: newRecipe });
+    dispatch(setRecipe(newRecipe));
   };
 
   handleSaveRecipe = () => {
-    const { recipe } = this.state;
+    const { recipe, dispatch } = this.props;
 
     console.log('final state: ' + JSON.stringify(recipe));
 
     createRecipe(recipe).then(response => {
       console.log('Created Recipe: ' + JSON.stringify(response));
-      this.setState({ recipe: {} });
+      this.handleClearRecipe();
     });
+
+    Keyboard.dismiss();
+  };
+
+  handleClearRecipe = () => {
+    const { recipe, dispatch } = this.props;
+    dispatch(setRecipe({}));
+
+    if (this.mealTypeRef) {
+      this.mealTypeRef.select(0);
+    }
+    if (this.cuisineTypeRef) {
+      this.cuisineTypeRef.select(0);
+    }
+    if (this.preparationTypeRef) {
+      this.preparationTypeRef.select(0);
+    }
+    if (this.proteinTypeRef) {
+      this.proteinTypeRef.select(0);
+    }
 
     Keyboard.dismiss();
   };
 
   render() {
     const {
+      recipe,
       mealTypes,
       cuisineTypes,
       preparationTypes,
       proteinTypes,
     } = this.props;
+
+    const types = [
+      {
+        name: 'mealTypes',
+        values: mealTypes,
+        callback: this.handleMealTypeChange,
+        ref: this.handleMealTypeRef,
+      },
+      {
+        name: 'cuisineTypes',
+        values: cuisineTypes,
+        callback: this.handleCuisineTypeChange,
+        ref: this.handleCuisineTypeRef,
+      },
+      {
+        name: 'preparationTypes',
+        values: preparationTypes,
+        callback: this.handlePreparationTypeChange,
+        ref: this.handlePreparationTypeRef,
+      },
+      {
+        name: 'proteinTypes',
+        values: proteinTypes,
+        callback: this.handleProteinTypeChange,
+        ref: this.handleProteinTypeRef,
+      },
+    ];
 
     return (
       <AddRecipe
@@ -110,25 +187,17 @@ export class AdminScreen extends Component<any, Props, State> {
         onSourceChange={this.handleSourceChange}
         onVolumeChange={this.handleVolumeChange}
         onPageChange={this.handlePageChange}
-        onMealTypeChange={this.handleMealTypeChange}
-        onCusineTypeChange={this.handleCuisineTypeChange}
-        onPreparationTypeChange={this.handlePreparationTypeChange}
-        onProteinTypeChange={this.handleProteinTypeChange}
+        types={types}
         onSave={this.handleSaveRecipe}
-        name={this.state.recipe.name}
-        source={this.state.recipe.source}
-        volume={this.state.recipe.volume}
-        page={this.state.recipe.page}
-        mealTypes={mealTypes}
-        cuisineTypes={cuisineTypes}
-        preparationTypes={preparationTypes}
-        proteinTypes={proteinTypes}
+        onClear={this.handleClearRecipe}
+        recipe={recipe}
       />
     );
   }
 }
 
 const mapStateToProps = state => ({
+  recipe: state.recipe,
   mealTypes: state.mealTypes,
   cuisineTypes: state.cuisineTypes,
   proteinTypes: state.proteinTypes,

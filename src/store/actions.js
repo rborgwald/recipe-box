@@ -9,8 +9,8 @@ export const SET_PROTEIN_TYPES: 'SET_PROTEIN_TYPES' = 'SET_PROTEIN_TYPES';
 export const SET_PREPARATION_TYPES: 'SET_PREPARATION_TYPES' = 'SET_PREPARATION_TYPES';
 
 export type Action =
-  | SetRecipe
-  | SetRecipes
+  | SetRecipeAction
+  | SetRecipesAction
   | SetMealTypesAction
   | SetCuisineTypesAction
   | SetProteinTypesAction
