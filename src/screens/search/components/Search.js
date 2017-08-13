@@ -3,7 +3,8 @@ import React from 'react';
 import { View, Text, StyleSheet, TextInput, FlatList } from 'react-native';
 import ModalDropdown from 'react-native-modal-dropdown';
 import BlockButton from '../../../components/BlockButton';
-import { Recipe, SearchCriterion } from '../../../api/recipe/model';
+import type { State as StoreState } from '../../../store/store';
+import type { SearchCriterion } from '../../../api/recipe/model';
 import Divider from '../../../components/Divider';
 import RecipePreview from './RecipePreview';
 import WordButton from '../../../components/WordButton';
@@ -69,6 +70,38 @@ const styles = StyleSheet.create({
   },
 });
 
+export const getRefFromTypes = (
+  types: Array<any>,
+  typeName: string,
+): ModalDropdown => {
+  const type = types.find(element => element.name === typeName);
+  return type ? type.ref : undefined;
+};
+
+export const getCallbackFromTypes = (
+  types: Array<any>,
+  typeName: string,
+): Function => {
+  const type = types.find(element => element.name === typeName);
+  return type ? type.callback : () => {};
+};
+
+export const getValueFromTypes = (
+  types: Array<any>,
+  typeName: string,
+): Function => {
+  const type = types.find(element => element.name === typeName);
+  return type ? type.value : () => {};
+};
+
+export const getOptionsFromTypes = (
+  types: Array<any>,
+  typeName: string,
+): SearchCriterion[] => {
+  const type = types.find(element => element.name === typeName);
+  return type ? type.values : [];
+};
+
 const Search = ({
   types,
   onTextChange,
@@ -78,19 +111,11 @@ const Search = ({
   textValue,
   errorMessage,
 }: {
-  types: [
-    {
-      name: string,
-      values: SearchCriterion[],
-      value: SearchCriterion,
-      callback: Function,
-      ref: ModalDropdown,
-    },
-  ],
+  types: Array<any>,
   onTextChange: Function,
   onSearchRecipe: Function,
   onClearSearch: Function,
-  recipes: Recipe[],
+  recipes: Array<any>,
   textValue: string,
   errorMessage: string,
 }) =>
@@ -124,51 +149,36 @@ const Search = ({
     </View>
     <View style={styles.badgeContainer}>
       <BadgeSelector
-        childRef={types.find(type => type.name === 'mealTypes').ref}
-        searchCriterion={
-          types.find(type => type.name === 'mealTypes').value || undefined
-        }
+        childRef={getRefFromTypes(types, 'mealTypes')}
+        searchCriterion={getValueFromTypes(types, 'mealTypes')}
         backgroundColor="#6b7a8f"
         defaultText="Any meal type"
-        onValueChange={types.find(type => type.name === 'mealTypes').callback}
-        options={types.find(type => type.name === 'mealTypes').values}
+        onValueChange={getCallbackFromTypes(types, 'mealTypes')}
+        options={getOptionsFromTypes(types, 'mealTypes')}
       />
       <BadgeSelector
-        childRef={types.find(type => type.name === 'cuisineTypes').ref}
-        searchCriterion={
-          types.find(type => type.name === 'cuisineTypes').value || undefined
-        }
+        childRef={getRefFromTypes(types, 'cuisineTypes')}
+        searchCriterion={getValueFromTypes(types, 'cuisineTypes')}
         backgroundColor="#f7882f"
         defaultText="Any cuisine"
-        onValueChange={
-          types.find(type => type.name === 'cuisineTypes').callback
-        }
-        options={types.find(type => type.name === 'cuisineTypes').values}
+        onValueChange={getCallbackFromTypes(types, 'cuisineTypes')}
+        options={getOptionsFromTypes(types, 'cuisineTypes')}
       />
       <BadgeSelector
-        childRef={types.find(type => type.name === 'preparationTypes').ref}
-        searchCriterion={
-          types.find(type => type.name === 'preparationTypes').value ||
-          undefined
-        }
+        childRef={getRefFromTypes(types, 'preparationTypes')}
+        searchCriterion={getValueFromTypes(types, 'preparationTypes')}
         backgroundColor="#f7c331"
         defaultText="Any prep"
-        onValueChange={
-          types.find(type => type.name === 'preparationTypes').callback
-        }
-        options={types.find(type => type.name === 'preparationTypes').values}
+        onValueChange={getCallbackFromTypes(types, 'preparationTypes')}
+        options={getOptionsFromTypes(types, 'preparationTypes')}
       />
       <BadgeSelector
-        childRef={types.find(type => type.name === 'proteinTypes').ref}
-        searchCriterion={
-          types.find(type => type.name === 'proteinTypes').value || undefined
-        }
+        childRef={getRefFromTypes(types, 'proteinTypes')}
+        searchCriterion={getValueFromTypes(types, 'proteinTypes')}
         backgroundColor="#dcc7aa"
         defaultText="Any protein"
-        onValueChange={
-          types.find(type => type.name === 'proteinTypes').callback
-        }
-        options={types.find(type => type.name === 'proteinTypes').values}
+        onValueChange={getCallbackFromTypes(types, 'proteinTypes')}
+        options={getOptionsFromTypes(types, 'proteinTypes')}
       />
     </View>
     <Text style={styles.errorMessage}>

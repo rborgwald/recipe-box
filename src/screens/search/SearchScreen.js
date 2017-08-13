@@ -4,19 +4,20 @@ import { Keyboard } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import ModalDropdown from 'react-native-modal-dropdown';
 import { connect } from 'react-redux';
+import type { NavigationScreenProp } from 'react-navigation';
 import type { Store, State as StoreState } from '../../store/store';
 import { setRecipes } from '../../store/actions';
 import Search from './components/Search';
-import { getAllRecipes, searchRecipes } from '../../api/recipe/recipes';
-import { Recipe, SearchCriterion } from '../../api/recipe/model';
+import { searchRecipes } from '../../api/recipe/recipes';
+import type { SearchCriterion } from '../../api/recipe/model';
 import RecipeDetailsScreen from '../recipe-details/RecipeDetailsScreen';
 
 type State = {
   searchString: string,
-  mealType: SearchCriterion,
-  cuisineType: SearchCriterion,
-  preparationType: SearchCriterion,
-  proteinType: SearchCriterion,
+  mealType: SearchCriterion | null,
+  cuisineType: SearchCriterion | null,
+  preparationType: SearchCriterion | null,
+  proteinType: SearchCriterion | null,
   errorMessage: string,
 };
 
@@ -35,19 +36,19 @@ export class SearchScreen extends Component<any, Props, State> {
     title: 'Search',
   };
 
+  state = {
+    searchString: '',
+    mealType: null,
+    cuisineType: null,
+    preparationType: null,
+    proteinType: null,
+    errorMessage: '',
+  };
+
   mealTypeRef: ModalDropdown;
   cuisineTypeRef: ModalDropdown;
   preparationTypeRef: ModalDropdown;
   proteinTypeRef: ModalDropdown;
-
-  state = {
-    searchString: '',
-    mealType: undefined,
-    cuisineType: undefined,
-    preparationType: undefined,
-    proteinType: undefined,
-    errorMessage: '',
-  };
 
   handleSearchRecipe = () => {
     const {
@@ -65,29 +66,31 @@ export class SearchScreen extends Component<any, Props, State> {
       },
       {
         queryParam: 'mealtype',
-        value: mealType ? mealType.name : undefined,
+        value: mealType ? mealType.name : '',
       },
       {
         queryParam: 'cuisinetype',
-        value: cuisineType ? cuisineType.name : undefined,
+        value: cuisineType ? cuisineType.name : '',
       },
       {
         queryParam: 'preparationtype',
-        value: preparationType ? preparationType.name : undefined,
+        value: preparationType ? preparationType.name : '',
       },
       {
         queryParam: 'proteintype',
-        value: proteinType ? proteinType.name : undefined,
+        value: proteinType ? proteinType.name : '',
       },
     ];
 
-    searchRecipes(queryParams).then(recipes => {
-      console.log('Matching recipes: ' + JSON.stringify(recipes));
-      const { dispatch } = this.props;
-      dispatch(setRecipes(recipes));
-    }).catch(error => {
-      this.setState({ errorMessage: error.message });
-    });
+    searchRecipes(queryParams)
+      .then(recipes => {
+        console.log(`Matching recipes: ${JSON.stringify(recipes)}`);
+        const { dispatch } = this.props;
+        dispatch(setRecipes(recipes));
+      })
+      .catch(error => {
+        this.setState({ errorMessage: error.message });
+      });
     Keyboard.dismiss();
   };
 
@@ -97,28 +100,28 @@ export class SearchScreen extends Component<any, Props, State> {
 
   handleMealTypeChange = (idx: string) => {
     const newType = this.props.mealTypes.find(
-      type => type.id === parseInt(idx),
+      type => type.id === parseInt(idx, 10),
     );
     this.setState({ mealType: newType });
   };
 
   handleCuisineTypeChange = (idx: string) => {
     const newType = this.props.cuisineTypes.find(
-      type => type.id === parseInt(idx),
+      type => type.id === parseInt(idx, 10),
     );
     this.setState({ cuisineType: newType });
   };
 
   handlePreparationTypeChange = (idx: string) => {
     const newType = this.props.preparationTypes.find(
-      type => type.id === parseInt(idx),
+      type => type.id === parseInt(idx, 10),
     );
     this.setState({ preparationType: newType });
   };
 
   handleProteinTypeChange = (idx: string) => {
     const newType = this.props.proteinTypes.find(
-      type => type.id === parseInt(idx),
+      type => type.id === parseInt(idx, 10),
     );
     this.setState({ proteinType: newType });
   };
@@ -216,7 +219,7 @@ export class SearchScreen extends Component<any, Props, State> {
       recipe,
       onViewRecipe: () => {
         navigation.navigate('RecipeDetailsScreen', {
-          recipe: recipe,
+          recipe,
         });
       },
     }));

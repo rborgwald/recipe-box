@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import {
   StyleSheet,
@@ -6,7 +7,7 @@ import {
   Image,
   TouchableHighlight,
 } from 'react-native';
-import { Recipe } from '../../../api/recipe/model';
+import type { State as StoreState } from '../../../store/store';
 import chevron from '../../../images/chevron-right.png';
 
 const styles = StyleSheet.create({
@@ -34,30 +35,35 @@ const styles = StyleSheet.create({
   },
 });
 
-export const makeDetails = (source: string, volume: string, page: number) => {
+export const makeDetails = (source: string, volume: string, page: string) => {
   let details: string = '';
   if (source) {
     details += source;
   }
   if (volume) {
-    details += '  vol. ' + volume;
+    details += `  vol. ${volume}`;
   }
   if (page) {
-    details += ' (pg. ' + page + ')';
+    details += ` (pg. ${page})`;
   }
   return details;
 };
 
-const RecipePreview = ({ recipe, onViewRecipe }: { recipe: Recipe, onViewRecipe: Function }) =>
-  <TouchableHighlight
-    onPress={onViewRecipe} >
+const RecipePreview = ({
+  recipe,
+  onViewRecipe,
+}: {
+  recipe: $PropertyType<StoreState, 'recipe'>,
+  onViewRecipe: Function,
+}) =>
+  <TouchableHighlight onPress={onViewRecipe}>
     <View style={styles.container}>
       <View style={styles.recipeInfo}>
         <Text style={styles.text}>
-          {recipe.name}
+          {recipe ? recipe.name : ''}
         </Text>
         <Text style={styles.details}>
-          {makeDetails(recipe.source, recipe.volume, recipe.page)}
+          {recipe ? makeDetails(recipe.source, recipe.volume, recipe.page) : ''}
         </Text>
       </View>
       <Image style={styles.image} source={chevron} />
