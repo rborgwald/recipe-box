@@ -1,11 +1,9 @@
+// @flow
 import React from 'react';
-import { View, Text, StyleSheet, Picker } from 'react-native';
-import ModalDropdown from 'react-native-modal-dropdown';
-import { Recipe } from '../../../api/recipe/model';
+import { View, Text, StyleSheet } from 'react-native';
+import type { Recipe, SearchCriterion } from '../../../api/recipe/model';
 import TextRowInput from '../../../components/TextRowInput';
 import BlockButton from '../../../components/BlockButton';
-import TypeDropDown from '../../../components/TypeDropDown';
-import { SearchCriterion } from '../../../api/recipe/model';
 import BadgeSelector from '../../../components/BadgeSelector';
 
 const styles = StyleSheet.create({
@@ -44,11 +42,11 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   errorMessage: {
-  color: '#e74c3c',
+    color: '#e74c3c',
     backgroundColor: 'transparent',
     alignSelf: 'center',
     paddingBottom: 15,
-},
+  },
 });
 
 const RecipeDetails = ({
@@ -84,7 +82,7 @@ const RecipeDetails = ({
   onProteinTypeChange: Function,
   onUpdate: Function,
   onDelete: Function,
-  errorMessage: string
+  errorMessage: string,
 }) =>
   <View style={styles.container}>
     <View style={styles.infoWrapper}>
