@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { View, Text, Picker, StyleSheet } from 'react-native';
 import { capitalize } from '../utils/strings';
@@ -17,7 +18,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     width: 150,
-  }
+  },
 });
 
 const makeItems = (options: string[]) =>
@@ -37,13 +38,13 @@ const TypeDropDown = ({
   options: string[],
 }) =>
   <View style={styles.container}>
-<View style={styles.titleWrapper} >
-    <Text style={styles.title}>
-      {title + ':'}
-    </Text>
-</View>
+    <View style={styles.titleWrapper}>
+      <Text style={styles.title}>
+        {`${title}:`}
+      </Text>
+    </View>
     <Picker
-      selectedValue={selectedValue ? selectedValue : "0"}
+      selectedValue={selectedValue || '0'}
       onValueChange={onValueChange}
       style={styles.picker}
     >

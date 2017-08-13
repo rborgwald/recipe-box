@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { View, StyleSheet, Text, TextInput } from 'react-native';
 
@@ -36,7 +37,7 @@ const TextRowInput = ({
       {headerText}:
     </Text>
     <TextInput
-      style={[styles.content, contentStyle, {margin: 0}]}
+      style={[styles.content, contentStyle, { margin: 0 }]}
       value={contentText}
       autoCorrect={false}
       autoCapitalize="none"

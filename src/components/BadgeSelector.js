@@ -1,7 +1,8 @@
+// @flow
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import ModalDropdown from 'react-native-modal-dropdown';
-import { Recipe, SearchCriterion } from '../api/recipe/model';
+import type { SearchCriterion } from '../api/recipe/model';
 
 const styles = StyleSheet.create({
   container: {
@@ -39,16 +40,12 @@ const BadgeSelector = ({
   childRef?: ModalDropdown,
 }) =>
   <ModalDropdown
-    style={[styles.container, { backgroundColor: backgroundColor }]}
+    style={[styles.container, { backgroundColor }]}
     textStyle={[styles.selectionText, textStyle]}
     defaultValue={searchCriterion ? searchCriterion.description : defaultText}
     defaultIndex={searchCriterion ? searchCriterion.id : 0}
     options={[defaultText].concat(
-      options
-        .sort((a, b) => {
-          return a.id - b.id;
-        })
-        .map(option => option.description),
+      options.sort((a, b) => a.id - b.id).map(option => option.description),
     )}
     onSelect={idx => {
       onValueChange(idx);
