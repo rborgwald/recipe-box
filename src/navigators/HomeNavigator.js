@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { TabNavigator, TabBarBottom } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
 import { connect } from 'react-redux';
+import type { Store } from '../store/store';
 import SearchScreen from '../screens/search/SearchScreen';
 import AdminScreen from '../screens/admin/AdminScreen';
 import {
@@ -45,6 +46,11 @@ export const HomeNav = TabNavigator(
     },
   },
 );
+
+type Props = {
+  navigation: NavigationScreenProp,
+  dispatch: $PropertyType<Store, 'dispatch'>,
+};
 
 export class HomeNavWrapper extends Component<any, Props, void> {
   static navigationOptions = {

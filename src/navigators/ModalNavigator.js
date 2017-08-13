@@ -15,14 +15,6 @@ export const ModalNav = StackNavigator(
   },
 );
 
-type Props = {
-  navigation: NavigationScreenProp,
-};
-export class ModalNavWrapper extends Component<any, Props, void> {
-
-  render() {
-    return <ModalNav />;
-  }
-}
+const ModalNavWrapper = () => <ModalNav />;
 
 export default ModalNavWrapper;
