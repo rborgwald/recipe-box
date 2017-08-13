@@ -2,10 +2,10 @@
 import { createStore } from 'redux';
 import * as actions from './actions';
 import type { Action } from './actions';
-import { SearchCriterion, Recipe } from '../api/recipe/model';
+import type { SearchCriterion, Recipe } from '../api/recipe/model';
 
 export type State = {
-  +recipe: Recipe,
+  +recipe: Recipe | null,
   +recipes: Recipe[],
   +mealTypes: SearchCriterion[],
   +cuisineTypes: SearchCriterion[],
@@ -14,7 +14,7 @@ export type State = {
 };
 
 const initialState: State = {
-  recipe: {},
+  recipe: null,
   recipes: [],
   mealTypes: [],
   cuisineTypes: [],

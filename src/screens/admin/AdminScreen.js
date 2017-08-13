@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import { Keyboard } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import { connect } from 'react-redux';
-import type { Store } from '../../store/store';
+import ModalDropdown from 'react-native-modal-dropdown';
+import type { Store, State as StoreState } from '../../store/store';
 import { setRecipe } from '../../store/actions';
-
 import AddRecipe from './components/AddRecipe';
 import type { Recipe } from '../../api/recipe/model';
 import { createRecipe } from '../../api/recipe/recipes';
@@ -13,6 +13,10 @@ import { createRecipe } from '../../api/recipe/recipes';
 type Props = {
   dispatch: $PropertyType<Store, 'dispatch'>,
   recipe: $PropertyType<StoreState, 'recipe'>,
+  mealTypes: $PropertyType<StoreState, 'mealTypes'>,
+  cuisineTypes: $PropertyType<StoreState, 'cuisineTypes'>,
+  preparationTypes: $PropertyType<StoreState, 'preparationTypes'>,
+  proteinTypes: $PropertyType<StoreState, 'proteinTypes'>,
 };
 
 type State = {
@@ -77,67 +81,65 @@ export class AdminScreen extends Component<any, Props, State> {
 
   handleMealTypeChange = (idx: string) => {
     const newType = this.props.mealTypes.find(
-      type => type.id === parseInt(idx),
+      type => type.id === parseInt(idx, 10),
     );
 
     const { recipe, dispatch } = this.props;
-    const newRecipe = { ...recipe };
-    newRecipe.mealType = newType;
+    const newRecipe: Recipe = { ...recipe, mealType: newType };
     dispatch(setRecipe(newRecipe));
   };
 
   handleCuisineTypeChange = (idx: string) => {
     const newType = this.props.cuisineTypes.find(
-      type => type.id === parseInt(idx),
+      type => type.id === parseInt(idx, 10),
     );
 
     const { recipe, dispatch } = this.props;
-    const newRecipe = { ...recipe };
-    newRecipe.cuisineType = newType;
+    const newRecipe = { ...recipe, cuisineType: newType };
     dispatch(setRecipe(newRecipe));
   };
 
   handlePreparationTypeChange = (idx: string) => {
     const newType = this.props.preparationTypes.find(
-      type => type.id === parseInt(idx),
+      type => type.id === parseInt(idx, 10),
     );
 
     const { recipe, dispatch } = this.props;
-    const newRecipe = { ...recipe };
-    newRecipe.preparationType = newType;
+    const newRecipe = { ...recipe, preparationType: newType };
     dispatch(setRecipe(newRecipe));
   };
 
   handleProteinTypeChange = (idx: string) => {
     const newType = this.props.proteinTypes.find(
-      type => type.id === parseInt(idx),
+      type => type.id === parseInt(idx, 10),
     );
 
     const { recipe, dispatch } = this.props;
-    const newRecipe = { ...recipe };
-    newRecipe.proteinType = newType;
+    const newRecipe = { ...recipe, proteinType: newType };
     dispatch(setRecipe(newRecipe));
   };
 
   handleSaveRecipe = () => {
-    const { recipe, dispatch } = this.props;
+    const { recipe } = this.props;
 
-    console.log('final state: ' + JSON.stringify(recipe));
+    console.log(`final state: ${JSON.stringify(recipe)}`);
 
-    createRecipe(recipe).then(response => {
-      console.log('Created Recipe: ' + JSON.stringify(response));
-      this.setState({ errorMessage: '' });
-      this.handleClearRecipe();
-    }).catch(error => {
-      this.setState({ errorMessage: error.message });
-    });
+    createRecipe(recipe)
+      .then(response => {
+        console.log(`Created Recipe: ${JSON.stringify(response)}`);
+        this.setState({ errorMessage: '' });
+        this.handleClearRecipe();
+      })
+      .catch(error => {
+        this.setState({ errorMessage: error.message });
+      });
 
     Keyboard.dismiss();
   };
 
   handleClearRecipe = () => {
-    const { recipe, dispatch } = this.props;
-    dispatch(setRecipe({}));
+    const { dispatch } = this.props;
+    dispatch(setRecipe(null));
 
     if (this.mealTypeRef) {
       this.mealTypeRef.select(0);

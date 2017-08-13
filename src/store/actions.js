@@ -6,7 +6,8 @@ export const SET_RECIPES: 'SET_RECIPES' = 'SET_RECIPES';
 export const SET_MEAL_TYPES: 'SET_MEAL_TYPES' = 'SET_MEAL_TYPES';
 export const SET_CUISINE_TYPES: 'SET_CUISINE_TYPES' = 'SET_CUISINE_TYPES';
 export const SET_PROTEIN_TYPES: 'SET_PROTEIN_TYPES' = 'SET_PROTEIN_TYPES';
-export const SET_PREPARATION_TYPES: 'SET_PREPARATION_TYPES' = 'SET_PREPARATION_TYPES';
+export const SET_PREPARATION_TYPES: 'SET_PREPARATION_TYPES' =
+  'SET_PREPARATION_TYPES';
 
 export type Action =
   | SetRecipeAction
@@ -47,7 +48,9 @@ type SetCuisineTypesAction = {
   type: typeof SET_CUISINE_TYPES,
   payload: $PropertyType<State, 'cuisineTypes'>,
 };
-export const setCuisineTypes = (cuisineTypes: $PropertyType<State, 'cuisineTypes'>) => ({
+export const setCuisineTypes = (
+  cuisineTypes: $PropertyType<State, 'cuisineTypes'>,
+) => ({
   type: SET_CUISINE_TYPES,
   payload: cuisineTypes,
 });
@@ -56,7 +59,9 @@ type SetProteinTypesAction = {
   type: typeof SET_PROTEIN_TYPES,
   payload: $PropertyType<State, 'proteinTypes'>,
 };
-export const setProteinTypes = (proteinTypes: $PropertyType<State, 'proteinTypes'>) => ({
+export const setProteinTypes = (
+  proteinTypes: $PropertyType<State, 'proteinTypes'>,
+) => ({
   type: SET_PROTEIN_TYPES,
   payload: proteinTypes,
 });
@@ -65,7 +70,9 @@ type SetPreparationTypesAction = {
   type: typeof SET_PREPARATION_TYPES,
   payload: $PropertyType<State, 'preparationTypes'>,
 };
-export const setPreparationTypes = (preparationTypes: $PropertyType<State, 'preparationTypes'>) => ({
+export const setPreparationTypes = (
+  preparationTypes: $PropertyType<State, 'preparationTypes'>,
+) => ({
   type: SET_PREPARATION_TYPES,
   payload: preparationTypes,
 });

@@ -5,7 +5,7 @@ export type Recipe = {
   name: string,
   source: string,
   volume: string,
-  page: number,
+  page: string,
   mealType: SearchCriterion,
   cuisineType: SearchCriterion,
   preparationType: SearchCriterion,

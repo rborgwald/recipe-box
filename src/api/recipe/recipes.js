@@ -1,4 +1,5 @@
 // @flow
+import type { State as StoreState } from '../../store/store';
 import { recipeUrl } from '../urls';
 import type { Recipe } from './model';
 
@@ -114,7 +115,9 @@ export const updateRecipe = (recipe: Recipe): Promise<*> => {
     });
 };
 
-export const createRecipe = (recipe: Recipe): Promise<*> => {
+export const createRecipe = (
+  recipe: $PropertyType<StoreState, 'recipe'>,
+): Promise<*> => {
   console.log(`recipe to create: ${JSON.stringify(recipe)}`);
 
   return timeoutPromise(

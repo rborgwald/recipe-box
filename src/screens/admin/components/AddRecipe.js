@@ -2,10 +2,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import ModalDropdown from 'react-native-modal-dropdown';
+import type { State as StoreState } from '../../../store/store';
 import TextRowInput from '../../../components/TextRowInput';
 import BlockButton from '../../../components/BlockButton';
 import BadgeSelector from '../../../components/BadgeSelector';
-import { SearchCriterion, Recipe } from '../../../api/recipe/model';
+import type { SearchCriterion } from '../../../api/recipe/model';
 
 const styles = StyleSheet.create({
   container: {
@@ -50,6 +51,30 @@ const styles = StyleSheet.create({
   },
 });
 
+export const getRefFromTypes = (
+  types: Array<any>,
+  typeName: string,
+): ModalDropdown => {
+  const type = types.find(element => element.name === typeName);
+  return type ? type.ref : undefined;
+};
+
+export const getCallbackFromTypes = (
+  types: Array<any>,
+  typeName: string,
+): Function => {
+  const type = types.find(element => element.name === typeName);
+  return type ? type.callback : () => {};
+};
+
+export const getOptionsFromTypes = (
+  types: Array<any>,
+  typeName: string,
+): SearchCriterion[] => {
+  const type = types.find(element => element.name === typeName);
+  return type ? type.values : [];
+};
+
 const AddRecipe = ({
   onNameChange,
   onSourceChange,
@@ -67,15 +92,8 @@ const AddRecipe = ({
   onPageChange: Function,
   onSave: Function,
   onClear: Function,
-  recipe: Recipe,
-  types: [
-    {
-      name: string,
-      values: SearchCriterion[],
-      callback: Function,
-      ref: ModalDropdown,
-    },
-  ],
+  recipe: $PropertyType<StoreState, 'recipe'>,
+  types: Array<any>,
   errorMessage: string,
 }) =>
   <ScrollView style={styles.container}>
@@ -105,38 +123,32 @@ const AddRecipe = ({
     </View>
     <View style={styles.badgeContainer}>
       <BadgeSelector
-        childRef={types.find(type => type.name === 'mealTypes').ref}
+        childRef={getRefFromTypes(types, 'mealTypes')}
         backgroundColor="#6b7a8f"
         defaultText="- Meal -"
-        onValueChange={types.find(type => type.name === 'mealTypes').callback}
-        options={types.find(type => type.name === 'mealTypes').values}
+        onValueChange={getCallbackFromTypes(types, 'mealTypes')}
+        options={getOptionsFromTypes(types, 'mealTypes')}
       />
       <BadgeSelector
-        childRef={types.find(type => type.name === 'cuisineTypes').ref}
+        childRef={getRefFromTypes(types, 'cuisineTypes')}
         backgroundColor="#f7882f"
         defaultText="- Cuisine -"
-        onValueChange={
-          types.find(type => type.name === 'cuisineTypes').callback
-        }
-        options={types.find(type => type.name === 'cuisineTypes').values}
+        onValueChange={getCallbackFromTypes(types, 'cuisineTypes')}
+        options={getOptionsFromTypes(types, 'cuisineTypes')}
       />
       <BadgeSelector
-        childRef={types.find(type => type.name === 'preparationTypes').ref}
+        childRef={getRefFromTypes(types, 'preparationTypes')}
         backgroundColor="#f7c331"
         defaultText="- Prep -"
-        onValueChange={
-          types.find(type => type.name === 'preparationTypes').callback
-        }
-        options={types.find(type => type.name === 'preparationTypes').values}
+        onValueChange={getCallbackFromTypes(types, 'preparationTypes')}
+        options={getOptionsFromTypes(types, 'preparationTypes')}
       />
       <BadgeSelector
-        childRef={types.find(type => type.name === 'proteinTypes').ref}
+        childRef={getRefFromTypes(types, 'proteinTypes')}
         backgroundColor="#dcc7aa"
         defaultText="- Protein -"
-        onValueChange={
-          types.find(type => type.name === 'proteinTypes').callback
-        }
-        options={types.find(type => type.name === 'proteinTypes').values}
+        onValueChange={getCallbackFromTypes(types, 'proteinTypes')}
+        options={getOptionsFromTypes(types, 'proteinTypes')}
       />
     </View>
     <View style={styles.buttonContainer}>
@@ -144,7 +156,7 @@ const AddRecipe = ({
         style={styles.saveButton}
         text="Save"
         onPress={onSave}
-        disabled={!recipe.name || !recipe.source}
+        disabled={recipe ? !recipe.name || !recipe.source : true}
       />
       <BlockButton style={styles.clearButton} text="Clear" onPress={onClear} />
     </View>
