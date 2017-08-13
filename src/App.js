@@ -16,12 +16,9 @@ const RecipeBoxNav = StackNavigator(
   },
 );
 
-export default class App extends Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <RecipeBoxNav />
-      </Provider>
-    );
-  }
-}
+const App = () =>
+  <Provider store={store}>
+    <RecipeBoxNav />
+  </Provider>;
+
+export default App;

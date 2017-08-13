@@ -1,8 +1,12 @@
 /* @flow */
 import React, { Component } from 'react';
+import type { NavigationScreenProp } from 'react-navigation';
 import SplashScreenBackground from './components/SplashScreenBackground';
 import { navigateModalNavigator } from '../../utils/navigation';
 
+type Props = {
+  navigation: NavigationScreenProp,
+};
 export class SplashScreen extends Component<any, Props, void> {
   static navigationOptions = {
     header: null,
@@ -14,13 +18,7 @@ export class SplashScreen extends Component<any, Props, void> {
   };
 
   render() {
-    const { navigate } = this.props.navigation;
-
-    return (
-      <SplashScreenBackground
-        onPress={this.handleGetStarted}
-      />
-    );
+    return <SplashScreenBackground onPress={this.handleGetStarted} />;
   }
 }
 

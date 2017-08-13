@@ -51,20 +51,24 @@ const styles = StyleSheet.create({
   buttonText: {
     fontWeight: '300',
     fontSize: 28,
-  }
+  },
 });
 
 const SplashScreenBackground = ({ onPress }: { onPress: Function }) =>
   <View style={styles.container}>
     <StatusBar barStyle="light-content" />
-      <Image source={backgroundImage} style={styles.backgroundImage}>
-        <View style={styles.logoContainer}>
-          <Image style={styles.strideLogo} source={logo} />
-        </View>
-        <View style={styles.buttonContainer}>
-          <WordButton style={styles.buttonText} text="Get Started" onPress={onPress} />
-        </View>
-      </Image>
+    <Image source={backgroundImage} style={styles.backgroundImage}>
+      <View style={styles.logoContainer}>
+        <Image style={styles.strideLogo} source={logo} />
+      </View>
+      <View style={styles.buttonContainer}>
+        <WordButton
+          style={styles.buttonText}
+          text="Get Started"
+          onPress={onPress}
+        />
+      </View>
+    </Image>
   </View>;
 
 export default SplashScreenBackground;
