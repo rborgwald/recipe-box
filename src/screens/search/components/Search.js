@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   searchResultsWrapper: {
     margin: 10,
     marginTop: 0,
-    marginBottom: 165,
+    marginBottom: 170,
   },
   errorMessage: {
     color: '#e74c3c',

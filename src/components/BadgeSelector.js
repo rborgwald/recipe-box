@@ -5,15 +5,15 @@ import { Recipe, SearchCriterion } from '../api/recipe/model';
 
 const styles = StyleSheet.create({
   container: {
-    height: 33,
-    borderRadius: 33 / 2,
+    height: 37,
+    borderRadius: 37 / 2,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 12,
     margin: 5,
   },
   selectionText: {
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: '500',
     color: '#FFF',
   },

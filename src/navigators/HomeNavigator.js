@@ -36,6 +36,7 @@ export const HomeNav = TabNavigator(
       inactiveBackgroundColor: '#444444',
       labelStyle: {
         fontSize: 24,
+        paddingBottom: 5,
       },
       tabStyle: {
         borderWidth: 1,
