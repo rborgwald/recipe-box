@@ -2,7 +2,7 @@
 import { lookupUrl } from '../urls';
 
 export const getMealTypes = (): Promise<*> =>
-  fetch(lookupUrl + '/mealtypes', {
+  fetch(`${lookupUrl}/mealtypes`, {
     method: 'GET',
   }).then(async response => {
     const { status } = response;
@@ -13,7 +13,7 @@ export const getMealTypes = (): Promise<*> =>
   });
 
 export const getCuisineTypes = (): Promise<*> =>
-  fetch(lookupUrl + '/cuisinetypes', {
+  fetch(`${lookupUrl}/cuisinetypes`, {
     method: 'GET',
   }).then(async response => {
     const { status } = response;
@@ -24,7 +24,7 @@ export const getCuisineTypes = (): Promise<*> =>
   });
 
 export const getPreparationTypes = (): Promise<*> =>
-  fetch(lookupUrl + '/preparationtypes', {
+  fetch(`${lookupUrl}/preparationtypes`, {
     method: 'GET',
   }).then(async response => {
     const { status } = response;
@@ -35,7 +35,7 @@ export const getPreparationTypes = (): Promise<*> =>
   });
 
 export const getProteinTypes = (): Promise<*> =>
-  fetch(lookupUrl + '/proteintypes', {
+  fetch(`${lookupUrl}/proteintypes`, {
     method: 'GET',
   }).then(async response => {
     const { status } = response;

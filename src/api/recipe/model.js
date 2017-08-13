@@ -16,4 +16,4 @@ export type SearchCriterion = {
   id: number,
   name: string,
   description: string,
-}
+};

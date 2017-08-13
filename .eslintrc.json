@@ -1,0 +1,54 @@
+{
+  "extends": [
+    "airbnb",
+    "plugin:flowtype/recommended",
+    "plugin:react/recommended",
+    "prettier",
+    "prettier/flowtype",
+    "prettier/react"
+  ],
+  "parser": "babel-eslint",
+  "rules": {
+    "semi": 2,
+    "curly": 2,
+    "camelcase": 2,
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": false }],
+    "no-use-before-define": "off",
+    "react/prop-types": [2, { "ignore": ["children"] }],
+    "import/prefer-default-export": "off",
+    "no-console": "off",
+    "import/no-unresolved": [2, { "ignore" : [".png"]} ],
+    "react/require-default-props": "off",
+    "react/no-unescaped-entities": "off",
+    "no-multi-spaces": "off",
+    "import/imports-first": [ "warn", "DISABLE-absolute-first" ],
+    "react/no-array-index-key": "off",
+    "no-nested-ternary": "off",
+    "no-underscore-dangle": "off",
+    "prettier/prettier": ["error", {
+      "singleQuote": true,
+      "trailingComma": "all"
+    }],
+    "import/no-named-as-default": "off"
+  },
+  "globals": {
+    "fetch": false,
+    "$PropertyType": true,
+    "syncPromise": true
+  },
+  "env": {
+    "jest": true
+  },
+  "plugins": [
+    "flowtype",
+    "react",
+    "prettier",
+    "react-native"
+  ],
+  "settings": {
+    "import/resolver": {
+      "babel-module": {}
+    }
+  }
+}

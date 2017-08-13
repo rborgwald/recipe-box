@@ -6,10 +6,8 @@
   "start": "node node_modules/react-native/local-cli/cli.js start",
   "test": "jest",
   "android-local": "ENVFILE=.env react-native run-android",
-  "android-dev": "ENVFILE=.env.dev react-native run-android",
-  "android-stage": "ENVFILE=.env.stage react-native run-android",
-  "android-prod": "ENVFILE=.env.prod react-native run-android",
-  "build-android-prod": "export ENVFILE=.env.prod && cd android && ./gradlew assembleRelease && cd .."
+  "android-amazon": "ENVFILE=.env.amazon react-native run-android",
+  "build-android-amazon": "export ENVFILE=.env.amazon && cd android && ./gradlew assembleRelease && cd .."
  },
  "dependencies": {
   "babel-plugin-module-resolver": "^2.7.1",
