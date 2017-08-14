@@ -43,9 +43,9 @@ const BadgeSelector = ({
     style={[styles.container, { backgroundColor }]}
     textStyle={[styles.selectionText, textStyle]}
     defaultValue={searchCriterion ? searchCriterion.description : defaultText}
-    defaultIndex={searchCriterion ? searchCriterion.id : 0}
+    defaultIndex={searchCriterion ? searchCriterion.idx : 0}
     options={[defaultText].concat(
-      options.sort((a, b) => a.id - b.id).map(option => option.description),
+      options.sort((a, b) => a.idx - b.idx).map(option => option.description),
     )}
     onSelect={idx => {
       onValueChange(idx);

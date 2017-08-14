@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { TabNavigator, TabBarBottom } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import type { Store } from '../store/store';
 import SearchScreen from '../screens/search/SearchScreen';
@@ -66,15 +67,26 @@ export class HomeNavWrapper extends Component<any, Props, void> {
     // TODO: figure out how to handle error(s)
 
     getMealTypes().then(types => {
-      dispatch(setMealTypes(types));
+      // Sort the types
+      const sortedById = types.sort((a, b) => a.id - b.id);
+
+      // Add index to each type
+      _.map(sortedById, (e, i) => _.extend(e, { idx: i + 1 }));
+      dispatch(setMealTypes(sortedById));
     });
     getCuisineTypes().then(types => {
+      const sortedById = types.sort((a, b) => a.id - b.id);
+      _.map(sortedById, (e, i) => _.extend(e, { idx: i + 1 }));
       dispatch(setCuisineTypes(types));
     });
     getProteinTypes().then(types => {
+      const sortedById = types.sort((a, b) => a.id - b.id);
+      _.map(sortedById, (e, i) => _.extend(e, { idx: i + 1 }));
       dispatch(setProteinTypes(types));
     });
     getPreparationTypes().then(types => {
+      const sortedById = types.sort((a, b) => a.id - b.id);
+      _.map(sortedById, (e, i) => _.extend(e, { idx: i + 1 }));
       dispatch(setPreparationTypes(types));
     });
   };

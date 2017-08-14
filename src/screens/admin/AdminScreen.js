@@ -81,7 +81,7 @@ export class AdminScreen extends Component<any, Props, State> {
 
   handleMealTypeChange = (idx: string) => {
     const newType = this.props.mealTypes.find(
-      type => type.id === parseInt(idx, 10),
+      type => type.idx === parseInt(idx, 10),
     );
 
     const { recipe, dispatch } = this.props;
@@ -91,7 +91,7 @@ export class AdminScreen extends Component<any, Props, State> {
 
   handleCuisineTypeChange = (idx: string) => {
     const newType = this.props.cuisineTypes.find(
-      type => type.id === parseInt(idx, 10),
+      type => type.idx === parseInt(idx, 10),
     );
 
     const { recipe, dispatch } = this.props;
@@ -101,7 +101,7 @@ export class AdminScreen extends Component<any, Props, State> {
 
   handlePreparationTypeChange = (idx: string) => {
     const newType = this.props.preparationTypes.find(
-      type => type.id === parseInt(idx, 10),
+      type => type.idx === parseInt(idx, 10),
     );
 
     const { recipe, dispatch } = this.props;
@@ -111,7 +111,7 @@ export class AdminScreen extends Component<any, Props, State> {
 
   handleProteinTypeChange = (idx: string) => {
     const newType = this.props.proteinTypes.find(
-      type => type.id === parseInt(idx, 10),
+      type => type.idx === parseInt(idx, 10),
     );
 
     const { recipe, dispatch } = this.props;
