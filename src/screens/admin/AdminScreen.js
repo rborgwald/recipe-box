@@ -9,6 +9,8 @@ import { setRecipe } from '../../store/actions';
 import AddRecipe from './components/AddRecipe';
 import type { Recipe } from '../../api/recipe/model';
 import { createRecipe } from '../../api/recipe/recipes';
+import ImageButton from '../../components/ImageButton';
+import menuIcon from '../../images/hamburgerNav.png';
 
 type Props = {
   dispatch: $PropertyType<Store, 'dispatch'>,
@@ -23,9 +25,15 @@ type State = {
   errorMessage: string,
 };
 export class AdminScreen extends Component<any, Props, State> {
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => ({
     title: 'Add Recipes',
-  };
+    headerLeft: (
+      <ImageButton
+        icon={menuIcon}
+        onPress={() => navigation.navigate('DrawerOpen')}
+      />
+    ),
+  });
   state = {
     errorMessage: '',
   };

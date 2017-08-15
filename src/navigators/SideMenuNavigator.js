@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { TabNavigator, TabBarBottom } from 'react-navigation';
+import { DrawerNavigator } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
 import _ from 'lodash';
 import { connect } from 'react-redux';
@@ -20,40 +20,21 @@ import {
   setProteinTypes,
 } from '../store/actions';
 
-export const HomeNav = TabNavigator(
-  {
-    Search: {
-      screen: SearchScreen,
-    },
-    Add: {
-      screen: AdminScreen,
-    },
+export const SideMenuNav = DrawerNavigator({
+  Search: {
+    screen: SearchScreen,
   },
-  {
-    tabBarComponent: TabBarBottom,
-    tabBarPosition: 'bottom',
-    tabBarOptions: {
-      activeTintColor: '#ffffff',
-      activeBackgroundColor: '#444444',
-      inactiveBackgroundColor: '#444444',
-      labelStyle: {
-        fontSize: 24,
-        paddingBottom: 5,
-      },
-      tabStyle: {
-        borderWidth: 1,
-        borderColor: '#ffffff',
-      },
-    },
+  Add: {
+    screen: AdminScreen,
   },
-);
+});
 
 type Props = {
   navigation: NavigationScreenProp,
   dispatch: $PropertyType<Store, 'dispatch'>,
 };
 
-export class HomeNavWrapper extends Component<any, Props, void> {
+export class SideMenuNavWrapper extends Component<any, Props, void> {
   static navigationOptions = {
     header: null,
   };
@@ -92,8 +73,8 @@ export class HomeNavWrapper extends Component<any, Props, void> {
   };
 
   render() {
-    return <HomeNav />;
+    return <SideMenuNav />;
   }
 }
 
-export default connect()(HomeNavWrapper);
+export default connect()(SideMenuNavWrapper);

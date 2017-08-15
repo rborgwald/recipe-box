@@ -11,6 +11,8 @@ import Search from './components/Search';
 import { searchRecipes } from '../../api/recipe/recipes';
 import type { SearchCriterion } from '../../api/recipe/model';
 import RecipeDetailsScreen from '../recipe-details/RecipeDetailsScreen';
+import ImageButton from '../../components/ImageButton';
+import menuIcon from '../../images/hamburgerNav.png';
 
 type State = {
   searchString: string,
@@ -32,9 +34,15 @@ type Props = {
 };
 
 export class SearchScreen extends Component<any, Props, State> {
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => ({
     title: 'Search',
-  };
+    headerLeft: (
+      <ImageButton
+        icon={menuIcon}
+        onPress={() => navigation.navigate('DrawerOpen')}
+      />
+    ),
+  });
 
   state = {
     searchString: '',
