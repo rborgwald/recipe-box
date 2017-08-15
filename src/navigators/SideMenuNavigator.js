@@ -6,7 +6,7 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import type { Store } from '../store/store';
 import SearchScreen from '../screens/search/SearchScreen';
-import AdminScreen from '../screens/admin/AdminScreen';
+import AddRecipeScreen from '../screens/add-recipe/AddRecipeScreen';
 import {
   getCuisineTypes,
   getMealTypes,
@@ -25,7 +25,7 @@ export const SideMenuNav = DrawerNavigator({
     screen: SearchScreen,
   },
   Add: {
-    screen: AdminScreen,
+    screen: AddRecipeScreen,
   },
 });
 
