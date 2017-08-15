@@ -100,28 +100,28 @@ export class SearchScreen extends Component<any, Props, State> {
 
   handleMealTypeChange = (idx: string) => {
     const newType = this.props.mealTypes.find(
-      type => type.id === parseInt(idx, 10),
+      type => type.idx === parseInt(idx, 10),
     );
     this.setState({ mealType: newType });
   };
 
   handleCuisineTypeChange = (idx: string) => {
     const newType = this.props.cuisineTypes.find(
-      type => type.id === parseInt(idx, 10),
+      type => type.idx === parseInt(idx, 10),
     );
     this.setState({ cuisineType: newType });
   };
 
   handlePreparationTypeChange = (idx: string) => {
     const newType = this.props.preparationTypes.find(
-      type => type.id === parseInt(idx, 10),
+      type => type.idx === parseInt(idx, 10),
     );
     this.setState({ preparationType: newType });
   };
 
   handleProteinTypeChange = (idx: string) => {
     const newType = this.props.proteinTypes.find(
-      type => type.id === parseInt(idx, 10),
+      type => type.idx === parseInt(idx, 10),
     );
     this.setState({ proteinType: newType });
   };

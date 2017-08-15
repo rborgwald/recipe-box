@@ -63,51 +63,74 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
     this.setState({ recipe });
   };
 
-  handleMealTypeChange = (itemValue: string, itemIndex?: string) => {
-    const { navigation: { state: { params: { recipe } } } } = this.props;
+  handleMealTypeChange = (itemValue: string) => {
+    const {
+      mealTypes,
+      navigation: { state: { params: { recipe } } },
+    } = this.props;
 
     recipe.mealType = null;
     if (parseInt(itemValue, 10) !== 0) {
+      const selectedIdx = parseInt(itemValue, 10);
       recipe.mealType = {};
-      recipe.mealType.id = parseInt(itemValue, 10);
+      const newType = mealTypes.find(type => type.idx === selectedIdx);
+      recipe.mealType = newType;
     }
     console.log(`recipe: ${JSON.stringify(recipe)}`);
     this.setState({ recipe });
   };
 
-  handleCuisineTypeChange = (itemValue: string, itemIndex: string) => {
-    const { navigation: { state: { params: { recipe } } } } = this.props;
+  handleCuisineTypeChange = (itemValue: string) => {
+    const {
+      cuisineTypes,
+      navigation: { state: { params: { recipe } } },
+    } = this.props;
 
     recipe.cuisineType = null;
     if (parseInt(itemValue, 10) !== 0) {
+      const selectedIdx = parseInt(itemValue, 10);
       recipe.cuisineType = {};
-      recipe.cuisineType.id = parseInt(itemValue, 10);
+      const newType = cuisineTypes.find(type => type.idx === selectedIdx);
+      recipe.cuisineType = newType;
     }
 
+    console.log(`recipe: ${JSON.stringify(recipe)}`);
     this.setState({ recipe });
   };
 
-  handlePreparationTypeChange = (itemValue: string, itemIndex: string) => {
-    const { navigation: { state: { params: { recipe } } } } = this.props;
+  handlePreparationTypeChange = (itemValue: string) => {
+    const {
+      preparationTypes,
+      navigation: { state: { params: { recipe } } },
+    } = this.props;
 
     recipe.preparationType = null;
     if (parseInt(itemValue, 10) !== 0) {
+      const selectedIdx = parseInt(itemValue, 10);
       recipe.preparationType = {};
-      recipe.preparationType.id = parseInt(itemValue, 10);
+      const newType = preparationTypes.find(type => type.idx === selectedIdx);
+      recipe.preparationType = newType;
     }
 
+    console.log(`recipe: ${JSON.stringify(recipe)}`);
     this.setState({ recipe });
   };
 
-  handleProteinTypeChange = (itemValue: string, itemIndex: string) => {
-    const { navigation: { state: { params: { recipe } } } } = this.props;
+  handleProteinTypeChange = (itemValue: string) => {
+    const {
+      proteinTypes,
+      navigation: { state: { params: { recipe } } },
+    } = this.props;
 
     recipe.proteinType = null;
     if (parseInt(itemValue, 10) !== 0) {
+      const selectedIdx = parseInt(itemValue, 10);
       recipe.proteinType = {};
-      recipe.proteinType.id = parseInt(itemValue, 10);
+      const newType = proteinTypes.find(type => type.idx === selectedIdx);
+      recipe.proteinType = newType;
     }
 
+    console.log(`recipe: ${JSON.stringify(recipe)}`);
     this.setState({ recipe });
   };
 

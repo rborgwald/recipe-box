@@ -13,6 +13,7 @@ export type Recipe = {
 };
 
 export type SearchCriterion = {
+  idx: number,
   id: number,
   name: string,
   description: string,
