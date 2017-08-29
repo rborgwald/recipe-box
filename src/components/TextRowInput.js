@@ -20,19 +20,21 @@ const styles = StyleSheet.create({
 });
 
 const TextRowInput = ({
+  containerStyle,
   headerStyle,
   contentStyle,
   headerText,
   contentText,
   onChangeText,
 }: {
+  containerStyle?: View.propTypes.style,
   headerStyle?: Text.propTypes.style,
   contentStyle?: Text.propTypes.style,
   headerText: string,
   contentText?: string,
   onChangeText: Function,
 }) =>
-  <View style={styles.container}>
+  <View style={[styles.container, containerStyle]}>
     <Text style={[styles.header, headerStyle]}>
       {headerText}:
     </Text>

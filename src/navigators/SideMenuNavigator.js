@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import type { Store } from '../store/store';
 import SearchScreen from '../screens/search/SearchScreen';
 import AddRecipeScreen from '../screens/add-recipe/AddRecipeScreen';
+import AdminScreen from '../screens/admin/AdminScreen';
+import SideMenuContentScreen from '../screens/side-menu-content/SideMenuContentScreen';
 import {
   getCuisineTypes,
   getMealTypes,
@@ -20,14 +22,22 @@ import {
   setProteinTypes,
 } from '../store/actions';
 
-export const SideMenuNav = DrawerNavigator({
-  Search: {
-    screen: SearchScreen,
+export const SideMenuNav = DrawerNavigator(
+  {
+    Search: {
+      screen: SearchScreen,
+    },
+    AddRecipe: {
+      screen: AddRecipeScreen,
+    },
+    Admin: {
+      screen: AdminScreen,
+    },
   },
-  Add: {
-    screen: AddRecipeScreen,
+  {
+    contentComponent: SideMenuContentScreen,
   },
-});
+);
 
 type Props = {
   navigation: NavigationScreenProp,

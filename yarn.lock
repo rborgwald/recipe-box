@@ -3990,6 +3990,10 @@ react-native-modal-dropdown@^0.4.4:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/react-native-modal-dropdown/-/react-native-modal-dropdown-0.4.4.tgz#1164f3844b3847391fc3a0d0133189e6629d02c2"
 
+react-native-simple-radio-button@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/react-native-simple-radio-button/-/react-native-simple-radio-button-2.6.1.tgz#6277812044ea87645ae52a8f8c3f7eb0d9385228"
+
 react-native-tab-view@^0.0.67:
   version "0.0.67"
   resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.67.tgz#cdd146fe5e5d4baff6c89f2d5d0b15fa23db39d0"

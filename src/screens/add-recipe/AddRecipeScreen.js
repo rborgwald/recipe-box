@@ -24,7 +24,7 @@ type Props = {
 type State = {
   errorMessage: string,
 };
-export class AdminScreen extends Component<any, Props, State> {
+export class AddRecipeScreen extends Component<any, Props, State> {
   static navigationOptions = ({ navigation }) => ({
     title: 'Add Recipes',
     headerLeft: (
@@ -229,10 +229,10 @@ const mapStateToProps = state => ({
   preparationTypes: state.preparationTypes,
 });
 
-const AdminNav = StackNavigator({
-  Admin: {
-    screen: connect(mapStateToProps)(AdminScreen),
+const AddRecipeNav = StackNavigator({
+  AddRecipe: {
+    screen: connect(mapStateToProps)(AddRecipeScreen),
   },
 });
 
-export default AdminNav;
+export default AddRecipeNav;
