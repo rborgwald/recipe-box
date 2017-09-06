@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
+import ModalDropdown from 'react-native-modal-dropdown';
 import BadgeSelector from '../../../components/BadgeSelector';
 import type { SearchCriterion } from '../../../api/recipe/model';
 
@@ -18,23 +19,37 @@ const styles = StyleSheet.create({
   },
 });
 
+export const getCallbackFromTypes = (
+  types: Array<any>,
+  selectedCategory: number,
+): Function => {
+  const type = types[selectedCategory];
+  return type ? type.callback : () => {};
+};
+
 const Options = ({
   category,
+  options,
+  childRef,
   types,
+  selectedValue,
 }: {
   category: number,
+  options: SearchCriterion[],
+  childRef: ModalDropdown,
   types: Array<any>,
+  selectedValue?: SearchCriterion,
 }) =>
   <View style={styles.container}>
     <Text style={styles.headerText}>Option</Text>
     <View style={styles.selectorContainer}>
       <BadgeSelector
-        childRef={types[category].ref}
+        childRef={childRef}
         backgroundColor="#6b7a8f"
-        defaultText="- Select Option -"
-        onValueChange={types[category].callback}
-        options={types[category].values}
-        searchCriterion={types[category].value}
+        defaultText="- Add New -"
+        onValueChange={getCallbackFromTypes(types, category)}
+        options={options}
+        searchCriterion={selectedValue}
       />
     </View>
   </View>;

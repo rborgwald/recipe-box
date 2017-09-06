@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import { StackNavigator } from 'react-navigation';
 import ModalDropdown from 'react-native-modal-dropdown';
 import type { Store, State as StoreState } from '../../store/store';
@@ -12,6 +13,13 @@ import Options from './components/Options';
 import TextRowInput from '../../components/TextRowInput';
 import BlockButton from '../../components/BlockButton';
 import type { SearchCriterion } from '../../api/recipe/model';
+import { createType, deleteType, updateType } from '../../api/recipe/lookup';
+import {
+  setCuisineTypes,
+  setMealTypes,
+  setPreparationTypes,
+  setProteinTypes,
+} from '../../store/actions';
 
 const styles = StyleSheet.create({
   container: {
@@ -46,12 +54,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     margin: 5,
   },
-  statusMessage: {
+  errorMessage: {
     color: '#e74c3c',
     backgroundColor: 'transparent',
     alignSelf: 'center',
     paddingBottom: 15,
-    fontSize: 22,
+    fontSize: 14,
+    fontWeight: '300',
+  },
+  successMessage: {
+    color: 'green',
+    backgroundColor: 'transparent',
+    alignSelf: 'center',
+    paddingBottom: 15,
+    fontSize: 14,
+    fontWeight: '300',
   },
 });
 
@@ -63,9 +80,12 @@ type Props = {
   proteinTypes: $PropertyType<StoreState, 'proteinTypes'>,
 };
 type State = {
-  statusMessage: string,
+  successMessage: string,
+  errorMessage: string,
   selectedCategory: number,
+  currentOptions: SearchCriterion[],
   selectedOption: SearchCriterion | null,
+  currentName: string,
 };
 export class AdminScreen extends Component<any, Props, State> {
   static navigationOptions = ({ navigation }) => ({
@@ -78,84 +98,308 @@ export class AdminScreen extends Component<any, Props, State> {
     ),
   });
   state = {
-    statusMessage: '',
+    successMessage: '',
+    errorMessage: '',
     selectedCategory: 0,
+    currentOptions: this.props.mealTypes,
     selectedOption: null,
+    currentName: '',
   };
 
-  mealTypeRef: ModalDropdown;
-  cuisineTypeRef: ModalDropdown;
-  preparationTypeRef: ModalDropdown;
-  proteinTypeRef: ModalDropdown;
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
+    return (
+      nextState.selectedOption !== this.state.selectedOption ||
+      nextState.currentName !== this.state.currentName ||
+      nextState.successMessage !== this.state.successMessage ||
+      nextState.errorMessage !== this.state.errorMessage ||
+      nextState.currentOptions !== this.state.currentOptions ||
+      nextProps !== this.props
+    );
+  }
+
+  dropDownRef: ModalDropdown;
+
+  categoriesMap = {
+    '0': 'mealtypes',
+    '1': 'cuisinetypes',
+    '2': 'proteintypes',
+    '3': 'preparationtypes',
+  };
 
   handleCategoryPress = (value: number) => {
-    this.setState({ selectedCategory: value, selectedOption: undefined });
-    if (this.mealTypeRef) {
-      this.mealTypeRef.select(0);
+    this.setState({
+      selectedCategory: value,
+      selectedOption: null,
+      currentName: '',
+      successMessage: '',
+      errorMessage: '',
+    });
+
+    if (value === 0) {
+      this.setState({ currentOptions: this.props.mealTypes });
+    } else if (value === 1) {
+      this.setState({ currentOptions: this.props.cuisineTypes });
+    } else if (value === 2) {
+      this.setState({ currentOptions: this.props.proteinTypes });
+    } else if (value === 3) {
+      this.setState({ currentOptions: this.props.preparationTypes });
     }
-    if (this.cuisineTypeRef) {
-      this.cuisineTypeRef.select(0);
-    }
-    if (this.proteinTypeRef) {
-      this.proteinTypeRef.select(0);
-    }
-    if (this.preparationTypeRef) {
-      this.preparationTypeRef.select(0);
-    }
+
+    this.dropDownRef.select(0);
   };
 
   handleMealTypeChange = (idx: string) => {
     const mealType = this.props.mealTypes.find(
       type => type.idx === parseInt(idx, 10),
     );
-    this.setState({ selectedOption: mealType });
+    if (mealType) {
+      this.setState({
+        selectedOption: mealType,
+        currentName: mealType.description,
+      });
+    } else {
+      this.setState({ selectedOption: null, currentName: '' });
+    }
   };
 
   handleCuisineTypeChange = (idx: string) => {
     const cuisineType = this.props.cuisineTypes.find(
       type => type.idx === parseInt(idx, 10),
     );
-    this.setState({ selectedOption: cuisineType });
+    if (cuisineType) {
+      this.setState({
+        selectedOption: cuisineType,
+        currentName: cuisineType.description,
+      });
+    } else {
+      this.setState({ selectedOption: null, currentName: '' });
+    }
   };
 
   handlePreparationTypeChange = (idx: string) => {
     const preparationType = this.props.preparationTypes.find(
       type => type.idx === parseInt(idx, 10),
     );
-    this.setState({ selectedOption: preparationType });
+    if (preparationType) {
+      this.setState({
+        selectedOption: preparationType,
+        currentName: preparationType.description,
+      });
+    } else {
+      this.setState({ selectedOption: null, currentName: '' });
+    }
   };
 
   handleProteinTypeChange = (idx: string) => {
     const proteinType = this.props.proteinTypes.find(
       type => type.idx === parseInt(idx, 10),
     );
-    this.setState({ selectedOption: proteinType });
+    if (proteinType) {
+      this.setState({
+        selectedOption: proteinType,
+        currentName: proteinType.description,
+      });
+    } else {
+      this.setState({ selectedOption: null, currentName: '' });
+    }
   };
 
-  handleMealTypeRef = (ref: ModalDropdown) => {
-    this.mealTypeRef = ref;
+  handleNameChange = (text: string) => {
+    this.setState({ currentName: text });
   };
 
-  handleCuisineTypeRef = (ref: ModalDropdown) => {
-    this.cuisineTypeRef = ref;
+  handleDropDownRef = (ref: ModalDropdown) => {
+    this.dropDownRef = ref;
   };
 
-  handlePreparationTypeRef = (ref: ModalDropdown) => {
-    this.preparationTypeRef = ref;
+  handleSavePress = () => {
+    if (!this.state.selectedOption && this.state.currentName !== '') {
+      console.log(`Ready to save new type: ${this.state.currentName}`);
+
+      createType(
+        this.categoriesMap[this.state.selectedCategory],
+        this.state.currentName,
+      )
+        .then(newType => {
+          this.dispatchNewTypes(this.state.selectedCategory, newType);
+          this.setState({
+            currentName: '',
+            successMessage: `New type "${newType.description}" successfully saved`,
+            errorMessage: '',
+          });
+        })
+        .catch(error => {
+          this.setState({ errorMessage: error.message, successMessage: '' });
+        });
+    } else if (this.state.selectedOption && this.state.currentName !== '') {
+      const selectedOption = this.state.selectedOption;
+      console.log(`Ready to update: ${this.state.currentName}`);
+      updateType(
+        this.categoriesMap[this.state.selectedCategory],
+        selectedOption,
+        this.state.currentName,
+      )
+        .then(newType => {
+          console.log(`updated type: ${JSON.stringify(newType)}`);
+          const typeWithIdx = { ...newType, idx: selectedOption.idx };
+          this.dispatchUpdatedTypes(this.state.selectedCategory, typeWithIdx);
+          this.setState({
+            currentName: '',
+            successMessage: `Type "${typeWithIdx.description}" updated successfully`,
+            errorMessage: '',
+          });
+        })
+        .catch(error => {
+          this.setState({ errorMessage: error.message, successMessage: '' });
+        });
+    }
   };
 
-  handleProteinTypeRef = (ref: ModalDropdown) => {
-    this.proteinTypeRef = ref;
+  dispatchNewTypes = (selectedCategory: number, type: SearchCriterion) => {
+    const { dispatch } = this.props;
+    let newTypes;
+    const newType = type;
+    if (selectedCategory === 0) {
+      newTypes = [...this.props.mealTypes];
+      newType.idx = newTypes.length + 1;
+      newTypes.push(newType);
+      console.log(`to dispatch: ${JSON.stringify(newTypes)}`);
+      dispatch(setMealTypes(newTypes));
+      this.setState({ currentOptions: newTypes });
+    } else if (selectedCategory === 1) {
+      newTypes = [...this.props.cuisineTypes];
+      newType.idx = newTypes.length + 1;
+      newTypes.push(newType);
+      dispatch(setCuisineTypes(newTypes));
+      this.setState({ currentOptions: newTypes });
+    } else if (selectedCategory === 2) {
+      newTypes = [...this.props.proteinTypes];
+      newType.idx = newTypes.length + 1;
+      newTypes.push(newType);
+      dispatch(setProteinTypes(newTypes));
+      this.setState({ currentOptions: newTypes });
+    } else if (selectedCategory === 3) {
+      newTypes = [...this.props.preparationTypes];
+      newType.idx = newTypes.length + 1;
+      newTypes.push(newType);
+      dispatch(setPreparationTypes(newTypes));
+      this.setState({ currentOptions: newTypes });
+    }
+  };
+
+  dispatchUpdatedTypes = (selectedCategory: number, type: SearchCriterion) => {
+    const { dispatch } = this.props;
+    if (selectedCategory === 0) {
+      const existingTypes = [...this.props.mealTypes];
+      const newTypes = _.map(
+        existingTypes,
+        t =>
+          t.id === type.id ? { ...type, description: type.description } : t,
+      );
+      console.log(`to dispatch: ${JSON.stringify(newTypes)}`);
+      dispatch(setMealTypes(newTypes));
+      this.setState({ currentOptions: newTypes });
+    } else if (selectedCategory === 1) {
+      const existingTypes = [...this.props.cuisineTypes];
+      const newTypes = _.map(
+        existingTypes,
+        t =>
+          t.id === type.id ? { ...type, description: type.description } : t,
+      );
+      dispatch(setCuisineTypes(newTypes));
+      this.setState({ currentOptions: newTypes });
+    } else if (selectedCategory === 2) {
+      const existingTypes = [...this.props.proteinTypes];
+      const newTypes = _.map(
+        existingTypes,
+        t =>
+          t.id === type.id ? { ...type, description: type.description } : t,
+      );
+      dispatch(setProteinTypes(newTypes));
+      this.setState({ currentOptions: newTypes });
+    } else if (selectedCategory === 3) {
+      const existingTypes = [...this.props.preparationTypes];
+      const newTypes = _.map(
+        existingTypes,
+        t =>
+          t.id === type.id ? { ...type, description: type.description } : t,
+      );
+      dispatch(setPreparationTypes(newTypes));
+      this.setState({ currentOptions: newTypes });
+    }
+    this.dropDownRef.select(0);
+  };
+
+  handleDeletePress = () => {
+    console.log(`Delete Pressed: ${JSON.stringify(this.state.selectedOption)}`);
+    if (this.state.selectedOption) {
+      const selectedOption = this.state.selectedOption;
+      console.log(
+        `Ready to delete type: ${selectedOption.id} ${selectedOption.name}`,
+      );
+
+      deleteType(
+        this.categoriesMap[this.state.selectedCategory],
+        selectedOption.id,
+      )
+        .then(() => {
+          this.removeTypes(this.state.selectedCategory, selectedOption);
+          this.setState({
+            currentName: '',
+            successMessage: `Type "${selectedOption.description}" successfully deleted`,
+            errorMessage: '',
+          });
+        })
+        .catch(error => {
+          this.setState({ errorMessage: error.message, successMessage: '' });
+        });
+    }
+  };
+
+  removeTypes = (selectedCategory: number, type: SearchCriterion) => {
+    const { dispatch } = this.props;
+    let newTypes;
+    if (selectedCategory === 0) {
+      newTypes = [...this.props.mealTypes];
+      _.remove(newTypes, { id: type.id });
+      dispatch(setMealTypes(newTypes));
+      this.setState({
+        currentOptions: newTypes,
+        selectedOption: null,
+        currentName: '',
+      });
+    } else if (selectedCategory === 1) {
+      newTypes = [...this.props.cuisineTypes];
+      _.remove(newTypes, { id: type.id });
+      dispatch(setCuisineTypes(newTypes));
+      this.setState({
+        currentOptions: newTypes,
+        selectedOption: null,
+        currentName: '',
+      });
+    } else if (selectedCategory === 2) {
+      newTypes = [...this.props.proteinTypes];
+      _.remove(newTypes, { id: type.id });
+      dispatch(setProteinTypes(newTypes));
+      this.setState({
+        currentOptions: newTypes,
+        selectedOption: null,
+        currentName: '',
+      });
+    } else if (selectedCategory === 3) {
+      newTypes = [...this.props.preparationTypes];
+      _.remove(newTypes, { id: type.id });
+      dispatch(setPreparationTypes(newTypes));
+      this.setState({
+        currentOptions: newTypes,
+        selectedOption: null,
+        currentName: '',
+      });
+    }
+    this.dropDownRef.select(0);
   };
 
   render() {
-    const {
-      mealTypes,
-      cuisineTypes,
-      preparationTypes,
-      proteinTypes,
-    } = this.props;
-
     const categories = [
       { label: 'Meal', value: 0 },
       { label: 'Cuisine', value: 1 },
@@ -165,28 +409,16 @@ export class AdminScreen extends Component<any, Props, State> {
 
     const types = [
       {
-        values: mealTypes,
-        value: this.state.selectedOption,
         callback: this.handleMealTypeChange,
-        ref: this.handleMealTypeRef,
       },
       {
-        values: cuisineTypes,
-        value: this.state.selectedOption,
         callback: this.handleCuisineTypeChange,
-        ref: this.handleCuisineTypeRef,
       },
       {
-        values: proteinTypes,
-        value: this.state.selectedOption,
         callback: this.handleProteinTypeChange,
-        ref: this.handleProteinTypeRef,
       },
       {
-        values: preparationTypes,
-        value: this.state.selectedOption,
         callback: this.handlePreparationTypeChange,
-        ref: this.handlePreparationTypeRef,
       },
     ];
 
@@ -201,36 +433,39 @@ export class AdminScreen extends Component<any, Props, State> {
               />
             </View>
             <View style={styles.optionsContainer}>
-              <Options category={this.state.selectedCategory} types={types} />
+              <Options
+                category={this.state.selectedCategory}
+                options={this.state.currentOptions}
+                childRef={this.handleDropDownRef}
+                types={types}
+                selectedValue={this.state.selectedOption || undefined}
+              />
             </View>
           </View>
           <TextRowInput
             containerStyle={styles.textRow}
-            onChangeText={() => {}}
+            onChangeText={this.handleNameChange}
             headerText="Name"
-            contentText={
-              this.state.selectedOption
-                ? this.state.selectedOption.description
-                : ''
-            }
+            contentText={this.state.currentName}
           />
           <View style={styles.buttonContainer}>
             <BlockButton
               style={styles.saveButton}
               text="Save"
-              onPress={() => {
-                console.warn('Save pressed');
-              }}
+              onPress={this.handleSavePress}
             />
             <BlockButton
               style={styles.deleteButton}
               text="Delete"
-              onPress={() => {
-                console.warn('Delete pressed');
-              }}
+              onPress={this.handleDeletePress}
             />
           </View>
-          <Text style={styles.statusMessage}>Status message here</Text>
+          <Text style={styles.errorMessage}>
+            {this.state.errorMessage}
+          </Text>
+          <Text style={styles.successMessage}>
+            {this.state.successMessage}
+          </Text>
         </View>
       </ScrollView>
     );
