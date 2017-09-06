@@ -1,10 +1,10 @@
 // @flow
-import React, { Component } from 'react';
+import React from 'react';
 import { Provider } from 'react-redux';
+import { StackNavigator } from 'react-navigation';
 import SplashScreen from './screens/splash/SplashScreen';
 import ModalNavigator from './navigators/ModalNavigator';
 import { store } from './store/store';
-import { StackNavigator } from 'react-navigation';
 
 const RecipeBoxNav = StackNavigator(
   {

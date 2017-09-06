@@ -1,220 +1,478 @@
-/* @flow */
+// @flow
 import React, { Component } from 'react';
-import { Keyboard } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
+import _ from 'lodash';
+import { StackNavigator } from 'react-navigation';
 import ModalDropdown from 'react-native-modal-dropdown';
 import type { Store, State as StoreState } from '../../store/store';
-import { setRecipe } from '../../store/actions';
-import AddRecipe from './components/AddRecipe';
-import type { Recipe } from '../../api/recipe/model';
-import { createRecipe } from '../../api/recipe/recipes';
+import ImageButton from '../../components/ImageButton';
+import Categories from './components/Categories';
+import menuIcon from '../../images/hamburgerNav.png';
+import Options from './components/Options';
+import TextRowInput from '../../components/TextRowInput';
+import BlockButton from '../../components/BlockButton';
+import type { SearchCriterion } from '../../api/recipe/model';
+import { createType, deleteType, updateType } from '../../api/recipe/lookup';
+import {
+  setCuisineTypes,
+  setMealTypes,
+  setPreparationTypes,
+  setProteinTypes,
+} from '../../store/actions';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  selectionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: 15,
+  },
+  categoriesContainer: {
+    margin: 15,
+  },
+  optionsContainer: {
+    margin: 15,
+    marginRight: 20,
+  },
+  textRow: {
+    margin: 15,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: 15,
+  },
+  saveButton: {
+    backgroundColor: 'green',
+    margin: 5,
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+    margin: 5,
+  },
+  errorMessage: {
+    color: '#e74c3c',
+    backgroundColor: 'transparent',
+    alignSelf: 'center',
+    paddingBottom: 15,
+    fontSize: 14,
+    fontWeight: '300',
+  },
+  successMessage: {
+    color: 'green',
+    backgroundColor: 'transparent',
+    alignSelf: 'center',
+    paddingBottom: 15,
+    fontSize: 14,
+    fontWeight: '300',
+  },
+});
 
 type Props = {
   dispatch: $PropertyType<Store, 'dispatch'>,
-  recipe: $PropertyType<StoreState, 'recipe'>,
   mealTypes: $PropertyType<StoreState, 'mealTypes'>,
   cuisineTypes: $PropertyType<StoreState, 'cuisineTypes'>,
   preparationTypes: $PropertyType<StoreState, 'preparationTypes'>,
   proteinTypes: $PropertyType<StoreState, 'proteinTypes'>,
 };
-
 type State = {
+  successMessage: string,
   errorMessage: string,
+  selectedCategory: number,
+  currentOptions: SearchCriterion[],
+  selectedOption: SearchCriterion | null,
+  currentName: string,
 };
 export class AdminScreen extends Component<any, Props, State> {
-  static navigationOptions = {
-    title: 'Add Recipes',
-  };
+  static navigationOptions = ({ navigation }) => ({
+    title: 'Admin',
+    headerLeft: (
+      <ImageButton
+        icon={menuIcon}
+        onPress={() => navigation.navigate('DrawerOpen')}
+      />
+    ),
+  });
   state = {
+    successMessage: '',
     errorMessage: '',
+    selectedCategory: 0,
+    currentOptions: this.props.mealTypes,
+    selectedOption: null,
+    currentName: '',
   };
 
-  mealTypeRef: ModalDropdown;
-  cuisineTypeRef: ModalDropdown;
-  preparationTypeRef: ModalDropdown;
-  proteinTypeRef: ModalDropdown;
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
+    return (
+      nextState.selectedOption !== this.state.selectedOption ||
+      nextState.currentName !== this.state.currentName ||
+      nextState.successMessage !== this.state.successMessage ||
+      nextState.errorMessage !== this.state.errorMessage ||
+      nextState.currentOptions !== this.state.currentOptions ||
+      nextProps !== this.props
+    );
+  }
 
-  handleMealTypeRef = (ref: ModalDropdown) => {
-    this.mealTypeRef = ref;
+  dropDownRef: ModalDropdown;
+
+  categoriesMap = {
+    '0': 'mealtypes',
+    '1': 'cuisinetypes',
+    '2': 'proteintypes',
+    '3': 'preparationtypes',
   };
 
-  handleCuisineTypeRef = (ref: ModalDropdown) => {
-    this.cuisineTypeRef = ref;
-  };
+  handleCategoryPress = (value: number) => {
+    this.setState({
+      selectedCategory: value,
+      selectedOption: null,
+      currentName: '',
+      successMessage: '',
+      errorMessage: '',
+    });
 
-  handlePreparationTypeRef = (ref: ModalDropdown) => {
-    this.preparationTypeRef = ref;
-  };
+    if (value === 0) {
+      this.setState({ currentOptions: this.props.mealTypes });
+    } else if (value === 1) {
+      this.setState({ currentOptions: this.props.cuisineTypes });
+    } else if (value === 2) {
+      this.setState({ currentOptions: this.props.proteinTypes });
+    } else if (value === 3) {
+      this.setState({ currentOptions: this.props.preparationTypes });
+    }
 
-  handleProteinTypeRef = (ref: ModalDropdown) => {
-    this.proteinTypeRef = ref;
-  };
-
-  handleNameChange = (text: string) => {
-    const { dispatch, recipe } = this.props;
-    const newRecipe: Recipe = { ...recipe };
-    newRecipe.name = text;
-    dispatch(setRecipe(newRecipe));
-  };
-
-  handleSourceChange = (text: string) => {
-    const { dispatch, recipe } = this.props;
-    const newRecipe: Recipe = { ...recipe };
-    newRecipe.source = text;
-    dispatch(setRecipe(newRecipe));
-  };
-
-  handleVolumeChange = (text: string) => {
-    const { dispatch, recipe } = this.props;
-    const newRecipe: Recipe = { ...recipe };
-    newRecipe.volume = text;
-    dispatch(setRecipe(newRecipe));
-  };
-
-  handlePageChange = (text: string) => {
-    const { dispatch, recipe } = this.props;
-    const newRecipe: Recipe = { ...recipe };
-    newRecipe.page = text;
-    dispatch(setRecipe(newRecipe));
+    this.dropDownRef.select(0);
   };
 
   handleMealTypeChange = (idx: string) => {
-    const newType = this.props.mealTypes.find(
+    const mealType = this.props.mealTypes.find(
       type => type.idx === parseInt(idx, 10),
     );
-
-    const { recipe, dispatch } = this.props;
-    const newRecipe: Recipe = { ...recipe, mealType: newType };
-    dispatch(setRecipe(newRecipe));
+    if (mealType) {
+      this.setState({
+        selectedOption: mealType,
+        currentName: mealType.description,
+      });
+    } else {
+      this.setState({ selectedOption: null, currentName: '' });
+    }
   };
 
   handleCuisineTypeChange = (idx: string) => {
-    const newType = this.props.cuisineTypes.find(
+    const cuisineType = this.props.cuisineTypes.find(
       type => type.idx === parseInt(idx, 10),
     );
-
-    const { recipe, dispatch } = this.props;
-    const newRecipe = { ...recipe, cuisineType: newType };
-    dispatch(setRecipe(newRecipe));
+    if (cuisineType) {
+      this.setState({
+        selectedOption: cuisineType,
+        currentName: cuisineType.description,
+      });
+    } else {
+      this.setState({ selectedOption: null, currentName: '' });
+    }
   };
 
   handlePreparationTypeChange = (idx: string) => {
-    const newType = this.props.preparationTypes.find(
+    const preparationType = this.props.preparationTypes.find(
       type => type.idx === parseInt(idx, 10),
     );
-
-    const { recipe, dispatch } = this.props;
-    const newRecipe = { ...recipe, preparationType: newType };
-    dispatch(setRecipe(newRecipe));
+    if (preparationType) {
+      this.setState({
+        selectedOption: preparationType,
+        currentName: preparationType.description,
+      });
+    } else {
+      this.setState({ selectedOption: null, currentName: '' });
+    }
   };
 
   handleProteinTypeChange = (idx: string) => {
-    const newType = this.props.proteinTypes.find(
+    const proteinType = this.props.proteinTypes.find(
       type => type.idx === parseInt(idx, 10),
     );
-
-    const { recipe, dispatch } = this.props;
-    const newRecipe = { ...recipe, proteinType: newType };
-    dispatch(setRecipe(newRecipe));
-  };
-
-  handleSaveRecipe = () => {
-    const { recipe } = this.props;
-
-    console.log(`final state: ${JSON.stringify(recipe)}`);
-
-    createRecipe(recipe)
-      .then(response => {
-        console.log(`Created Recipe: ${JSON.stringify(response)}`);
-        this.setState({ errorMessage: '' });
-        this.handleClearRecipe();
-      })
-      .catch(error => {
-        this.setState({ errorMessage: error.message });
+    if (proteinType) {
+      this.setState({
+        selectedOption: proteinType,
+        currentName: proteinType.description,
       });
-
-    Keyboard.dismiss();
+    } else {
+      this.setState({ selectedOption: null, currentName: '' });
+    }
   };
 
-  handleClearRecipe = () => {
+  handleNameChange = (text: string) => {
+    this.setState({ currentName: text });
+  };
+
+  handleDropDownRef = (ref: ModalDropdown) => {
+    this.dropDownRef = ref;
+  };
+
+  handleSavePress = () => {
+    if (!this.state.selectedOption && this.state.currentName !== '') {
+      console.log(`Ready to save new type: ${this.state.currentName}`);
+
+      createType(
+        this.categoriesMap[this.state.selectedCategory],
+        this.state.currentName,
+      )
+        .then(newType => {
+          this.dispatchNewTypes(this.state.selectedCategory, newType);
+          this.setState({
+            currentName: '',
+            successMessage: `New type "${newType.description}" successfully saved`,
+            errorMessage: '',
+          });
+        })
+        .catch(error => {
+          this.setState({ errorMessage: error.message, successMessage: '' });
+        });
+    } else if (this.state.selectedOption && this.state.currentName !== '') {
+      const selectedOption = this.state.selectedOption;
+      console.log(`Ready to update: ${this.state.currentName}`);
+      updateType(
+        this.categoriesMap[this.state.selectedCategory],
+        selectedOption,
+        this.state.currentName,
+      )
+        .then(newType => {
+          console.log(`updated type: ${JSON.stringify(newType)}`);
+          const typeWithIdx = { ...newType, idx: selectedOption.idx };
+          this.dispatchUpdatedTypes(this.state.selectedCategory, typeWithIdx);
+          this.setState({
+            currentName: '',
+            successMessage: `Type "${typeWithIdx.description}" updated successfully`,
+            errorMessage: '',
+          });
+        })
+        .catch(error => {
+          this.setState({ errorMessage: error.message, successMessage: '' });
+        });
+    }
+  };
+
+  dispatchNewTypes = (selectedCategory: number, type: SearchCriterion) => {
     const { dispatch } = this.props;
-    dispatch(setRecipe(null));
+    let newTypes;
+    const newType = type;
+    if (selectedCategory === 0) {
+      newTypes = [...this.props.mealTypes];
+      newType.idx = newTypes.length + 1;
+      newTypes.push(newType);
+      console.log(`to dispatch: ${JSON.stringify(newTypes)}`);
+      dispatch(setMealTypes(newTypes));
+      this.setState({ currentOptions: newTypes });
+    } else if (selectedCategory === 1) {
+      newTypes = [...this.props.cuisineTypes];
+      newType.idx = newTypes.length + 1;
+      newTypes.push(newType);
+      dispatch(setCuisineTypes(newTypes));
+      this.setState({ currentOptions: newTypes });
+    } else if (selectedCategory === 2) {
+      newTypes = [...this.props.proteinTypes];
+      newType.idx = newTypes.length + 1;
+      newTypes.push(newType);
+      dispatch(setProteinTypes(newTypes));
+      this.setState({ currentOptions: newTypes });
+    } else if (selectedCategory === 3) {
+      newTypes = [...this.props.preparationTypes];
+      newType.idx = newTypes.length + 1;
+      newTypes.push(newType);
+      dispatch(setPreparationTypes(newTypes));
+      this.setState({ currentOptions: newTypes });
+    }
+  };
 
-    if (this.mealTypeRef) {
-      this.mealTypeRef.select(0);
+  dispatchUpdatedTypes = (selectedCategory: number, type: SearchCriterion) => {
+    const { dispatch } = this.props;
+    if (selectedCategory === 0) {
+      const existingTypes = [...this.props.mealTypes];
+      const newTypes = _.map(
+        existingTypes,
+        t =>
+          t.id === type.id ? { ...type, description: type.description } : t,
+      );
+      console.log(`to dispatch: ${JSON.stringify(newTypes)}`);
+      dispatch(setMealTypes(newTypes));
+      this.setState({ currentOptions: newTypes });
+    } else if (selectedCategory === 1) {
+      const existingTypes = [...this.props.cuisineTypes];
+      const newTypes = _.map(
+        existingTypes,
+        t =>
+          t.id === type.id ? { ...type, description: type.description } : t,
+      );
+      dispatch(setCuisineTypes(newTypes));
+      this.setState({ currentOptions: newTypes });
+    } else if (selectedCategory === 2) {
+      const existingTypes = [...this.props.proteinTypes];
+      const newTypes = _.map(
+        existingTypes,
+        t =>
+          t.id === type.id ? { ...type, description: type.description } : t,
+      );
+      dispatch(setProteinTypes(newTypes));
+      this.setState({ currentOptions: newTypes });
+    } else if (selectedCategory === 3) {
+      const existingTypes = [...this.props.preparationTypes];
+      const newTypes = _.map(
+        existingTypes,
+        t =>
+          t.id === type.id ? { ...type, description: type.description } : t,
+      );
+      dispatch(setPreparationTypes(newTypes));
+      this.setState({ currentOptions: newTypes });
     }
-    if (this.cuisineTypeRef) {
-      this.cuisineTypeRef.select(0);
-    }
-    if (this.preparationTypeRef) {
-      this.preparationTypeRef.select(0);
-    }
-    if (this.proteinTypeRef) {
-      this.proteinTypeRef.select(0);
-    }
+    this.dropDownRef.select(0);
+  };
 
-    this.setState({ errorMessage: '' });
+  handleDeletePress = () => {
+    console.log(`Delete Pressed: ${JSON.stringify(this.state.selectedOption)}`);
+    if (this.state.selectedOption) {
+      const selectedOption = this.state.selectedOption;
+      console.log(
+        `Ready to delete type: ${selectedOption.id} ${selectedOption.name}`,
+      );
 
-    Keyboard.dismiss();
+      deleteType(
+        this.categoriesMap[this.state.selectedCategory],
+        selectedOption.id,
+      )
+        .then(() => {
+          this.removeTypes(this.state.selectedCategory, selectedOption);
+          this.setState({
+            currentName: '',
+            successMessage: `Type "${selectedOption.description}" successfully deleted`,
+            errorMessage: '',
+          });
+        })
+        .catch(error => {
+          this.setState({ errorMessage: error.message, successMessage: '' });
+        });
+    }
+  };
+
+  removeTypes = (selectedCategory: number, type: SearchCriterion) => {
+    const { dispatch } = this.props;
+    let newTypes;
+    if (selectedCategory === 0) {
+      newTypes = [...this.props.mealTypes];
+      _.remove(newTypes, { id: type.id });
+      dispatch(setMealTypes(newTypes));
+      this.setState({
+        currentOptions: newTypes,
+        selectedOption: null,
+        currentName: '',
+      });
+    } else if (selectedCategory === 1) {
+      newTypes = [...this.props.cuisineTypes];
+      _.remove(newTypes, { id: type.id });
+      dispatch(setCuisineTypes(newTypes));
+      this.setState({
+        currentOptions: newTypes,
+        selectedOption: null,
+        currentName: '',
+      });
+    } else if (selectedCategory === 2) {
+      newTypes = [...this.props.proteinTypes];
+      _.remove(newTypes, { id: type.id });
+      dispatch(setProteinTypes(newTypes));
+      this.setState({
+        currentOptions: newTypes,
+        selectedOption: null,
+        currentName: '',
+      });
+    } else if (selectedCategory === 3) {
+      newTypes = [...this.props.preparationTypes];
+      _.remove(newTypes, { id: type.id });
+      dispatch(setPreparationTypes(newTypes));
+      this.setState({
+        currentOptions: newTypes,
+        selectedOption: null,
+        currentName: '',
+      });
+    }
+    this.dropDownRef.select(0);
   };
 
   render() {
-    const {
-      recipe,
-      mealTypes,
-      cuisineTypes,
-      preparationTypes,
-      proteinTypes,
-    } = this.props;
-
-    const { errorMessage } = this.state;
+    const categories = [
+      { label: 'Meal', value: 0 },
+      { label: 'Cuisine', value: 1 },
+      { label: 'Protein', value: 2 },
+      { label: 'Preparation', value: 3 },
+    ];
 
     const types = [
       {
-        name: 'mealTypes',
-        values: mealTypes,
         callback: this.handleMealTypeChange,
-        ref: this.handleMealTypeRef,
       },
       {
-        name: 'cuisineTypes',
-        values: cuisineTypes,
         callback: this.handleCuisineTypeChange,
-        ref: this.handleCuisineTypeRef,
       },
       {
-        name: 'preparationTypes',
-        values: preparationTypes,
-        callback: this.handlePreparationTypeChange,
-        ref: this.handlePreparationTypeRef,
-      },
-      {
-        name: 'proteinTypes',
-        values: proteinTypes,
         callback: this.handleProteinTypeChange,
-        ref: this.handleProteinTypeRef,
+      },
+      {
+        callback: this.handlePreparationTypeChange,
       },
     ];
 
     return (
-      <AddRecipe
-        onNameChange={this.handleNameChange}
-        onSourceChange={this.handleSourceChange}
-        onVolumeChange={this.handleVolumeChange}
-        onPageChange={this.handlePageChange}
-        types={types}
-        onSave={this.handleSaveRecipe}
-        onClear={this.handleClearRecipe}
-        recipe={recipe}
-        errorMessage={errorMessage}
-      />
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={styles.selectionContainer}>
+            <View style={styles.categoriesContainer}>
+              <Categories
+                categories={categories}
+                onPress={this.handleCategoryPress}
+              />
+            </View>
+            <View style={styles.optionsContainer}>
+              <Options
+                category={this.state.selectedCategory}
+                options={this.state.currentOptions}
+                childRef={this.handleDropDownRef}
+                types={types}
+                selectedValue={this.state.selectedOption || undefined}
+              />
+            </View>
+          </View>
+          <TextRowInput
+            containerStyle={styles.textRow}
+            onChangeText={this.handleNameChange}
+            headerText="Name"
+            contentText={this.state.currentName}
+          />
+          <View style={styles.buttonContainer}>
+            <BlockButton
+              style={styles.saveButton}
+              text="Save"
+              onPress={this.handleSavePress}
+            />
+            <BlockButton
+              style={styles.deleteButton}
+              text="Delete"
+              onPress={this.handleDeletePress}
+            />
+          </View>
+          <Text style={styles.errorMessage}>
+            {this.state.errorMessage}
+          </Text>
+          <Text style={styles.successMessage}>
+            {this.state.successMessage}
+          </Text>
+        </View>
+      </ScrollView>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  recipe: state.recipe,
   mealTypes: state.mealTypes,
   cuisineTypes: state.cuisineTypes,
   proteinTypes: state.proteinTypes,

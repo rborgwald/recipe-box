@@ -3,7 +3,6 @@ import React from 'react';
 import { View, Text, StyleSheet, TextInput, FlatList } from 'react-native';
 import ModalDropdown from 'react-native-modal-dropdown';
 import BlockButton from '../../../components/BlockButton';
-import type { State as StoreState } from '../../../store/store';
 import type { SearchCriterion } from '../../../api/recipe/model';
 import Divider from '../../../components/Divider';
 import RecipePreview from './RecipePreview';
