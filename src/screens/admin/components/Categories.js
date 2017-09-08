@@ -33,7 +33,7 @@ const Categories = ({
       style={styles.radioGroup}
       radio_props={categories}
       initial={0}
-      buttonColor={'#6b7a8f'}
+      buttonColor={'#5EBC9E'}
       animation
       onPress={onPress}
     />

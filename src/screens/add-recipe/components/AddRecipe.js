@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    margin: 15,
+    margin: 5,
   },
   infoWrapper: {
     width: '100%',
@@ -23,12 +23,13 @@ const styles = StyleSheet.create({
   detailsContainer: {
     flex: 1,
     flexDirection: 'column',
+    margin: 10,
   },
   badgeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 8,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -36,11 +37,11 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   saveButton: {
-    backgroundColor: 'green',
+    backgroundColor: '#29a709',
     margin: 5,
   },
   clearButton: {
-    backgroundColor: 'red',
+    backgroundColor: '#e24949',
     margin: 5,
   },
   errorMessage: {

@@ -6,11 +6,12 @@ import type { SearchCriterion } from '../api/recipe/model';
 
 const styles = StyleSheet.create({
   container: {
+    width: 90,
     height: 37,
     borderRadius: 37 / 2,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 12,
+    padding: 8,
     margin: 5,
   },
   selectionText: {

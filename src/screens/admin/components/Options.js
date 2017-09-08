@@ -45,7 +45,7 @@ const Options = ({
     <View style={styles.selectorContainer}>
       <BadgeSelector
         childRef={childRef}
-        backgroundColor="#6b7a8f"
+        backgroundColor="#5EBC9E"
         defaultText="- Add New -"
         onValueChange={getCallbackFromTypes(types, category)}
         options={options}

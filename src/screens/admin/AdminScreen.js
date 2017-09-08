@@ -47,11 +47,11 @@ const styles = StyleSheet.create({
     margin: 15,
   },
   saveButton: {
-    backgroundColor: 'green',
+    backgroundColor: '#29a709',
     margin: 5,
   },
   deleteButton: {
-    backgroundColor: 'red',
+    backgroundColor: '#e24949',
     margin: 5,
   },
   errorMessage: {
@@ -453,11 +453,16 @@ export class AdminScreen extends Component<any, Props, State> {
               style={styles.saveButton}
               text="Save"
               onPress={this.handleSavePress}
+              disabled={this.state.currentName === ''}
             />
             <BlockButton
               style={styles.deleteButton}
               text="Delete"
               onPress={this.handleDeletePress}
+              disabled={
+                this.state.currentName === '' ||
+                this.state.selectedOption === null
+              }
             />
           </View>
           <Text style={styles.errorMessage}>

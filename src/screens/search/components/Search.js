@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    margin: 10,
+    margin: 8,
   },
   searchButtonContainer: {
     flexDirection: 'column',
@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
   },
   searchButton: {
     width: '100%',
+    backgroundColor: '#29a709',
   },
   clearButtonContainer: {
     width: '100%',
@@ -151,7 +152,7 @@ const Search = ({
         childRef={getRefFromTypes(types, 'mealTypes')}
         searchCriterion={getValueFromTypes(types, 'mealTypes')}
         backgroundColor="#6b7a8f"
-        defaultText="Any meal type"
+        defaultText="Any meal"
         onValueChange={getCallbackFromTypes(types, 'mealTypes')}
         options={getOptionsFromTypes(types, 'mealTypes')}
       />
