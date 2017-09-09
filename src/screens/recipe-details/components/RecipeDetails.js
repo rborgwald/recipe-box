@@ -34,11 +34,11 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   updateButton: {
-    backgroundColor: 'green',
+    backgroundColor: '#29a709',
     margin: 5,
   },
   deleteButton: {
-    backgroundColor: 'red',
+    backgroundColor: '#e24949',
     margin: 5,
   },
   errorMessage: {

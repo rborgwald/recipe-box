@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    margin: 5,
+    margin: 15,
   },
   infoWrapper: {
     width: '100%',
@@ -23,18 +23,17 @@ const styles = StyleSheet.create({
   detailsContainer: {
     flex: 1,
     flexDirection: 'column',
-    margin: 10,
   },
   badgeContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 10,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    margin: 20,
+    margin: 5,
   },
   saveButton: {
     backgroundColor: '#29a709',
@@ -121,36 +120,36 @@ const AddRecipe = ({
           contentText={recipe ? recipe.page : ''}
         />
       </View>
-    </View>
-    <View style={styles.badgeContainer}>
-      <BadgeSelector
-        childRef={getRefFromTypes(types, 'mealTypes')}
-        backgroundColor="#6b7a8f"
-        defaultText="- Meal -"
-        onValueChange={getCallbackFromTypes(types, 'mealTypes')}
-        options={getOptionsFromTypes(types, 'mealTypes')}
-      />
-      <BadgeSelector
-        childRef={getRefFromTypes(types, 'cuisineTypes')}
-        backgroundColor="#f7882f"
-        defaultText="- Cuisine -"
-        onValueChange={getCallbackFromTypes(types, 'cuisineTypes')}
-        options={getOptionsFromTypes(types, 'cuisineTypes')}
-      />
-      <BadgeSelector
-        childRef={getRefFromTypes(types, 'preparationTypes')}
-        backgroundColor="#f7c331"
-        defaultText="- Prep -"
-        onValueChange={getCallbackFromTypes(types, 'preparationTypes')}
-        options={getOptionsFromTypes(types, 'preparationTypes')}
-      />
-      <BadgeSelector
-        childRef={getRefFromTypes(types, 'proteinTypes')}
-        backgroundColor="#dcc7aa"
-        defaultText="- Protein -"
-        onValueChange={getCallbackFromTypes(types, 'proteinTypes')}
-        options={getOptionsFromTypes(types, 'proteinTypes')}
-      />
+      <View style={styles.badgeContainer}>
+        <BadgeSelector
+          childRef={getRefFromTypes(types, 'mealTypes')}
+          backgroundColor="#6b7a8f"
+          defaultText="- Meal -"
+          onValueChange={getCallbackFromTypes(types, 'mealTypes')}
+          options={getOptionsFromTypes(types, 'mealTypes')}
+        />
+        <BadgeSelector
+          childRef={getRefFromTypes(types, 'cuisineTypes')}
+          backgroundColor="#f7882f"
+          defaultText="- Cuisine -"
+          onValueChange={getCallbackFromTypes(types, 'cuisineTypes')}
+          options={getOptionsFromTypes(types, 'cuisineTypes')}
+        />
+        <BadgeSelector
+          childRef={getRefFromTypes(types, 'preparationTypes')}
+          backgroundColor="#f7c331"
+          defaultText="- Prep -"
+          onValueChange={getCallbackFromTypes(types, 'preparationTypes')}
+          options={getOptionsFromTypes(types, 'preparationTypes')}
+        />
+        <BadgeSelector
+          childRef={getRefFromTypes(types, 'proteinTypes')}
+          backgroundColor="#dcc7aa"
+          defaultText="- Protein -"
+          onValueChange={getCallbackFromTypes(types, 'proteinTypes')}
+          options={getOptionsFromTypes(types, 'proteinTypes')}
+        />
+      </View>
     </View>
     <View style={styles.buttonContainer}>
       <BlockButton
