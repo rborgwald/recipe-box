@@ -58,9 +58,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   searchResultsWrapper: {
+    flex: 1,
     margin: 10,
     marginTop: 0,
-    marginBottom: 170,
   },
   errorMessage: {
     color: '#e74c3c',

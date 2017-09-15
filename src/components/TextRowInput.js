@@ -25,6 +25,7 @@ const TextRowInput = ({
   contentStyle,
   headerText,
   contentText,
+  autoCapitalize,
   onChangeText,
 }: {
   containerStyle?: View.propTypes.style,
@@ -32,6 +33,7 @@ const TextRowInput = ({
   contentStyle?: Text.propTypes.style,
   headerText: string,
   contentText?: string,
+  autoCapitalize?: TextInput.propTypes.autoCapitalize,
   onChangeText: Function,
 }) =>
   <View style={[styles.container, containerStyle]}>
@@ -42,7 +44,7 @@ const TextRowInput = ({
       style={[styles.content, contentStyle, { margin: 0 }]}
       value={contentText}
       autoCorrect={false}
-      autoCapitalize="none"
+      autoCapitalize={autoCapitalize || 'none'}
       underlineColorAndroid="rgba(0,0,0,0)"
       onChangeText={onChangeText}
       placeholderTextColor="#666"

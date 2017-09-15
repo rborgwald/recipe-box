@@ -16,6 +16,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 15,
+    width: '99%',
+    alignItems: 'center',
   },
   text: {
     fontSize: 18,
@@ -28,6 +30,7 @@ const styles = StyleSheet.create({
   },
   recipeInfo: {
     flexDirection: 'column',
+    width: '90%',
   },
   details: {
     fontSize: 12,

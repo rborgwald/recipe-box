@@ -100,16 +100,19 @@ const AddRecipe = ({
     <View style={styles.infoWrapper}>
       <View style={styles.detailsContainer}>
         <TextRowInput
+          autoCapitalize='words'
           onChangeText={onNameChange}
           headerText="Name"
           contentText={recipe ? recipe.name : ''}
         />
         <TextRowInput
+          autoCapitalize='words'
           onChangeText={onSourceChange}
           headerText="Source"
           contentText={recipe ? recipe.source : ''}
         />
         <TextRowInput
+          autoCapitalize='words'
           onChangeText={onVolumeChange}
           headerText="Volume"
           contentText={recipe ? recipe.volume : ''}

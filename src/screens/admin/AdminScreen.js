@@ -160,6 +160,10 @@ export class AdminScreen extends Component<any, Props, State> {
     } else {
       this.setState({ selectedOption: null, currentName: '' });
     }
+    this.setState({
+      successMessage: '',
+      errorMessage: '',
+    });
   };
 
   handleCuisineTypeChange = (idx: string) => {
@@ -174,6 +178,10 @@ export class AdminScreen extends Component<any, Props, State> {
     } else {
       this.setState({ selectedOption: null, currentName: '' });
     }
+    this.setState({
+      successMessage: '',
+      errorMessage: '',
+    });
   };
 
   handlePreparationTypeChange = (idx: string) => {
@@ -188,6 +196,10 @@ export class AdminScreen extends Component<any, Props, State> {
     } else {
       this.setState({ selectedOption: null, currentName: '' });
     }
+    this.setState({
+      successMessage: '',
+      errorMessage: '',
+    });
   };
 
   handleProteinTypeChange = (idx: string) => {
@@ -202,6 +214,10 @@ export class AdminScreen extends Component<any, Props, State> {
     } else {
       this.setState({ selectedOption: null, currentName: '' });
     }
+    this.setState({
+      successMessage: '',
+      errorMessage: '',
+    });
   };
 
   handleNameChange = (text: string) => {

@@ -58,25 +58,22 @@ export class SideMenuNavWrapper extends Component<any, Props, void> {
     // TODO: figure out how to handle error(s)
 
     getMealTypes().then(types => {
-      // Sort the types
-      const sortedById = types.sort((a, b) => a.id - b.id);
-
-      // Add index to each type
+      const sortedById = types.sort((a, b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
       _.map(sortedById, (e, i) => _.extend(e, { idx: i + 1 }));
       dispatch(setMealTypes(sortedById));
     });
     getCuisineTypes().then(types => {
-      const sortedById = types.sort((a, b) => a.id - b.id);
+      const sortedById = types.sort((a, b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
       _.map(sortedById, (e, i) => _.extend(e, { idx: i + 1 }));
       dispatch(setCuisineTypes(types));
     });
     getProteinTypes().then(types => {
-      const sortedById = types.sort((a, b) => a.id - b.id);
+      const sortedById = types.sort((a, b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
       _.map(sortedById, (e, i) => _.extend(e, { idx: i + 1 }));
       dispatch(setProteinTypes(types));
     });
     getPreparationTypes().then(types => {
-      const sortedById = types.sort((a, b) => a.id - b.id);
+      const sortedById = types.sort((a, b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
       _.map(sortedById, (e, i) => _.extend(e, { idx: i + 1 }));
       dispatch(setPreparationTypes(types));
     });
