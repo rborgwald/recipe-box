@@ -2,6 +2,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import ModalDropdown from 'react-native-modal-dropdown';
+import CheckBox from 'react-native-checkbox';
 import type { State as StoreState } from '../../../store/store';
 import TextRowInput from '../../../components/TextRowInput';
 import BlockButton from '../../../components/BlockButton';
@@ -19,6 +20,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 15,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
+    marginTop: 5,
   },
   detailsContainer: {
     flex: 1,
@@ -80,6 +87,8 @@ const AddRecipe = ({
   onSourceChange,
   onVolumeChange,
   onPageChange,
+  onNewRecipeCheckedChange,
+  onTriedItCheckedChange,
   onSave,
   onClear,
   recipe,
@@ -90,6 +99,8 @@ const AddRecipe = ({
   onSourceChange: Function,
   onVolumeChange: Function,
   onPageChange: Function,
+  onNewRecipeCheckedChange: Function,
+  onTriedItCheckedChange: Function,
   onSave: Function,
   onClear: Function,
   recipe: $PropertyType<StoreState, 'recipe'>,
@@ -100,19 +111,19 @@ const AddRecipe = ({
     <View style={styles.infoWrapper}>
       <View style={styles.detailsContainer}>
         <TextRowInput
-          autoCapitalize='words'
+          autoCapitalize="words"
           onChangeText={onNameChange}
           headerText="Name"
           contentText={recipe ? recipe.name : ''}
         />
         <TextRowInput
-          autoCapitalize='words'
+          autoCapitalize="words"
           onChangeText={onSourceChange}
           headerText="Source"
           contentText={recipe ? recipe.source : ''}
         />
         <TextRowInput
-          autoCapitalize='words'
+          autoCapitalize="words"
           onChangeText={onVolumeChange}
           headerText="Volume"
           contentText={recipe ? recipe.volume : ''}
@@ -122,6 +133,18 @@ const AddRecipe = ({
           headerText="Page"
           contentText={recipe ? recipe.page : ''}
         />
+        <View style={styles.checkboxContainer}>
+          <CheckBox
+            label="New"
+            checked={recipe && recipe.newRecipe !== undefined ? recipe.newRecipe : true}
+            onChange={onNewRecipeCheckedChange}
+          />
+          <CheckBox
+            label="Tried It"
+            checked={recipe && recipe.newRecipe !== undefined ? !recipe.newRecipe : false}
+            onChange={onTriedItCheckedChange}
+          />
+        </View>
       </View>
       <View style={styles.badgeContainer}>
         <BadgeSelector

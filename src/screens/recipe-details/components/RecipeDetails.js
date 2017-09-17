@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import CheckBox from 'react-native-checkbox';
 import type { Recipe, SearchCriterion } from '../../../api/recipe/model';
 import TextRowInput from '../../../components/TextRowInput';
 import BlockButton from '../../../components/BlockButton';
@@ -21,6 +22,12 @@ const styles = StyleSheet.create({
   detailsContainer: {
     flex: 1,
     flexDirection: 'column',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
+    marginTop: 5,
   },
   badgeContainer: {
     flexDirection: 'column',
@@ -59,6 +66,8 @@ const RecipeDetails = ({
   onSourceChange,
   onVolumeChange,
   onPageChange,
+  onNewRecipeCheckedChange,
+  onTriedItCheckedChange,
   onMealTypeChange,
   onCuisineTypeChange,
   onPreparationTypeChange,
@@ -76,6 +85,8 @@ const RecipeDetails = ({
   onSourceChange: Function,
   onVolumeChange: Function,
   onPageChange: Function,
+  onNewRecipeCheckedChange: Function,
+  onTriedItCheckedChange: Function,
   onMealTypeChange: Function,
   onCuisineTypeChange: Function,
   onPreparationTypeChange: Function,
@@ -107,6 +118,18 @@ const RecipeDetails = ({
           headerText="Page"
           contentText={recipe.page ? recipe.page.toString() : ''}
         />
+        <View style={styles.checkboxContainer}>
+          <CheckBox
+            label="New"
+            checked={recipe.newRecipe}
+            onChange={onNewRecipeCheckedChange}
+          />
+          <CheckBox
+            label="Tried It"
+            checked={!(recipe.newRecipe)}
+            onChange={onTriedItCheckedChange}
+          />
+        </View>
       </View>
       <View style={styles.badgeContainer}>
         <BadgeSelector

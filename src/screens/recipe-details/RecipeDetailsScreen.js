@@ -63,6 +63,18 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
     this.setState({ recipe });
   };
 
+  handleNewRecipeCheckedChange = (checked: boolean) => {
+    const { navigation: { state: { params: { recipe } } } } = this.props;
+    recipe.newRecipe = !checked;
+    this.setState({ recipe });
+  };
+
+  handleTriedItRecipeCheckedChange = (checked: boolean) => {
+    const { navigation: { state: { params: { recipe } } } } = this.props;
+    recipe.newRecipe = checked;
+    this.setState({ recipe });
+  };
+
   handleMealTypeChange = (itemValue: string) => {
     const {
       mealTypes,
@@ -193,6 +205,8 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
           onSourceChange={this.handleSourceChange}
           onVolumeChange={this.handleVolumeChange}
           onPageChange={this.handlePageChange}
+          onNewRecipeCheckedChange={this.handleNewRecipeCheckedChange}
+          onTriedItCheckedChange={this.handleTriedItRecipeCheckedChange}
           onMealTypeChange={this.handleMealTypeChange}
           onCuisineTypeChange={this.handleCuisineTypeChange}
           onPreparationTypeChange={this.handlePreparationTypeChange}

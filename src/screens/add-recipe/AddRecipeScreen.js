@@ -87,6 +87,20 @@ export class AddRecipeScreen extends Component<any, Props, State> {
     dispatch(setRecipe(newRecipe));
   };
 
+  handleNewRecipeCheckedChange = (checked: boolean) => {
+    const { dispatch, recipe } = this.props;
+    const newRecipe: Recipe = { ...recipe, newRecipe: !checked };
+    console.log(`newRecipe: ${JSON.stringify(newRecipe)}`);
+    dispatch(setRecipe(newRecipe));
+  };
+
+  handleTriedItRecipeCheckedChange = (checked: boolean) => {
+    const { dispatch, recipe } = this.props;
+    const newRecipe: Recipe = { ...recipe, newRecipe: checked };
+    console.log(`newRecipe: ${JSON.stringify(newRecipe)}`);
+    dispatch(setRecipe(newRecipe));
+  };
+
   handleMealTypeChange = (idx: string) => {
     const newType = this.props.mealTypes.find(
       type => type.idx === parseInt(idx, 10),
@@ -129,6 +143,10 @@ export class AddRecipeScreen extends Component<any, Props, State> {
 
   handleSaveRecipe = () => {
     const { recipe } = this.props;
+
+    if(recipe && recipe.newRecipe === undefined) {
+      recipe.newRecipe = true;
+    }
 
     console.log(`final state: ${JSON.stringify(recipe)}`);
 
@@ -211,6 +229,8 @@ export class AddRecipeScreen extends Component<any, Props, State> {
         onSourceChange={this.handleSourceChange}
         onVolumeChange={this.handleVolumeChange}
         onPageChange={this.handlePageChange}
+        onNewRecipeCheckedChange={this.handleNewRecipeCheckedChange}
+        onTriedItCheckedChange={this.handleTriedItRecipeCheckedChange}
         types={types}
         onSave={this.handleSaveRecipe}
         onClear={this.handleClearRecipe}

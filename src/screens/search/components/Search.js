@@ -2,11 +2,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, TextInput, FlatList } from 'react-native';
 import ModalDropdown from 'react-native-modal-dropdown';
+import CheckBox from 'react-native-checkbox';
 import BlockButton from '../../../components/BlockButton';
 import type { SearchCriterion } from '../../../api/recipe/model';
 import Divider from '../../../components/Divider';
 import RecipePreview from './RecipePreview';
-import WordButton from '../../../components/WordButton';
 import BadgeSelector from '../../../components/BadgeSelector';
 
 const styles = StyleSheet.create({
@@ -30,6 +30,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginVertical: 15,
     marginHorizontal: 5,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
+    marginVertical: 5,
   },
   badgeContainer: {
     flexDirection: 'column',
@@ -105,6 +111,10 @@ export const getOptionsFromTypes = (
 const Search = ({
   types,
   onTextChange,
+  newRecipeChecked,
+  onNewRecipeCheckedChange,
+  triedItChecked,
+  onTriedItCheckedChange,
   onSearchRecipe,
   onClearSearch,
   recipes = [],
@@ -113,6 +123,10 @@ const Search = ({
 }: {
   types: Array<any>,
   onTextChange: Function,
+  newRecipeChecked: boolean,
+  onNewRecipeCheckedChange: Function,
+  triedItChecked: boolean,
+  onTriedItCheckedChange: Function,
   onSearchRecipe: Function,
   onClearSearch: Function,
   recipes: Array<any>,
@@ -133,6 +147,18 @@ const Search = ({
           placeholderTextColor="#666"
           onSubmitEditing={onSearchRecipe}
         />
+        <View style={styles.checkboxContainer}>
+          <CheckBox
+            label="New"
+            checked={newRecipeChecked}
+            onChange={onNewRecipeCheckedChange}
+          />
+          <CheckBox
+            label="Tried It"
+            checked={triedItChecked}
+            onChange={onTriedItCheckedChange}
+          />
+        </View>
         <View style={styles.buttonContainer}>
           <BlockButton
             style={styles.searchButton}

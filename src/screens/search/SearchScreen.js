@@ -16,6 +16,8 @@ import menuIcon from '../../images/hamburgerNav.png';
 
 type State = {
   searchString: string,
+  newRecipe: boolean,
+  triedIt: boolean,
   mealType: SearchCriterion | null,
   cuisineType: SearchCriterion | null,
   preparationType: SearchCriterion | null,
@@ -46,6 +48,8 @@ export class SearchScreen extends Component<any, Props, State> {
 
   state = {
     searchString: '',
+    newRecipe: true,
+    triedIt: true,
     mealType: null,
     cuisineType: null,
     preparationType: null,
@@ -61,6 +65,8 @@ export class SearchScreen extends Component<any, Props, State> {
   handleSearchRecipe = () => {
     const {
       searchString,
+      newRecipe,
+      triedIt,
       mealType,
       cuisineType,
       preparationType,
@@ -88,6 +94,12 @@ export class SearchScreen extends Component<any, Props, State> {
         queryParam: 'proteintype',
         value: proteinType ? proteinType.name : '',
       },
+      // TODO - logic here to determine if new=true, new=false, or new = ''
+      {
+        queryParam: 'new',
+        value: newRecipe && !triedIt ? newRecipe.toString()
+          : !newRecipe && triedIt ? newRecipe.toString() : '',
+      },
     ];
 
     searchRecipes(queryParams)
@@ -104,6 +116,14 @@ export class SearchScreen extends Component<any, Props, State> {
 
   handleTextChange = (text: string) => {
     this.setState({ searchString: text });
+  };
+
+  handleNewCheckedChange = (checked: boolean) => {
+    this.setState({ newRecipe: !checked });
+  };
+
+  handleTriedItCheckedChange = (checked: boolean) => {
+    this.setState({ triedIt: !checked});
   };
 
   handleMealTypeChange = (idx: string) => {
@@ -138,6 +158,8 @@ export class SearchScreen extends Component<any, Props, State> {
     const { dispatch } = this.props;
     this.setState({
       searchString: '',
+      newRecipe: true,
+      triedIt: true,
       mealType: undefined,
       cuisineType: undefined,
       preparationType: undefined,
@@ -236,6 +258,10 @@ export class SearchScreen extends Component<any, Props, State> {
       <Search
         types={types}
         onTextChange={this.handleTextChange}
+        newRecipeChecked={this.state.newRecipe}
+        onNewRecipeCheckedChange={this.handleNewCheckedChange}
+        triedItChecked={this.state.triedIt}
+        onTriedItCheckedChange={this.handleTriedItCheckedChange}
         onSearchRecipe={this.handleSearchRecipe}
         onClearSearch={this.handleClear}
         recipes={data}
