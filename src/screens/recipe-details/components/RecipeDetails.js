@@ -6,6 +6,7 @@ import type { Recipe, SearchCriterion } from '../../../api/recipe/model';
 import TextRowInput from '../../../components/TextRowInput';
 import BlockButton from '../../../components/BlockButton';
 import BadgeSelector from '../../../components/BadgeSelector';
+import Ratings from '../../../components/Ratings';
 
 const styles = StyleSheet.create({
   container: {
@@ -27,7 +28,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: 10,
-    marginTop: 5,
+    marginVertical: 5,
   },
   badgeContainer: {
     flexDirection: 'column',
@@ -39,14 +40,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     margin: 5,
+    marginTop: 0,
   },
   updateButton: {
     backgroundColor: '#29a709',
     margin: 5,
+    marginTop: 0,
   },
   deleteButton: {
     backgroundColor: '#e24949',
     margin: 5,
+    marginTop: 0,
   },
   errorMessage: {
     color: '#e74c3c',
@@ -68,6 +72,7 @@ const RecipeDetails = ({
   onPageChange,
   onNewRecipeCheckedChange,
   onTriedItCheckedChange,
+  onRatingChange,
   onMealTypeChange,
   onCuisineTypeChange,
   onPreparationTypeChange,
@@ -87,6 +92,7 @@ const RecipeDetails = ({
   onPageChange: Function,
   onNewRecipeCheckedChange: Function,
   onTriedItCheckedChange: Function,
+  onRatingChange: Function,
   onMealTypeChange: Function,
   onCuisineTypeChange: Function,
   onPreparationTypeChange: Function,
@@ -130,6 +136,11 @@ const RecipeDetails = ({
             onChange={onTriedItCheckedChange}
           />
         </View>
+        <Ratings
+          maxRating={3}
+          rating={recipe.stars ? recipe.stars : 0}
+          onRatingChange={onRatingChange}
+        />
       </View>
       <View style={styles.badgeContainer}>
         <BadgeSelector

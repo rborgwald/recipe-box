@@ -75,6 +75,12 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
     this.setState({ recipe });
   };
 
+  handleRatingChange = (itemSelected: number) => {
+    const { navigation: { state: { params: { recipe } } } } = this.props;
+    recipe.stars = itemSelected;
+    this.setState({ recipe });
+  };
+
   handleMealTypeChange = (itemValue: string) => {
     const {
       mealTypes,
@@ -207,6 +213,7 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
           onPageChange={this.handlePageChange}
           onNewRecipeCheckedChange={this.handleNewRecipeCheckedChange}
           onTriedItCheckedChange={this.handleTriedItRecipeCheckedChange}
+          onRatingChange={this.handleRatingChange}
           onMealTypeChange={this.handleMealTypeChange}
           onCuisineTypeChange={this.handleCuisineTypeChange}
           onPreparationTypeChange={this.handlePreparationTypeChange}

@@ -7,6 +7,7 @@ import {
   Image,
   TouchableHighlight,
 } from 'react-native';
+import Ratings from '../../../components/Ratings';
 import type { State as StoreState } from '../../../store/store';
 import chevron from '../../../images/chevron-right.png';
 
@@ -30,7 +31,10 @@ const styles = StyleSheet.create({
   },
   recipeInfo: {
     flexDirection: 'column',
-    width: '90%',
+    width: '75%',
+  },
+  subHeader: {
+    flexDirection: 'row',
   },
   details: {
     fontSize: 12,
@@ -44,7 +48,7 @@ export const makeDetails = (source: string, volume: string, page: string) => {
     details += source;
   }
   if (volume) {
-    details += `  vol. ${volume}`;
+    details += ` - ${volume}`;
   }
   if (page) {
     details += ` (pg. ${page})`;
@@ -65,9 +69,20 @@ const RecipePreview = ({
         <Text style={styles.text}>
           {recipe ? recipe.name : ''}
         </Text>
-        <Text style={styles.details}>
-          {recipe ? makeDetails(recipe.source, recipe.volume, recipe.page) : ''}
-        </Text>
+
+        <View style={styles.subHeader}>
+          <Text style={styles.details}>
+            {recipe
+              ? makeDetails(recipe.source, recipe.volume, recipe.page)
+              : ''}
+          </Text>
+          <Ratings
+            maxRating={3}
+            rating={recipe && recipe.stars ? recipe.stars : 0}
+            size={15}
+            disabled={true}
+          />
+        </View>
       </View>
       <Image style={styles.image} source={chevron} />
     </View>
