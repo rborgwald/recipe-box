@@ -90,7 +90,6 @@ export class AddRecipeScreen extends Component<any, Props, State> {
   handleNewRecipeCheckedChange = (checked: boolean) => {
     const { dispatch, recipe } = this.props;
     const newRecipe: Recipe = { ...recipe, newRecipe: !checked };
-    console.log(`newRecipe: ${JSON.stringify(newRecipe)}`);
     dispatch(setRecipe(newRecipe));
   };
 
@@ -98,6 +97,12 @@ export class AddRecipeScreen extends Component<any, Props, State> {
     const { dispatch, recipe } = this.props;
     const newRecipe: Recipe = { ...recipe, newRecipe: checked };
     console.log(`newRecipe: ${JSON.stringify(newRecipe)}`);
+    dispatch(setRecipe(newRecipe));
+  };
+
+  handleRatingChange = (itemSelected: number) => {
+    const {dispatch, recipe} = this.props;
+    const newRecipe: Recipe = { ...recipe, stars: itemSelected};
     dispatch(setRecipe(newRecipe));
   };
 
@@ -231,6 +236,7 @@ export class AddRecipeScreen extends Component<any, Props, State> {
         onPageChange={this.handlePageChange}
         onNewRecipeCheckedChange={this.handleNewRecipeCheckedChange}
         onTriedItCheckedChange={this.handleTriedItRecipeCheckedChange}
+        onRatingChange={this.handleRatingChange}
         types={types}
         onSave={this.handleSaveRecipe}
         onClear={this.handleClearRecipe}

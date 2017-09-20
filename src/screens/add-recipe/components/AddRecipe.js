@@ -8,6 +8,7 @@ import TextRowInput from '../../../components/TextRowInput';
 import BlockButton from '../../../components/BlockButton';
 import BadgeSelector from '../../../components/BadgeSelector';
 import type { SearchCriterion } from '../../../api/recipe/model';
+import Ratings from '../../../components/Ratings';
 
 const styles = StyleSheet.create({
   container: {
@@ -89,6 +90,7 @@ const AddRecipe = ({
   onPageChange,
   onNewRecipeCheckedChange,
   onTriedItCheckedChange,
+  onRatingChange,
   onSave,
   onClear,
   recipe,
@@ -101,6 +103,7 @@ const AddRecipe = ({
   onPageChange: Function,
   onNewRecipeCheckedChange: Function,
   onTriedItCheckedChange: Function,
+  onRatingChange: Function,
   onSave: Function,
   onClear: Function,
   recipe: $PropertyType<StoreState, 'recipe'>,
@@ -145,6 +148,11 @@ const AddRecipe = ({
             onChange={onTriedItCheckedChange}
           />
         </View>
+        <Ratings
+          maxRating={3}
+          rating={recipe && recipe.stars ? recipe.stars : 0}
+          onRatingChange={onRatingChange}
+        />
       </View>
       <View style={styles.badgeContainer}>
         <BadgeSelector

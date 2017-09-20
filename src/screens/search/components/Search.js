@@ -8,6 +8,7 @@ import type { SearchCriterion } from '../../../api/recipe/model';
 import Divider from '../../../components/Divider';
 import RecipePreview from './RecipePreview';
 import BadgeSelector from '../../../components/BadgeSelector';
+import Ratings from '../../../components/Ratings';
 
 const styles = StyleSheet.create({
   container: {
@@ -115,10 +116,12 @@ const Search = ({
   onNewRecipeCheckedChange,
   triedItChecked,
   onTriedItCheckedChange,
+  onRatingChange,
   onSearchRecipe,
   onClearSearch,
   recipes = [],
   textValue,
+  rating,
   errorMessage,
 }: {
   types: Array<any>,
@@ -127,10 +130,12 @@ const Search = ({
   onNewRecipeCheckedChange: Function,
   triedItChecked: boolean,
   onTriedItCheckedChange: Function,
+  onRatingChange: Function,
   onSearchRecipe: Function,
   onClearSearch: Function,
   recipes: Array<any>,
   textValue: string,
+  rating: number,
   errorMessage: string,
 }) =>
   <View style={styles.container}>
@@ -159,6 +164,11 @@ const Search = ({
             onChange={onTriedItCheckedChange}
           />
         </View>
+        <Ratings
+          maxRating={3}
+          rating={rating}
+          onRatingChange={onRatingChange}
+        />
         <View style={styles.buttonContainer}>
           <BlockButton
             style={styles.searchButton}

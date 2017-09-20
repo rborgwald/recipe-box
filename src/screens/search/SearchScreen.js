@@ -16,6 +16,7 @@ import menuIcon from '../../images/hamburgerNav.png';
 
 type State = {
   searchString: string,
+  rating: number,
   newRecipe: boolean,
   triedIt: boolean,
   mealType: SearchCriterion | null,
@@ -48,6 +49,7 @@ export class SearchScreen extends Component<any, Props, State> {
 
   state = {
     searchString: '',
+    rating: 0,
     newRecipe: true,
     triedIt: true,
     mealType: null,
@@ -65,6 +67,7 @@ export class SearchScreen extends Component<any, Props, State> {
   handleSearchRecipe = () => {
     const {
       searchString,
+      rating,
       newRecipe,
       triedIt,
       mealType,
@@ -94,11 +97,16 @@ export class SearchScreen extends Component<any, Props, State> {
         queryParam: 'proteintype',
         value: proteinType ? proteinType.name : '',
       },
-      // TODO - logic here to determine if new=true, new=false, or new = ''
       {
         queryParam: 'new',
-        value: newRecipe && !triedIt ? newRecipe.toString()
-          : !newRecipe && triedIt ? newRecipe.toString() : '',
+        value:
+          newRecipe && !triedIt
+            ? newRecipe.toString()
+            : !newRecipe && triedIt ? newRecipe.toString() : '',
+      },
+      {
+        queryParam: 'stars',
+        value: rating > 0 ? rating.toString() : '',
       },
     ];
 
@@ -123,7 +131,11 @@ export class SearchScreen extends Component<any, Props, State> {
   };
 
   handleTriedItCheckedChange = (checked: boolean) => {
-    this.setState({ triedIt: !checked});
+    this.setState({ triedIt: !checked });
+  };
+
+  handleRatingChange = (itemSelected: number) => {
+    this.setState({ rating: itemSelected });
   };
 
   handleMealTypeChange = (idx: string) => {
@@ -158,6 +170,7 @@ export class SearchScreen extends Component<any, Props, State> {
     const { dispatch } = this.props;
     this.setState({
       searchString: '',
+      rating: 0,
       newRecipe: true,
       triedIt: true,
       mealType: undefined,
@@ -262,10 +275,12 @@ export class SearchScreen extends Component<any, Props, State> {
         onNewRecipeCheckedChange={this.handleNewCheckedChange}
         triedItChecked={this.state.triedIt}
         onTriedItCheckedChange={this.handleTriedItCheckedChange}
+        onRatingChange={this.handleRatingChange}
         onSearchRecipe={this.handleSearchRecipe}
         onClearSearch={this.handleClear}
         recipes={data}
         textValue={this.state.searchString}
+        rating={this.state.rating}
         errorMessage={errorMessage}
       />
     );
