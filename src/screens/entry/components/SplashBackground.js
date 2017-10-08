@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const SplashScreenBackground = ({ onPress }: { onPress: Function }) =>
+const SplashBackground = ({ onPress }: { onPress: Function }) =>
   <View style={styles.container}>
     <StatusBar barStyle="light-content" />
     <Image source={backgroundImage} style={styles.backgroundImage}>
@@ -71,4 +71,4 @@ const SplashScreenBackground = ({ onPress }: { onPress: Function }) =>
     </Image>
   </View>;
 
-export default SplashScreenBackground;
+export default SplashBackground;

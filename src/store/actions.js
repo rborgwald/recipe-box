@@ -8,6 +8,10 @@ export const SET_CUISINE_TYPES: 'SET_CUISINE_TYPES' = 'SET_CUISINE_TYPES';
 export const SET_PROTEIN_TYPES: 'SET_PROTEIN_TYPES' = 'SET_PROTEIN_TYPES';
 export const SET_PREPARATION_TYPES: 'SET_PREPARATION_TYPES' =
   'SET_PREPARATION_TYPES';
+export const SET_LOGIN: 'SET_LOGIN' = 'SET_LOGIN';
+export const SET_TOKEN: 'SET_TOKEN' = 'SET_TOKEN';
+export const SET_USER: 'SET_USER' = 'SET_USER';
+export const SET_LOGOUT: 'SET_LOGOUT' = 'SET_LOGOUT';
 
 export type Action =
   | SetRecipeAction
@@ -15,7 +19,11 @@ export type Action =
   | SetMealTypesAction
   | SetCuisineTypesAction
   | SetProteinTypesAction
-  | SetPreparationTypesAction;
+  | SetPreparationTypesAction
+  | SetLoginAction
+  | SetTokenAction
+  | SetUserAction
+  | SetLogoutAction;
 
 type SetRecipeAction = {
   type: typeof SET_RECIPE,
@@ -76,3 +84,47 @@ export const setPreparationTypes = (
   type: SET_PREPARATION_TYPES,
   payload: preparationTypes,
 });
+
+type SetLoginAction = {
+  type: typeof SET_LOGIN,
+  payload: $PropertyType<State, 'username'>,
+};
+export const setLogin = (username: $PropertyType<State, 'username'>) => {
+  return {
+    type: SET_LOGIN,
+    payload: username,
+  };
+};
+
+type SetTokenAction = {
+  type: typeof SET_TOKEN,
+  payload: $PropertyType<State, 'token'>,
+};
+export const setToken = (token: $PropertyType<State, 'token'>) => {
+  return {
+    type: SET_TOKEN,
+    payload: token,
+  }
+};
+
+type SetUserAction = {
+  type: typeof SET_USER,
+  payload: $PropertyType<State, 'username'>,
+};
+export const setUser = (username: $PropertyType<State, 'username'>) => {
+  return {
+    type: SET_USER,
+    payload: username,
+  }
+};
+
+type SetLogoutAction = {
+  type: typeof SET_LOGOUT,
+  payload: null,
+}
+export const setLogout = () => {
+  return {
+    type: SET_LOGOUT,
+    payload: null,
+  };
+};

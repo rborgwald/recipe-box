@@ -34,6 +34,7 @@ type Props = {
   cuisineTypes: $PropertyType<StoreState, 'cuisineTypes'>,
   preparationTypes: $PropertyType<StoreState, 'preparationTypes'>,
   proteinTypes: $PropertyType<StoreState, 'proteinTypes'>,
+  token: $PropertyType<StoreState, 'token'>,
 };
 
 export class SearchScreen extends Component<any, Props, State> {
@@ -65,6 +66,7 @@ export class SearchScreen extends Component<any, Props, State> {
   proteinTypeRef: ModalDropdown;
 
   handleSearchRecipe = () => {
+    const { token } = this.props;
     const {
       searchString,
       rating,
@@ -110,7 +112,7 @@ export class SearchScreen extends Component<any, Props, State> {
       },
     ];
 
-    searchRecipes(queryParams)
+    searchRecipes(token, queryParams)
       .then(recipes => {
         console.log(`Matching recipes: ${JSON.stringify(recipes)}`);
         const { dispatch } = this.props;
@@ -293,6 +295,7 @@ const mapStateToProps = state => ({
   cuisineTypes: state.cuisineTypes,
   proteinTypes: state.proteinTypes,
   preparationTypes: state.preparationTypes,
+  token: state.token,
 });
 
 const RecipeNav = StackNavigator({

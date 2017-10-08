@@ -25,6 +25,7 @@ type Props = {
   cuisineTypes: $PropertyType<StoreState, 'cuisineTypes'>,
   preparationTypes: $PropertyType<StoreState, 'preparationTypes'>,
   proteinTypes: $PropertyType<StoreState, 'proteinTypes'>,
+  token: $PropertyType<StoreState, 'token'>,
 };
 export class RecipeDetailsScreen extends Component<any, Props, State> {
   static navigationOptions = ({ navigation }) => ({
@@ -156,10 +157,11 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
     const {
       recipes,
       dispatch,
+      token,
       navigation: { state: { params: { recipe } } },
     } = this.props;
     if (recipe) {
-      updateRecipe(recipe)
+      updateRecipe(token, recipe)
         .then(() => {
           const newRecipes = filter(recipes, rec => rec.id !== recipe.id);
           newRecipes.push(recipe);
@@ -178,10 +180,11 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
     const {
       recipes,
       dispatch,
+      token,
       navigation: { state: { params: { recipe } } },
     } = this.props;
     if (recipe) {
-      deleteRecipe(recipe)
+      deleteRecipe(token, recipe)
         .then(() => {
           const newRecipes = filter(recipes, rec => rec.id !== recipe.id);
           dispatch(setRecipes(newRecipes));
@@ -231,6 +234,7 @@ const mapStateToProps = state => ({
   cuisineTypes: state.cuisineTypes,
   proteinTypes: state.proteinTypes,
   preparationTypes: state.preparationTypes,
+  token: state.token,
 });
 
 export default connect(mapStateToProps)(RecipeDetailsScreen);

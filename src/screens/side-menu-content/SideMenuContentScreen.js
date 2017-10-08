@@ -1,13 +1,17 @@
 // @flow
 import React, { Component } from 'react';
 import { StyleSheet, View, Image, BackHandler } from 'react-native';
+import { connect } from 'react-redux';
 import type { NavigationScreenProp } from 'react-navigation';
+import type { State, Store } from '../../store/store';
 import SideMenuItem from './components/SideMenuItem';
 import logo from '../../images/logo.png';
 import searchIcon from '../../images/search-icon.png';
 import addRecipeIcon from '../../images/plus-icon.png';
 import adminIcon from '../../images/admin-icon.png';
 import logoutIcon from '../../images/logout-icon.png';
+import { deleteToken } from '../../utils/storage';
+import {setLogout, setToken} from "../../store/actions";
 
 const styles = StyleSheet.create({
   outerContainerStyle: {
@@ -29,8 +33,9 @@ const styles = StyleSheet.create({
 
 type Props = {
   navigation: NavigationScreenProp,
+  dispatch: $PropertyType<Store, 'dispatch'>,
 };
-export default class SideMenuContentScreen extends Component<any, Props, void> {
+export class SideMenuContentScreen extends Component<any, Props, void> {
   handleSearchRecipePress = () => {
     this.props.navigation.navigate('Search');
   };
@@ -41,6 +46,17 @@ export default class SideMenuContentScreen extends Component<any, Props, void> {
 
   handleAdminPress = () => {
     this.props.navigation.navigate('Admin');
+  };
+
+  handleLogoutPress = () => {
+    const { dispatch } = this.props;
+
+    return deleteToken().then(() => {
+      dispatch(setLogout());
+
+      BackHandler.exitApp();
+    });
+
   };
 
   render() {
@@ -65,11 +81,13 @@ export default class SideMenuContentScreen extends Component<any, Props, void> {
           onPress={this.handleAdminPress}
         />
         <SideMenuItem
-          title="Exit"
+          title="Logout"
           icon={logoutIcon}
-          onPress={() => BackHandler.exitApp()}
+          onPress={this.handleLogoutPress}
         />
       </View>
     );
   }
 }
+
+export default connect()(SideMenuContentScreen);

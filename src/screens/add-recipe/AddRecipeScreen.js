@@ -19,6 +19,7 @@ type Props = {
   cuisineTypes: $PropertyType<StoreState, 'cuisineTypes'>,
   preparationTypes: $PropertyType<StoreState, 'preparationTypes'>,
   proteinTypes: $PropertyType<StoreState, 'proteinTypes'>,
+  token: $PropertyType<StoreState, 'token'>,
 };
 
 type State = {
@@ -147,7 +148,7 @@ export class AddRecipeScreen extends Component<any, Props, State> {
   };
 
   handleSaveRecipe = () => {
-    const { recipe } = this.props;
+    const { recipe, token } = this.props;
 
     if(recipe && recipe.newRecipe === undefined) {
       recipe.newRecipe = true;
@@ -155,7 +156,7 @@ export class AddRecipeScreen extends Component<any, Props, State> {
 
     console.log(`final state: ${JSON.stringify(recipe)}`);
 
-    createRecipe(recipe)
+    createRecipe(token, recipe)
       .then(response => {
         console.log(`Created Recipe: ${JSON.stringify(response)}`);
         this.setState({ errorMessage: '' });
@@ -253,6 +254,7 @@ const mapStateToProps = state => ({
   cuisineTypes: state.cuisineTypes,
   proteinTypes: state.proteinTypes,
   preparationTypes: state.preparationTypes,
+  token: state.token,
 });
 
 const AddRecipeNav = StackNavigator({
