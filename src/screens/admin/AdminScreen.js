@@ -78,6 +78,7 @@ type Props = {
   cuisineTypes: $PropertyType<StoreState, 'cuisineTypes'>,
   preparationTypes: $PropertyType<StoreState, 'preparationTypes'>,
   proteinTypes: $PropertyType<StoreState, 'proteinTypes'>,
+  token: $PropertyType<StoreState, 'token'>,
 };
 type State = {
   successMessage: string,
@@ -229,10 +230,13 @@ export class AdminScreen extends Component<any, Props, State> {
   };
 
   handleSavePress = () => {
+    const { token } = this.props;
+
     if (!this.state.selectedOption && this.state.currentName !== '') {
       console.log(`Ready to save new type: ${this.state.currentName}`);
 
       createType(
+        token,
         this.categoriesMap[this.state.selectedCategory],
         this.state.currentName,
       )
@@ -251,6 +255,7 @@ export class AdminScreen extends Component<any, Props, State> {
       const selectedOption = this.state.selectedOption;
       console.log(`Ready to update: ${this.state.currentName}`);
       updateType(
+        token,
         this.categoriesMap[this.state.selectedCategory],
         selectedOption,
         this.state.currentName,
@@ -347,6 +352,7 @@ export class AdminScreen extends Component<any, Props, State> {
   };
 
   handleDeletePress = () => {
+    const { token } = this.props;
     console.log(`Delete Pressed: ${JSON.stringify(this.state.selectedOption)}`);
     if (this.state.selectedOption) {
       const selectedOption = this.state.selectedOption;
@@ -355,6 +361,7 @@ export class AdminScreen extends Component<any, Props, State> {
       );
 
       deleteType(
+        token,
         this.categoriesMap[this.state.selectedCategory],
         selectedOption.id,
       )
@@ -498,6 +505,7 @@ const mapStateToProps = state => ({
   cuisineTypes: state.cuisineTypes,
   proteinTypes: state.proteinTypes,
   preparationTypes: state.preparationTypes,
+  token: state.token,
 });
 
 const AdminNav = StackNavigator({

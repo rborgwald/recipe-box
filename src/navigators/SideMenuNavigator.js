@@ -4,7 +4,7 @@ import { DrawerNavigator } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import type { Store } from '../store/store';
+import type { Store, State as StoreState } from '../store/store';
 import SearchScreen from '../screens/search/SearchScreen';
 import AddRecipeScreen from '../screens/add-recipe/AddRecipeScreen';
 import AdminScreen from '../screens/admin/AdminScreen';
@@ -42,6 +42,7 @@ export const SideMenuNav = DrawerNavigator(
 type Props = {
   navigation: NavigationScreenProp,
   dispatch: $PropertyType<Store, 'dispatch'>,
+  token: $PropertyType<StoreState, 'token'>,
 };
 
 export class SideMenuNavWrapper extends Component<any, Props, void> {
@@ -54,25 +55,25 @@ export class SideMenuNavWrapper extends Component<any, Props, void> {
   }
 
   lookupTypes = () => {
-    const { dispatch } = this.props;
+    const { dispatch, token } = this.props;
     // TODO: figure out how to handle error(s)
 
-    getMealTypes().then(types => {
+    getMealTypes(token).then(types => {
       const sortedById = types.sort((a, b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
       _.map(sortedById, (e, i) => _.extend(e, { idx: i + 1 }));
       dispatch(setMealTypes(sortedById));
     });
-    getCuisineTypes().then(types => {
+    getCuisineTypes(token).then(types => {
       const sortedById = types.sort((a, b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
       _.map(sortedById, (e, i) => _.extend(e, { idx: i + 1 }));
       dispatch(setCuisineTypes(types));
     });
-    getProteinTypes().then(types => {
+    getProteinTypes(token).then(types => {
       const sortedById = types.sort((a, b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
       _.map(sortedById, (e, i) => _.extend(e, { idx: i + 1 }));
       dispatch(setProteinTypes(types));
     });
-    getPreparationTypes().then(types => {
+    getPreparationTypes(token).then(types => {
       const sortedById = types.sort((a, b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
       _.map(sortedById, (e, i) => _.extend(e, { idx: i + 1 }));
       dispatch(setPreparationTypes(types));
@@ -84,4 +85,8 @@ export class SideMenuNavWrapper extends Component<any, Props, void> {
   }
 }
 
-export default connect()(SideMenuNavWrapper);
+const mapStateToProps = state => ({
+  token: state.token,
+});
+
+export default connect(mapStateToProps)(SideMenuNavWrapper);

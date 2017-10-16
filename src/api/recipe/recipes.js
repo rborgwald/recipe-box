@@ -6,6 +6,7 @@ import type { Recipe } from './model';
 export const NETWORK_TIMEOUT = 5000;
 
 export const searchRecipes = (
+  token: string,
   queryParams: {
     queryParam: string,
     value: string,
@@ -16,6 +17,9 @@ export const searchRecipes = (
     'Request timed out',
     fetch(recipeUrl + makeQueryString(queryParams), {
       method: 'GET',
+      headers: {
+        Authorization: token,
+      },
     }),
   )
     .then(async response => {
@@ -47,12 +51,15 @@ const makeQueryString = (queryParams): string => {
   return queryString;
 };
 
-export const getAllRecipes = (): Promise<*> =>
+export const getAllRecipes = (token: string): Promise<*> =>
   timeoutPromise(
     NETWORK_TIMEOUT,
     'Request timed out',
     fetch(`${recipeUrl}/all`, {
       method: 'GET',
+      headers: {
+        Authorization: token,
+      },
     }),
   )
     .then(async response => {
@@ -66,7 +73,7 @@ export const getAllRecipes = (): Promise<*> =>
       throw Error(err);
     });
 
-export const deleteRecipe = async (recipe: Recipe): Promise<*> => {
+export const deleteRecipe = async (token: string, recipe: Recipe): Promise<*> => {
   console.log(`deleteing recipe: ${recipeUrl}/${recipe.id}`);
 
   const response = await timeoutPromise(
@@ -76,6 +83,7 @@ export const deleteRecipe = async (recipe: Recipe): Promise<*> => {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: token,
       },
     }),
   ).catch(err => {
@@ -89,7 +97,7 @@ export const deleteRecipe = async (recipe: Recipe): Promise<*> => {
   return Promise.resolve();
 };
 
-export const updateRecipe = (recipe: Recipe): Promise<*> => {
+export const updateRecipe = (token: string, recipe: Recipe): Promise<*> => {
   console.log(`recipe to update: ${JSON.stringify(recipe)}`);
 
   return timeoutPromise(
@@ -99,6 +107,7 @@ export const updateRecipe = (recipe: Recipe): Promise<*> => {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: token,
       },
       body: JSON.stringify(recipe),
     }),
@@ -116,6 +125,7 @@ export const updateRecipe = (recipe: Recipe): Promise<*> => {
 };
 
 export const createRecipe = (
+  token: string,
   recipe: $PropertyType<StoreState, 'recipe'>,
 ): Promise<*> => {
   console.log(`recipe to create: ${JSON.stringify(recipe)}`);
@@ -127,6 +137,7 @@ export const createRecipe = (
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: token,
       },
       body: JSON.stringify(recipe),
     }),

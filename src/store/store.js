@@ -11,6 +11,9 @@ export type State = {
   +cuisineTypes: SearchCriterion[],
   +proteinTypes: SearchCriterion[],
   +preparationTypes: SearchCriterion[],
+  +username: string,
+  +token: string,
+  +isLoggedIn: boolean,
 };
 
 const initialState: State = {
@@ -20,6 +23,9 @@ const initialState: State = {
   cuisineTypes: [],
   proteinTypes: [],
   preparationTypes: [],
+  username: '',
+  token: '',
+  isLoggedIn: false,
 };
 
 export const reducer = (state: State = initialState, action: Action) => {
@@ -59,6 +65,32 @@ export const reducer = (state: State = initialState, action: Action) => {
       return {
         ...state,
         recipes: payload,
+      };
+    }
+    case actions.SET_LOGIN: {
+      return {
+        ...state,
+        isLoggedIn: true,
+        username: payload,
+      };
+    }
+    case actions.SET_TOKEN: {
+      return {
+        ...state,
+        token: payload,
+      };
+    }
+    case actions.SET_USER: {
+      return {
+        ...state,
+        username: payload,
+      };
+    }
+    case actions.SET_LOGOUT: {
+      return {
+        ...state,
+        isLoggedIn: false,
+        token: '',
       };
     }
     default: {
