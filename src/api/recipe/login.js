@@ -4,10 +4,7 @@ import { loginUrl } from '../urls';
 
 export const NETWORK_TIMEOUT = 5000;
 
-export const login = (
-  username: string,
-  password: string
-): Promise<string> =>
+export const login = (username: string, password: string): Promise<string> =>
   timeoutPromise(
     NETWORK_TIMEOUT,
     'Request timed out',
@@ -17,8 +14,8 @@ export const login = (
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        username: username,
-        password: password,
+        username,
+        password,
       }),
     }),
   )

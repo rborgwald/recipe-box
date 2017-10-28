@@ -90,7 +90,7 @@ type State = {
 };
 export class AdminScreen extends Component<any, Props, State> {
   static navigationOptions = ({ navigation }) => ({
-    title: 'Admin',
+    title: 'Recipe Admin',
     headerLeft: (
       <ImageButton
         icon={menuIcon}

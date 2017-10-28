@@ -8,6 +8,7 @@ import type { Store, State as StoreState } from '../store/store';
 import SearchScreen from '../screens/search/SearchScreen';
 import AddRecipeScreen from '../screens/add-recipe/AddRecipeScreen';
 import AdminScreen from '../screens/admin/AdminScreen';
+import UsersScreen from '../screens/users/UsersScreen';
 import SideMenuContentScreen from '../screens/side-menu-content/SideMenuContentScreen';
 import {
   getCuisineTypes,
@@ -32,6 +33,9 @@ export const SideMenuNav = DrawerNavigator(
     },
     Admin: {
       screen: AdminScreen,
+    },
+    Users: {
+      screen: UsersScreen,
     },
   },
   {
@@ -59,22 +63,30 @@ export class SideMenuNavWrapper extends Component<any, Props, void> {
     // TODO: figure out how to handle error(s)
 
     getMealTypes(token).then(types => {
-      const sortedById = types.sort((a, b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
+      const sortedById = types.sort(
+        (a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0),
+      );
       _.map(sortedById, (e, i) => _.extend(e, { idx: i + 1 }));
       dispatch(setMealTypes(sortedById));
     });
     getCuisineTypes(token).then(types => {
-      const sortedById = types.sort((a, b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
+      const sortedById = types.sort(
+        (a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0),
+      );
       _.map(sortedById, (e, i) => _.extend(e, { idx: i + 1 }));
       dispatch(setCuisineTypes(types));
     });
     getProteinTypes(token).then(types => {
-      const sortedById = types.sort((a, b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
+      const sortedById = types.sort(
+        (a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0),
+      );
       _.map(sortedById, (e, i) => _.extend(e, { idx: i + 1 }));
       dispatch(setProteinTypes(types));
     });
     getPreparationTypes(token).then(types => {
-      const sortedById = types.sort((a, b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
+      const sortedById = types.sort(
+        (a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0),
+      );
       _.map(sortedById, (e, i) => _.extend(e, { idx: i + 1 }));
       dispatch(setPreparationTypes(types));
     });

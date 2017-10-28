@@ -11,7 +11,7 @@ export const getMealTypes = (token: string): Promise<*> =>
       Authorization: token,
     },
   }).then(async response => {
-    const {status} = response;
+    const { status } = response;
     const responseJson = await response.json();
     if (status !== 200 && status !== 404) throw Error(responseJson.message);
     if (status === 404) return [];

@@ -9,9 +9,10 @@ import logo from '../../images/logo.png';
 import searchIcon from '../../images/search-icon.png';
 import addRecipeIcon from '../../images/plus-icon.png';
 import adminIcon from '../../images/admin-icon.png';
+import usersIcon from '../../images/users_icon.png';
 import logoutIcon from '../../images/logout-icon.png';
 import { deleteToken } from '../../utils/storage';
-import {setLogout, setToken} from "../../store/actions";
+import { setLogout, setToken } from '../../store/actions';
 
 const styles = StyleSheet.create({
   outerContainerStyle: {
@@ -56,7 +57,10 @@ export class SideMenuContentScreen extends Component<any, Props, void> {
 
       BackHandler.exitApp();
     });
+  };
 
+  handleUsersPress = () => {
+    this.props.navigation.navigate('Users');
   };
 
   render() {
@@ -76,9 +80,14 @@ export class SideMenuContentScreen extends Component<any, Props, void> {
           onPress={this.handleAddRecipePress}
         />
         <SideMenuItem
-          title="Admin"
+          title="Recipe Admin"
           icon={adminIcon}
           onPress={this.handleAdminPress}
+        />
+        <SideMenuItem
+          title="User Admin"
+          icon={usersIcon}
+          onPress={this.handleUsersPress}
         />
         <SideMenuItem
           title="Logout"
