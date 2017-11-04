@@ -3,16 +3,17 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Image, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import type { NavigationScreenProp } from 'react-navigation';
-import type { State, Store } from '../../store/store';
+import type { Store } from '../../store/store';
 import SideMenuItem from './components/SideMenuItem';
 import logo from '../../images/logo.png';
 import searchIcon from '../../images/search-icon.png';
+import recipeListIcon from '../../images/recipe_list_icon.png';
 import addRecipeIcon from '../../images/plus-icon.png';
 import adminIcon from '../../images/admin-icon.png';
 import usersIcon from '../../images/users_icon.png';
 import logoutIcon from '../../images/logout-icon.png';
 import { deleteToken } from '../../utils/storage';
-import { setLogout, setToken } from '../../store/actions';
+import { setLogout } from '../../store/actions';
 
 const styles = StyleSheet.create({
   outerContainerStyle: {
@@ -20,13 +21,13 @@ const styles = StyleSheet.create({
   },
   imageContainerStyle: {
     flexDirection: 'row',
-    padding: 25,
+    padding: 10,
     justifyContent: 'center',
   },
   imageStyle: {
     resizeMode: 'contain',
     flex: 1,
-    paddingTop: 153,
+    paddingTop: 120,
     tintColor: '#333',
     opacity: 0.75,
   },
@@ -39,6 +40,10 @@ type Props = {
 export class SideMenuContentScreen extends Component<any, Props, void> {
   handleSearchRecipePress = () => {
     this.props.navigation.navigate('Search');
+  };
+
+  handleRecipeListPress = () => {
+    this.props.navigation.navigate('RecipeList');
   };
 
   handleAddRecipePress = () => {
@@ -73,6 +78,11 @@ export class SideMenuContentScreen extends Component<any, Props, void> {
           title="Search Recipe"
           icon={searchIcon}
           onPress={this.handleSearchRecipePress}
+        />
+        <SideMenuItem
+          title="Recipe Lists"
+          icon={recipeListIcon}
+          onPress={this.handleRecipeListPress}
         />
         <SideMenuItem
           title="Add Recipe"

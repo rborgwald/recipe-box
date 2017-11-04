@@ -8,7 +8,7 @@ import Login from './components/Login';
 import { navigateModalNavigator } from '../../utils/navigation';
 import type { Store, State as StoreState } from '../../store/store';
 import { login } from '../../api/recipe/login';
-import {setLogin, setLogout, setToken, setUser} from '../../store/actions';
+import { setLogin, setLogout, setToken, setUser } from '../../store/actions';
 import { deleteToken, readAll, saveToken, saveUser } from '../../utils/storage';
 
 type Props = {
@@ -40,11 +40,10 @@ export class EntryScreen extends Component<any, Props, State> {
         dispatch(setToken(token));
         dispatch(setLogin(username));
         this.setState({ username });
-      } else if(username) {
+      } else if (username) {
         dispatch(setUser(username));
         this.setState({ username });
       }
-
     });
   }
 

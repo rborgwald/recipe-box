@@ -12,6 +12,7 @@ export const SET_LOGIN: 'SET_LOGIN' = 'SET_LOGIN';
 export const SET_TOKEN: 'SET_TOKEN' = 'SET_TOKEN';
 export const SET_USER: 'SET_USER' = 'SET_USER';
 export const SET_LOGOUT: 'SET_LOGOUT' = 'SET_LOGOUT';
+export const SET_RECIPE_LISTS: 'SET_RECIPE_LISTS' = 'SET_RECIPE_LISTS';
 
 export type Action =
   | SetRecipeAction
@@ -23,7 +24,8 @@ export type Action =
   | SetLoginAction
   | SetTokenAction
   | SetUserAction
-  | SetLogoutAction;
+  | SetLogoutAction
+  | SetRecipeListsAction;
 
 type SetRecipeAction = {
   type: typeof SET_RECIPE,
@@ -104,7 +106,7 @@ export const setToken = (token: $PropertyType<State, 'token'>) => {
   return {
     type: SET_TOKEN,
     payload: token,
-  }
+  };
 };
 
 type SetUserAction = {
@@ -115,16 +117,27 @@ export const setUser = (username: $PropertyType<State, 'username'>) => {
   return {
     type: SET_USER,
     payload: username,
-  }
+  };
 };
 
 type SetLogoutAction = {
   type: typeof SET_LOGOUT,
   payload: null,
-}
+};
 export const setLogout = () => {
   return {
     type: SET_LOGOUT,
     payload: null,
   };
 };
+
+type SetRecipeListsAction = {
+  type: typeof SET_RECIPE_LISTS,
+  payload: $PropertyType<State, 'recipeLists'>,
+};
+export const setRecipeLists = (
+  recipeLists: $PropertyType<State, 'recipeLists'>,
+) => ({
+  type: SET_RECIPE_LISTS,
+  payload: recipeLists,
+});

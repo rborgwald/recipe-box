@@ -10,3 +10,5 @@ export const lookupUrl = `${RECIPES_URL}/api/lookup`;
 export const loginUrl = `${RECIPES_URL}/login`;
 
 export const userUrl = `${RECIPES_URL}/api/users`;
+
+export const recipeListsUrl = `${RECIPES_URL}/api/recipelists`;

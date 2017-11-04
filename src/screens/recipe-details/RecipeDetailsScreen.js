@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { filter } from 'lodash';
 import type { NavigationScreenProp } from 'react-navigation';
+import { NavigationActions } from 'react-navigation';
 // $FlowIssue
 import backArrow from '../../images/back.png';
 import type { Store, State as StoreState } from '../../store/store';
@@ -31,7 +32,20 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
   static navigationOptions = ({ navigation }) => ({
     headerTitle: 'Recipe Details',
     headerLeft: (
-      <ImageButton onPress={() => navigation.goBack()} icon={backArrow} />
+      <ImageButton
+        onPress={() => {
+          const { state: { params: { recipeList } } } = navigation;
+
+          return recipeList !== undefined
+            ? navigation.dispatch({
+                type: 'Navigation/NAVIGATE',
+                routeName: 'RecipeList',
+                params: { recipeList },
+              })
+            : navigation.goBack();
+        }}
+        icon={backArrow}
+      />
     ),
   });
 
@@ -199,13 +213,16 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
   };
 
   render() {
-    const { navigation: { state: { params: { recipe } } } } = this.props;
+    const {
+      navigation: { state: { params: { recipe, recipeList } } },
+    } = this.props;
     const { errorMessage } = this.state;
 
     return recipe === undefined
       ? null
       : <RecipeDetails
           recipe={recipe}
+          recipeList={recipeList}
           mealTypes={this.props.mealTypes}
           cuisineTypes={this.props.cuisineTypes}
           proteinTypes={this.props.proteinTypes}

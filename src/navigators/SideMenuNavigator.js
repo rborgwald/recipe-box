@@ -9,6 +9,7 @@ import SearchScreen from '../screens/search/SearchScreen';
 import AddRecipeScreen from '../screens/add-recipe/AddRecipeScreen';
 import AdminScreen from '../screens/admin/AdminScreen';
 import UsersScreen from '../screens/users/UsersScreen';
+import RecipeListScreen from '../screens/recipe-lists/RecipeListScreen';
 import SideMenuContentScreen from '../screens/side-menu-content/SideMenuContentScreen';
 import {
   getCuisineTypes,
@@ -21,12 +22,20 @@ import {
   setMealTypes,
   setPreparationTypes,
   setProteinTypes,
+  setRecipeLists,
 } from '../store/actions';
+import {
+  getRecipeListsForUser,
+  getRecipesForList,
+} from '../api/recipe/recipeLists';
 
 export const SideMenuNav = DrawerNavigator(
   {
     Search: {
       screen: SearchScreen,
+    },
+    RecipeList: {
+      screen: RecipeListScreen,
     },
     AddRecipe: {
       screen: AddRecipeScreen,
@@ -47,6 +56,7 @@ type Props = {
   navigation: NavigationScreenProp,
   dispatch: $PropertyType<Store, 'dispatch'>,
   token: $PropertyType<StoreState, 'token'>,
+  username: $PropertyType<StoreState, 'username'>,
 };
 
 export class SideMenuNavWrapper extends Component<any, Props, void> {
@@ -56,7 +66,34 @@ export class SideMenuNavWrapper extends Component<any, Props, void> {
 
   componentDidMount() {
     this.lookupTypes();
+    this.getRecipeLists();
   }
+
+  getRecipeLists = () => {
+    const { dispatch, token, username } = this.props;
+    const newRecipeLists = [];
+
+    getRecipeListsForUser(token, username).then(recipeListsFromApi => {
+      const promises = [];
+
+      recipeListsFromApi.forEach(recipeList => {
+        promises.push(
+          getRecipesForList(token, recipeList.id).then(recipes => {
+            const newRecipeList = {
+              id: recipeList.id,
+              name: recipeList.name,
+              recipes,
+            };
+            newRecipeLists.push(newRecipeList);
+            Promise.resolve();
+          }),
+        );
+      });
+      Promise.all(promises).then(() => {
+        dispatch(setRecipeLists(newRecipeLists));
+      });
+    });
+  };
 
   lookupTypes = () => {
     const { dispatch, token } = this.props;
@@ -99,6 +136,7 @@ export class SideMenuNavWrapper extends Component<any, Props, void> {
 
 const mapStateToProps = state => ({
   token: state.token,
+  username: state.username,
 });
 
 export default connect(mapStateToProps)(SideMenuNavWrapper);

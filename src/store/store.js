@@ -2,7 +2,7 @@
 import { createStore } from 'redux';
 import * as actions from './actions';
 import type { Action } from './actions';
-import type { SearchCriterion, Recipe } from '../api/recipe/model';
+import type { SearchCriterion, Recipe, RecipeList } from '../api/recipe/model';
 
 export type State = {
   +recipe: Recipe | null,
@@ -14,6 +14,7 @@ export type State = {
   +username: string,
   +token: string,
   +isLoggedIn: boolean,
+  +recipeLists: RecipeList[],
 };
 
 const initialState: State = {
@@ -26,6 +27,7 @@ const initialState: State = {
   username: '',
   token: '',
   isLoggedIn: false,
+  recipeLists: [],
 };
 
 export const reducer = (state: State = initialState, action: Action) => {
@@ -91,6 +93,12 @@ export const reducer = (state: State = initialState, action: Action) => {
         ...state,
         isLoggedIn: false,
         token: '',
+      };
+    }
+    case actions.SET_RECIPE_LISTS: {
+      return {
+        ...state,
+        recipeLists: payload,
       };
     }
     default: {

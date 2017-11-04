@@ -2,7 +2,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import CheckBox from 'react-native-checkbox';
-import type { Recipe, SearchCriterion } from '../../../api/recipe/model';
+import type {
+  Recipe,
+  RecipeList,
+  SearchCriterion,
+} from '../../../api/recipe/model';
 import TextRowInput from '../../../components/TextRowInput';
 import BlockButton from '../../../components/BlockButton';
 import BadgeSelector from '../../../components/BadgeSelector';
@@ -62,6 +66,7 @@ const styles = StyleSheet.create({
 
 const RecipeDetails = ({
   recipe,
+  recipeList,
   mealTypes,
   cuisineTypes,
   proteinTypes,
@@ -82,6 +87,7 @@ const RecipeDetails = ({
   errorMessage,
 }: {
   recipe: Recipe,
+  recipeList?: RecipeList,
   mealTypes: SearchCriterion[],
   cuisineTypes: SearchCriterion[],
   proteinTypes: SearchCriterion[],
@@ -132,7 +138,7 @@ const RecipeDetails = ({
           />
           <CheckBox
             label="Tried It"
-            checked={!(recipe.newRecipe)}
+            checked={!recipe.newRecipe}
             onChange={onTriedItCheckedChange}
           />
         </View>

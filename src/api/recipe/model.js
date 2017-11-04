@@ -26,3 +26,9 @@ export type User = {
   id: number,
   username: string,
 };
+
+export type RecipeList = {
+  id: string,
+  name: string,
+  recipes: Recipe[],
+};
