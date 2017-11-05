@@ -3,15 +3,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { filter } from 'lodash';
 import type { NavigationScreenProp } from 'react-navigation';
-import { NavigationActions } from 'react-navigation';
 // $FlowIssue
-import backArrow from '../../images/back.png';
+import closeIcon from '../../images/close-icon.png';
 import type { Store, State as StoreState } from '../../store/store';
-import { setRecipes } from '../../store/actions';
+import { hideModal, setRecipes } from '../../store/actions';
 import RecipeDetails from './components/RecipeDetails';
 import ImageButton from '../../components/ImageButton';
 import { updateRecipe, deleteRecipe } from '../../api/recipe/recipes';
 import type { Recipe } from '../../api/recipe/model';
+import { store } from '../../store/store';
 
 type State = {
   errorMessage: string,
@@ -34,17 +34,10 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
     headerLeft: (
       <ImageButton
         onPress={() => {
-          const { state: { params: { recipeList } } } = navigation;
-
-          return recipeList !== undefined
-            ? navigation.dispatch({
-                type: 'Navigation/NAVIGATE',
-                routeName: 'RecipeList',
-                params: { recipeList },
-              })
-            : navigation.goBack();
+          navigation.goBack();
+          store.dispatch(hideModal());
         }}
-        icon={backArrow}
+        icon={closeIcon}
       />
     ),
   });
@@ -214,6 +207,10 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
 
   render() {
     const {
+      mealTypes,
+      cuisineTypes,
+      proteinTypes,
+      preparationTypes,
       navigation: { state: { params: { recipe, recipeList } } },
     } = this.props;
     const { errorMessage } = this.state;
@@ -223,10 +220,10 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
       : <RecipeDetails
           recipe={recipe}
           recipeList={recipeList}
-          mealTypes={this.props.mealTypes}
-          cuisineTypes={this.props.cuisineTypes}
-          proteinTypes={this.props.proteinTypes}
-          preparationTypes={this.props.preparationTypes}
+          mealTypes={mealTypes}
+          cuisineTypes={cuisineTypes}
+          proteinTypes={proteinTypes}
+          preparationTypes={preparationTypes}
           onNameChange={this.handleNameChange}
           onSourceChange={this.handleSourceChange}
           onVolumeChange={this.handleVolumeChange}

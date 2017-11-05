@@ -13,6 +13,8 @@ export const SET_TOKEN: 'SET_TOKEN' = 'SET_TOKEN';
 export const SET_USER: 'SET_USER' = 'SET_USER';
 export const SET_LOGOUT: 'SET_LOGOUT' = 'SET_LOGOUT';
 export const SET_RECIPE_LISTS: 'SET_RECIPE_LISTS' = 'SET_RECIPE_LISTS';
+export const SHOW_MODAL: 'SHOW_MODAL' = 'SHOW_MODAL';
+export const HIDE_MODAL: 'HIDE_MODAL' = 'HIDE_MODAL';
 
 export type Action =
   | SetRecipeAction
@@ -25,7 +27,9 @@ export type Action =
   | SetTokenAction
   | SetUserAction
   | SetLogoutAction
-  | SetRecipeListsAction;
+  | SetRecipeListsAction
+  | ShowModalAction
+  | HideModalAction;
 
 type SetRecipeAction = {
   type: typeof SET_RECIPE,
@@ -140,4 +144,22 @@ export const setRecipeLists = (
 ) => ({
   type: SET_RECIPE_LISTS,
   payload: recipeLists,
+});
+
+type ShowModalAction = {
+  type: typeof SHOW_MODAL,
+  payload: Array<mixed>,
+};
+export const showModal = (args: Array<mixed>) => ({
+  type: SHOW_MODAL,
+  payload: args,
+});
+
+type HideModalAction = {
+  type: typeof HIDE_MODAL,
+  payload: void,
+};
+export const hideModal = (): HideModalAction => ({
+  type: HIDE_MODAL,
+  payload: undefined,
 });

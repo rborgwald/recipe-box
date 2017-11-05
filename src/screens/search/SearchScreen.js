@@ -6,13 +6,13 @@ import ModalDropdown from 'react-native-modal-dropdown';
 import { connect } from 'react-redux';
 import type { NavigationScreenProp } from 'react-navigation';
 import type { Store, State as StoreState } from '../../store/store';
-import { setRecipes } from '../../store/actions';
+import { setRecipes, showModal } from '../../store/actions';
 import Search from './components/Search';
 import { searchRecipes } from '../../api/recipe/recipes';
 import type { SearchCriterion } from '../../api/recipe/model';
-import RecipeDetailsScreen from '../recipe-details/RecipeDetailsScreen';
 import ImageButton from '../../components/ImageButton';
 import menuIcon from '../../images/hamburgerNav.png';
+import { store } from '../../store/store';
 
 type State = {
   searchString: string,
@@ -218,7 +218,6 @@ export class SearchScreen extends Component<any, Props, State> {
 
   render() {
     const {
-      navigation,
       mealTypes,
       cuisineTypes,
       preparationTypes,
@@ -263,9 +262,7 @@ export class SearchScreen extends Component<any, Props, State> {
       key: recipe.id,
       recipe,
       onViewRecipe: () => {
-        navigation.navigate('RecipeDetailsScreen', {
-          recipe,
-        });
+        store.dispatch(showModal(['RecipeDetailsScreen', { recipe }]));
       },
     }));
 
@@ -301,9 +298,6 @@ const mapStateToProps = state => ({
 const RecipeNav = StackNavigator({
   Search: {
     screen: connect(mapStateToProps)(SearchScreen),
-  },
-  RecipeDetailsScreen: {
-    screen: RecipeDetailsScreen,
   },
 });
 

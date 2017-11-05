@@ -8,6 +8,8 @@ import backArrow from '../../images/back.png';
 import type { Store, State as StoreState } from '../../store/store';
 import ImageButton from '../../components/ImageButton';
 import RecipeListDetails from './components/RecipeListDetails';
+import { showModal } from '../../store/actions';
+import { store } from '../../store/store';
 
 type State = {
   errorMessage: string,
@@ -33,25 +35,14 @@ export class RecipeListDetailsScreen extends Component<any, Props, State> {
   };
 
   render() {
-    const {
-      navigation,
-      navigation: { state: { params: { recipeList } } },
-    } = this.props;
+    const { navigation: { state: { params: { recipeList } } } } = this.props;
 
     const recipeData = recipeList.recipes.map(recipe => ({
       key: recipe.id,
       recipe,
       recipeList,
       onViewRecipe: () => {
-        navigation.navigate(
-          'RecipeNav',
-          {},
-          {
-            type: 'Navigation/NAVIGATE',
-            routeName: 'RecipeDetailsScreen',
-            params: { recipe, recipeList },
-          },
-        );
+        store.dispatch(showModal(['RecipeDetailsScreen', { recipe }]));
       },
     }));
 

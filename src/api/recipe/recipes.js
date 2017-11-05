@@ -73,10 +73,10 @@ export const getAllRecipes = (token: string): Promise<*> =>
       throw Error(err);
     });
 
-export const deleteRecipe = async (token: string, recipe: Recipe): Promise<*> => {
+export const deleteRecipe = (token: string, recipe: Recipe): Promise<*> => {
   console.log(`deleteing recipe: ${recipeUrl}/${recipe.id}`);
 
-  const response = await timeoutPromise(
+  return timeoutPromise(
     NETWORK_TIMEOUT,
     'Request timed out',
     fetch(`${recipeUrl}/${recipe.id}`, {
@@ -86,15 +86,26 @@ export const deleteRecipe = async (token: string, recipe: Recipe): Promise<*> =>
         Authorization: token,
       },
     }),
-  ).catch(err => {
-    throw Error(err);
-  });
-
-  const { status } = response;
-  if (status !== 200 && status !== 404) throw Error(response.message);
-  if (status === 404) return [];
-
-  return Promise.resolve();
+  )
+    .then(async response => {
+      const { status } = await response;
+      if (status !== 200) {
+        if (
+          response._bodyText.contains(
+            'constraint [recipe_list_mapping_recipe_id_fk]',
+          )
+        ) {
+          throw new Error(
+            'Unable to delete recipe - it is part of a recipe list',
+          );
+        }
+        throw new Error(response._bodyText);
+      }
+      return Promise.resolve();
+    })
+    .catch(err => {
+      throw Error(err);
+    });
 };
 
 export const updateRecipe = (token: string, recipe: Recipe): Promise<*> => {

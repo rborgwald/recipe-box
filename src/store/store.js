@@ -15,6 +15,7 @@ export type State = {
   +token: string,
   +isLoggedIn: boolean,
   +recipeLists: RecipeList[],
+  +showModal: Array<mixed>[], // e.g. ['RecipeDetailsScreen', { recipe }]
 };
 
 const initialState: State = {
@@ -28,6 +29,7 @@ const initialState: State = {
   token: '',
   isLoggedIn: false,
   recipeLists: [],
+  showModal: [],
 };
 
 export const reducer = (state: State = initialState, action: Action) => {
@@ -99,6 +101,20 @@ export const reducer = (state: State = initialState, action: Action) => {
       return {
         ...state,
         recipeLists: payload,
+      };
+    }
+    case actions.SHOW_MODAL: {
+      return {
+        ...state,
+        showModal: [...state.showModal, payload],
+      };
+    }
+    case actions.HIDE_MODAL: {
+      const newShowModal = [...state.showModal];
+      newShowModal.pop();
+      return {
+        ...state,
+        showModal: newShowModal,
       };
     }
     default: {
