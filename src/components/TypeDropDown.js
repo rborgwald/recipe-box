@@ -5,7 +5,7 @@ import { capitalize } from '../utils/strings';
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
   },
   titleWrapper: {
@@ -18,20 +18,27 @@ const styles = StyleSheet.create({
   },
   picker: {
     width: 150,
+    marginRight: 5,
   },
 });
 
 const makeItems = (options: string[]) =>
   options.map((value, idx) =>
-    <Picker.Item key={idx} label={capitalize(value)} value={idx + 1} />,
+    <Picker.Item
+      key={idx}
+      label={capitalize(value)}
+      value={capitalize(value)}
+    />,
   );
 
 const TypeDropDown = ({
+  style,
   title,
   selectedValue,
   onValueChange,
   options,
 }: {
+  style?: Picker.propTypes.style,
   title: string,
   selectedValue?: string,
   onValueChange: Function,
@@ -46,7 +53,7 @@ const TypeDropDown = ({
     <Picker
       selectedValue={selectedValue || '0'}
       onValueChange={onValueChange}
-      style={styles.picker}
+      style={(styles.picker, style)}
     >
       <Picker.Item label="- None -" value="0" />
       {makeItems(options)}

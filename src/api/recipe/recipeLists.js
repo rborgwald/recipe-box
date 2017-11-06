@@ -1,5 +1,6 @@
 // @flow
 import { recipeListsUrl } from '../urls';
+import type {Recipe, RecipeList} from "./model";
 
 export const NETWORK_TIMEOUT = 5000;
 
@@ -100,6 +101,60 @@ export const deleteRecipeList = (token: string, id: string): Promise<*> =>
     .then(async response => {
       const { status } = response;
 
+      if (status !== 200) {
+        const responseJson = await response.json();
+        throw Error(responseJson.message);
+      }
+      return Promise.resolve();
+    })
+    .catch(err => {
+      throw Error(err);
+    });
+
+export const addRecipeToRecipeList = (
+  token: string,
+  recipe: Recipe,
+  recipeList: RecipeList,
+): Promise<*> =>
+  timeoutPromise(
+    NETWORK_TIMEOUT,
+    'Request timed out',
+    fetch(`${recipeListsUrl}/${recipeList.id}/recipes/${recipe.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+    }),
+  )
+    .then(async response => {
+      const { status } = response;
+      const responseJson = await response.json();
+      if (status !== 200) throw Error(responseJson.message);
+      return responseJson;
+    })
+    .catch(err => {
+      throw Error(err);
+    });
+
+export const deleteRecipeFromRecipeList = (
+  token: string,
+  recipe: Recipe,
+  recipeList: RecipeList,
+): Promise<*> =>
+  timeoutPromise(
+    NETWORK_TIMEOUT,
+    'Request timed out',
+    fetch(`${recipeListsUrl}/${recipeList.id}/recipes/${recipe.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+    }),
+  )
+    .then(async response => {
+      const { status } = response;
       if (status !== 200) {
         const responseJson = await response.json();
         throw Error(responseJson.message);

@@ -1,21 +1,28 @@
 /* @flow */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { filter } from 'lodash';
 import type { NavigationScreenProp } from 'react-navigation';
+import _ from 'lodash';
 // $FlowIssue
 import closeIcon from '../../images/close-icon.png';
 import type { Store, State as StoreState } from '../../store/store';
-import { hideModal, setRecipes } from '../../store/actions';
+import { hideModal, setRecipeLists, setRecipes } from '../../store/actions';
 import RecipeDetails from './components/RecipeDetails';
 import ImageButton from '../../components/ImageButton';
 import { updateRecipe, deleteRecipe } from '../../api/recipe/recipes';
-import type { Recipe } from '../../api/recipe/model';
+import type { Recipe, RecipeList } from '../../api/recipe/model';
 import { store } from '../../store/store';
+import { capitalize } from '../../utils/strings';
+import {
+  addRecipeToRecipeList,
+  deleteRecipeFromRecipeList,
+} from '../../api/recipe/recipeLists';
 
 type State = {
   errorMessage: string,
+  successMessage: string,
   recipe: Recipe | null,
+  selectedList: RecipeList | null,
 };
 
 type Props = {
@@ -27,6 +34,7 @@ type Props = {
   preparationTypes: $PropertyType<StoreState, 'preparationTypes'>,
   proteinTypes: $PropertyType<StoreState, 'proteinTypes'>,
   token: $PropertyType<StoreState, 'token'>,
+  recipeLists: $PropertyType<StoreState, 'recipeLists'>,
 };
 export class RecipeDetailsScreen extends Component<any, Props, State> {
   static navigationOptions = ({ navigation }) => ({
@@ -44,7 +52,9 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
 
   state = {
     errorMessage: '',
+    successMessage: '',
     recipe: null,
+    selectedList: null,
   };
 
   handleNameChange = (newName: string) => {
@@ -170,7 +180,7 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
     if (recipe) {
       updateRecipe(token, recipe)
         .then(() => {
-          const newRecipes = filter(recipes, rec => rec.id !== recipe.id);
+          const newRecipes = _.filter(recipes, rec => rec.id !== recipe.id);
           newRecipes.push(recipe);
           dispatch(setRecipes(newRecipes));
 
@@ -178,7 +188,7 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
           navigation.goBack();
         })
         .catch(error => {
-          this.setState({ errorMessage: error.message });
+          this.setState({ errorMessage: error.message, successMessage: '' });
         });
     }
   };
@@ -193,16 +203,102 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
     if (recipe) {
       deleteRecipe(token, recipe)
         .then(() => {
-          const newRecipes = filter(recipes, rec => rec.id !== recipe.id);
+          const newRecipes = _.filter(recipes, rec => rec.id !== recipe.id);
           dispatch(setRecipes(newRecipes));
 
           const { navigation } = this.props;
           navigation.goBack();
         })
         .catch(error => {
-          this.setState({ errorMessage: error.message });
+          this.setState({ errorMessage: error.message, successMessage: '' });
         });
     }
+  };
+
+  handleAddToList = () => {
+    const {
+      token,
+      dispatch,
+      recipeLists,
+      navigation: { state: { params: { recipe } } },
+    } = this.props;
+
+    if (recipe && this.state.selectedList) {
+      addRecipeToRecipeList(token, recipe, this.state.selectedList)
+        .then(() => {
+          // Remove recipe if already exists in recipe list
+          const newRecipeList = _.cloneDeep(this.state.selectedList);
+          newRecipeList.recipes = _.filter(
+            newRecipeList ? newRecipeList.recipes : [],
+            listRecipe => listRecipe.id !== recipe.id,
+          );
+          // Add recipe to newRecipeList
+          if (newRecipeList.recipes) {
+            newRecipeList.recipes.push(recipe);
+          } else {
+            newRecipeList.recipes = [recipe];
+          }
+          // replace list in recipe lists object
+          const newRecipeLists = _.map(
+            recipeLists,
+            list => (list.id === newRecipeList.id ? newRecipeList : list),
+          );
+
+          dispatch(setRecipeLists(newRecipeLists));
+          this.setState({
+            errorMessage: '',
+            successMessage: 'Successfully added recipe to list',
+            selectedList: null,
+          });
+        })
+        .catch(error => {
+          this.setState({ errorMessage: error.message, successMessage: '' });
+        });
+    }
+  };
+
+  handleListChange = (itemValue: string) => {
+    const { recipeLists } = this.props;
+    let selectedList = null;
+    if (parseInt(itemValue, 10) !== 0) {
+      selectedList = recipeLists.find(
+        list => capitalize(list.name) === capitalize(itemValue),
+      );
+    }
+
+    this.setState({ selectedList });
+  };
+
+  handleRemoveRecipeFromList = () => {
+    const {
+      token,
+      dispatch,
+      recipeLists,
+      navigation: { state: { params: { recipe, recipeList } } },
+    } = this.props;
+    return recipeList
+      ? deleteRecipeFromRecipeList(token, recipe, recipeList)
+          .then(() => {
+            // Remove recipe from list
+            const newRecipeList = _.cloneDeep(recipeList);
+            newRecipeList.recipes = _.filter(
+              newRecipeList ? newRecipeList.recipes : [],
+              listRecipe => listRecipe.id !== recipe.id,
+            );
+            // replace list in recipe lists object
+            const newRecipeLists = _.map(
+              recipeLists,
+              list => (list.id === newRecipeList.id ? newRecipeList : list),
+            );
+
+            dispatch(setRecipeLists(newRecipeLists));
+            const { navigation } = this.props;
+            navigation.goBack();
+          })
+          .catch(error => {
+            this.setState({ errorMessage: error.message });
+          })
+      : null;
   };
 
   render() {
@@ -211,15 +307,15 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
       cuisineTypes,
       proteinTypes,
       preparationTypes,
+      recipeLists,
       navigation: { state: { params: { recipe, recipeList } } },
     } = this.props;
-    const { errorMessage } = this.state;
-
+    const { errorMessage, successMessage, selectedList } = this.state;
     return recipe === undefined
       ? null
       : <RecipeDetails
           recipe={recipe}
-          recipeList={recipeList}
+          recipeLists={recipeLists}
           mealTypes={mealTypes}
           cuisineTypes={cuisineTypes}
           proteinTypes={proteinTypes}
@@ -237,7 +333,13 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
           onProteinTypeChange={this.handleProteinTypeChange}
           onUpdate={this.handleOnUpdate}
           onDelete={this.handleOnDelete}
+          onAddToList={this.handleAddToList}
+          selectedList={selectedList}
+          onListChange={this.handleListChange}
           errorMessage={errorMessage}
+          successMessage={successMessage}
+          currentRecipeList={recipeList}
+          onRemoveRecipeFromList={this.handleRemoveRecipeFromList}
         />;
   }
 }
@@ -249,6 +351,7 @@ const mapStateToProps = state => ({
   proteinTypes: state.proteinTypes,
   preparationTypes: state.preparationTypes,
   token: state.token,
+  recipeLists: state.recipeLists,
 });
 
 export default connect(mapStateToProps)(RecipeDetailsScreen);

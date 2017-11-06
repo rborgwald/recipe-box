@@ -11,6 +11,8 @@ import TextRowInput from '../../../components/TextRowInput';
 import BlockButton from '../../../components/BlockButton';
 import BadgeSelector from '../../../components/BadgeSelector';
 import Ratings from '../../../components/Ratings';
+import TypeDropDown from '../../../components/TypeDropDown';
+import WordButton from '../../../components/WordButton';
 
 const styles = StyleSheet.create({
   container: {
@@ -62,11 +64,40 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     paddingBottom: 15,
   },
+  successMessage: {
+    color: 'green',
+    backgroundColor: 'transparent',
+    alignSelf: 'center',
+    paddingBottom: 15,
+  },
+  addToList: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+  },
+  addToListButton: {
+    backgroundColor: '#29a709',
+    margin: 5,
+    marginBottom: 8,
+    height: 20,
+    width: '25%',
+  },
+  listPicker: {
+    height: 30,
+    width: 220,
+  },
+  removeFromList: {
+    flexDirection: 'row',
+  },
+  removeButton: {
+    fontSize: 18,
+    color: 'red',
+    margin: 5,
+  },
 });
 
 const RecipeDetails = ({
   recipe,
-  recipeList,
+  recipeLists,
   mealTypes,
   cuisineTypes,
   proteinTypes,
@@ -84,10 +115,16 @@ const RecipeDetails = ({
   onProteinTypeChange,
   onUpdate,
   onDelete,
+  onAddToList,
+  selectedList,
+  onListChange,
   errorMessage,
+  successMessage,
+  currentRecipeList,
+  onRemoveRecipeFromList,
 }: {
   recipe: Recipe,
-  recipeList?: RecipeList,
+  recipeLists: RecipeList[],
   mealTypes: SearchCriterion[],
   cuisineTypes: SearchCriterion[],
   proteinTypes: SearchCriterion[],
@@ -105,7 +142,13 @@ const RecipeDetails = ({
   onProteinTypeChange: Function,
   onUpdate: Function,
   onDelete: Function,
+  onAddToList: Function,
+  selectedList: RecipeList | null,
+  onListChange: Function,
   errorMessage: string,
+  successMessage: string,
+  currentRecipeList?: RecipeList,
+  onRemoveRecipeFromList?: Function,
 }) =>
   <View style={styles.container}>
     <View style={styles.infoWrapper}>
@@ -194,6 +237,38 @@ const RecipeDetails = ({
     <Text style={styles.errorMessage}>
       {errorMessage}
     </Text>
+    <Text style={styles.successMessage}>
+      {successMessage}
+    </Text>
+
+    {currentRecipeList && onRemoveRecipeFromList
+      ? <View style={styles.removeFromList}>
+          <WordButton
+            style={styles.removeButton}
+            text={`Remove from list: ${currentRecipeList.name}`}
+            onPress={onRemoveRecipeFromList}
+          />
+        </View>
+      : <View style={styles.addToList}>
+          <TypeDropDown
+            style={styles.listPicker}
+            title={`Add ${recipe.name} to list`}
+            selectedValue={
+              selectedList ? selectedList.name : 'No list selected'
+            }
+            onValueChange={onListChange}
+            options={
+              recipeLists
+                ? recipeLists.map(list => list.name)
+                : ['no lists available']
+            }
+          />
+          <BlockButton
+            style={styles.addToListButton}
+            text="Add"
+            onPress={onAddToList}
+          />
+        </View>}
   </View>;
 
 export default RecipeDetails;

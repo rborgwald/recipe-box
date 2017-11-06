@@ -15,7 +15,7 @@ import {
   deleteRecipeList,
 } from '../../api/recipe/recipeLists';
 import { setRecipeLists } from '../../store/actions';
-import { RecipeListDetailsScreen } from './RecipeListDetailsScreen';
+import RecipeListDetailsScreen from './RecipeListDetailsScreen';
 
 const styles = StyleSheet.create({
   container: {
