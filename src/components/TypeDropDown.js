@@ -51,7 +51,7 @@ const TypeDropDown = ({
       </Text>
     </View>
     <Picker
-      selectedValue={selectedValue || '0'}
+      selectedValue={selectedValue ? capitalize(selectedValue) : '0'}
       onValueChange={onValueChange}
       style={(styles.picker, style)}
     >

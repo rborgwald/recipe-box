@@ -103,10 +103,10 @@ export class RecipeListScreen extends Component<any, Props, State> {
 
   render() {
     const { navigation, dispatch, token, recipeLists } = this.props;
-
+    
     const data = recipeLists.map(recipeList => ({
       key: recipeList.id,
-      recipeList,
+      name: recipeList.name,
       onPress: () => {
         navigation.navigate('RecipeListDetails', {
           recipeList,

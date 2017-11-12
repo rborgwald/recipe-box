@@ -31,4 +31,5 @@ export type RecipeList = {
   id: string,
   name: string,
   recipes: Recipe[],
+  users: User[],
 };

@@ -22,12 +22,13 @@ import {
   setMealTypes,
   setPreparationTypes,
   setProteinTypes,
-  setRecipeLists,
+  setRecipeLists, setUsers,
 } from '../store/actions';
 import {
   getRecipeListsForUser,
   getRecipesForList,
 } from '../api/recipe/recipeLists';
+import { getUsers } from '../api/recipe/users';
 
 export const SideMenuNav = DrawerNavigator(
   {
@@ -67,6 +68,7 @@ export class SideMenuNavWrapper extends Component<any, Props, void> {
   componentDidMount() {
     this.lookupTypes();
     this.getRecipeLists();
+    this.getAllUsers();
   }
 
   getRecipeLists = () => {
@@ -74,24 +76,14 @@ export class SideMenuNavWrapper extends Component<any, Props, void> {
     const newRecipeLists = [];
 
     getRecipeListsForUser(token, username).then(recipeListsFromApi => {
-      const promises = [];
+      dispatch(setRecipeLists(recipeListsFromApi));
+    });
+  };
 
-      recipeListsFromApi.forEach(recipeList => {
-        promises.push(
-          getRecipesForList(token, recipeList.id).then(recipes => {
-            const newRecipeList = {
-              id: recipeList.id,
-              name: recipeList.name,
-              recipes,
-            };
-            newRecipeLists.push(newRecipeList);
-            Promise.resolve();
-          }),
-        );
-      });
-      Promise.all(promises).then(() => {
-        dispatch(setRecipeLists(newRecipeLists));
-      });
+  getAllUsers = () => {
+    const { dispatch, token } = this.props;
+    getUsers(token).then(users => {
+      dispatch(setUsers(users));
     });
   };
 

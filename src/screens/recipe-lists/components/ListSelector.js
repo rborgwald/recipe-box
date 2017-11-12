@@ -44,25 +44,27 @@ const styles = StyleSheet.create({
 });
 
 const ListSelector = ({
-  recipeList,
+  name,
   onPress,
   onDeletePress,
+  buttonText,
 }: {
-  recipeList: RecipeList,
+  name: string,
   onPress: Function,
   onDeletePress: Function,
+  buttonText?: string,
 }) =>
   <TouchableHighlight onPress={onPress}>
     <View style={styles.container}>
       <View style={styles.recipeName}>
         <Image style={styles.dot} source={dot} />
         <Text style={styles.text}>
-          {recipeList.name}
+          {name}
         </Text>
       </View>
       <BlockButton
         style={styles.deleteButton}
-        text="Delete List"
+        text={buttonText ? buttonText : "Delete List"}
         onPress={onDeletePress}
       />
     </View>

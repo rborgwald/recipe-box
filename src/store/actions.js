@@ -11,6 +11,7 @@ export const SET_PREPARATION_TYPES: 'SET_PREPARATION_TYPES' =
 export const SET_LOGIN: 'SET_LOGIN' = 'SET_LOGIN';
 export const SET_TOKEN: 'SET_TOKEN' = 'SET_TOKEN';
 export const SET_USER: 'SET_USER' = 'SET_USER';
+export const SET_USERS: 'SET_USERS' = 'SET_USERS';
 export const SET_LOGOUT: 'SET_LOGOUT' = 'SET_LOGOUT';
 export const SET_RECIPE_LISTS: 'SET_RECIPE_LISTS' = 'SET_RECIPE_LISTS';
 export const SHOW_MODAL: 'SHOW_MODAL' = 'SHOW_MODAL';
@@ -26,6 +27,7 @@ export type Action =
   | SetLoginAction
   | SetTokenAction
   | SetUserAction
+  | SetUsersAction
   | SetLogoutAction
   | SetRecipeListsAction
   | ShowModalAction
@@ -123,6 +125,17 @@ export const setUser = (username: $PropertyType<State, 'username'>) => {
     payload: username,
   };
 };
+
+type SetUsersAction = {
+  type: typeof SET_USERS,
+  payload: $PropertyType<State, 'users'>,
+};
+export const setUsers = (
+  users: $PropertyType<State, 'users'>,
+) => ({
+  type: SET_USERS,
+  payload: users,
+});
 
 type SetLogoutAction = {
   type: typeof SET_LOGOUT,
