@@ -70,11 +70,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     paddingBottom: 15,
   },
+  dropDownContainer: {
+    flex:3,
+  },
   addToList: {
     flexDirection: 'row',
     alignItems: 'flex-end',
   },
   addToListButton: {
+    flex: 1,
     backgroundColor: '#29a709',
     margin: 5,
     marginBottom: 8,
@@ -251,6 +255,7 @@ const RecipeDetails = ({
         </View>
       : <View style={styles.addToList}>
           <TypeDropDown
+            containerStyle={styles.dropDownContainer}
             style={styles.listPicker}
             title={`Add ${recipe.name} to list`}
             selectedValue={

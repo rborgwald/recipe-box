@@ -32,19 +32,21 @@ const makeItems = (options: string[]) =>
   );
 
 const TypeDropDown = ({
+  containerStyle,
   style,
   title,
   selectedValue,
   onValueChange,
   options,
 }: {
+  containerStyle?: View.propTypes.style,
   style?: Picker.propTypes.style,
   title: string,
   selectedValue?: string,
   onValueChange: Function,
   options: string[],
 }) =>
-  <View style={styles.container}>
+  <View style={(styles.container, containerStyle)}>
     <View style={styles.titleWrapper}>
       <Text style={styles.title}>
         {`${title}:`}
