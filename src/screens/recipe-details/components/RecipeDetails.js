@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import CheckBox from 'react-native-checkbox';
 import type {
   Recipe,
@@ -235,7 +235,14 @@ const RecipeDetails = ({
       <BlockButton
         style={styles.deleteButton}
         text="Delete"
-        onPress={onDelete}
+        onPress={() => Alert.alert(
+          'Warning',
+          'Are you sure you want to delete this recipe?',
+          [
+            {text: 'Cancel', onPress: () => {}},
+            {text: 'Yes', onPress: onDelete},
+          ]
+        )}
       />
     </View>
     <Text style={styles.errorMessage}>

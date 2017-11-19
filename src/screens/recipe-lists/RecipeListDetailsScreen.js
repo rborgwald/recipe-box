@@ -204,6 +204,7 @@ export class RecipeListDetailsScreen extends Component<any, Props, State> {
             });
           });
       },
+      warningOnDeleteMsg: 'Are you sure you want to remove this user?',
     })) : [];
 
     return currentRecipeList === undefined

@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { ScrollView, View, Text, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { StackNavigator } from 'react-navigation';
@@ -481,11 +481,15 @@ export class AdminScreen extends Component<any, Props, State> {
             <BlockButton
               style={styles.deleteButton}
               text="Delete"
-              onPress={this.handleDeletePress}
               disabled={
                 this.state.currentName === '' ||
                 this.state.selectedOption === null
               }
+              onPress={() =>
+                Alert.alert('Warning', 'Are you sure you want to delete this option?', [
+                  { text: 'Cancel', onPress: () => {} },
+                  { text: 'Yes', onPress: this.handleDeletePress },
+                ])}
             />
           </View>
           <Text style={styles.errorMessage}>

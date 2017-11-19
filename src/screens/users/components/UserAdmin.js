@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { ScrollView, View, Text, StyleSheet, FlatList } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, FlatList, Alert } from 'react-native';
 import TextRowInput from '../../../components/TextRowInput';
 import BlockButton from '../../../components/BlockButton';
 import type { User } from '../../../api/recipe/model';
@@ -133,8 +133,15 @@ const UserAdmin = ({
         <BlockButton
           style={styles.deleteButton}
           text="Delete"
-          onPress={onDeletePress}
           disabled={username === ''}
+          onPress={() => Alert.alert(
+            'Warning',
+            'Are you sure you want to delete this user?',
+            [
+              {text: 'Cancel', onPress: () => {}},
+              {text: 'Yes', onPress: onDeletePress},
+            ]
+          )}
         />
       </View>
       <View>

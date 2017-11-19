@@ -6,6 +6,7 @@ import {
   Text,
   Image,
   TouchableHighlight,
+  Alert,
 } from 'react-native';
 import type { RecipeList } from '../../../api/recipe/model';
 import BlockButton from '../../../components/BlockButton';
@@ -47,11 +48,13 @@ const ListSelector = ({
   name,
   onPress,
   onDeletePress,
+  warningOnDeleteMsg,
   buttonText,
 }: {
   name: string,
   onPress: Function,
   onDeletePress: Function,
+  warningOnDeleteMsg: string,
   buttonText?: string,
 }) =>
   <TouchableHighlight onPress={onPress}>
@@ -64,8 +67,12 @@ const ListSelector = ({
       </View>
       <BlockButton
         style={styles.deleteButton}
-        text={buttonText ? buttonText : "Delete List"}
-        onPress={onDeletePress}
+        text={buttonText ? buttonText : 'Delete List'}
+        onPress={() =>
+          Alert.alert('Warning', warningOnDeleteMsg, [
+            { text: 'Cancel', onPress: () => {} },
+            { text: 'Yes', onPress: onDeletePress },
+          ])}
       />
     </View>
   </TouchableHighlight>;
