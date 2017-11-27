@@ -7,6 +7,7 @@ export type Recipe = {
   volume: string,
   page: string,
   notes: string,
+  url: string,
   stars: number,
   newRecipe: boolean,
   mealType: SearchCriterion,

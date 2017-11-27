@@ -1,12 +1,24 @@
 /* @flow */
 import React, { Component } from 'react';
+import {
+  View,
+  StyleSheet,
+  Alert,
+  Text,
+  Modal,
+  TouchableHighlight,
+} from 'react-native';
 import { connect } from 'react-redux';
 import type { NavigationScreenProp } from 'react-navigation';
 import _ from 'lodash';
 // $FlowIssue
 import closeIcon from '../../images/close-icon.png';
 import type { Store, State as StoreState } from '../../store/store';
-import { hideModal, setRecipeLists, setRecipes } from '../../store/actions';
+import {
+  hideModal,
+  setRecipeLists,
+  setRecipes,
+} from '../../store/actions';
 import RecipeDetails from './components/RecipeDetails';
 import ImageButton from '../../components/ImageButton';
 import { updateRecipe, deleteRecipe } from '../../api/recipe/recipes';
@@ -18,11 +30,19 @@ import {
   deleteRecipeFromRecipeList,
 } from '../../api/recipe/recipeLists';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+});
+
 type State = {
   errorMessage: string,
   successMessage: string,
   recipe: Recipe | null,
   selectedList: RecipeList | null,
+  link: string,
 };
 
 type Props = {
@@ -55,6 +75,7 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
     successMessage: '',
     recipe: null,
     selectedList: null,
+    link: '',
   };
 
   handleNameChange = (newName: string) => {
@@ -301,6 +322,12 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
       : null;
   };
 
+  handleLinkChange = (newLink: string) => {
+    const { navigation: { state: { params: { recipe } } } } = this.props;
+    recipe.url = newLink;
+    this.setState({ recipe });
+  };
+
   render() {
     const {
       mealTypes,
@@ -313,34 +340,37 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
     const { errorMessage, successMessage, selectedList } = this.state;
     return recipe === undefined
       ? null
-      : <RecipeDetails
-          recipe={recipe}
-          recipeLists={recipeLists}
-          mealTypes={mealTypes}
-          cuisineTypes={cuisineTypes}
-          proteinTypes={proteinTypes}
-          preparationTypes={preparationTypes}
-          onNameChange={this.handleNameChange}
-          onSourceChange={this.handleSourceChange}
-          onVolumeChange={this.handleVolumeChange}
-          onPageChange={this.handlePageChange}
-          onNewRecipeCheckedChange={this.handleNewRecipeCheckedChange}
-          onTriedItCheckedChange={this.handleTriedItRecipeCheckedChange}
-          onRatingChange={this.handleRatingChange}
-          onMealTypeChange={this.handleMealTypeChange}
-          onCuisineTypeChange={this.handleCuisineTypeChange}
-          onPreparationTypeChange={this.handlePreparationTypeChange}
-          onProteinTypeChange={this.handleProteinTypeChange}
-          onUpdate={this.handleOnUpdate}
-          onDelete={this.handleOnDelete}
-          onAddToList={this.handleAddToList}
-          selectedList={selectedList}
-          onListChange={this.handleListChange}
-          errorMessage={errorMessage}
-          successMessage={successMessage}
-          currentRecipeList={recipeList}
-          onRemoveRecipeFromList={this.handleRemoveRecipeFromList}
-        />;
+      : <View style={styles.container}>
+          <RecipeDetails
+            recipe={recipe}
+            recipeLists={recipeLists}
+            mealTypes={mealTypes}
+            cuisineTypes={cuisineTypes}
+            proteinTypes={proteinTypes}
+            preparationTypes={preparationTypes}
+            onNameChange={this.handleNameChange}
+            onSourceChange={this.handleSourceChange}
+            onVolumeChange={this.handleVolumeChange}
+            onPageChange={this.handlePageChange}
+            onNewRecipeCheckedChange={this.handleNewRecipeCheckedChange}
+            onTriedItCheckedChange={this.handleTriedItRecipeCheckedChange}
+            onRatingChange={this.handleRatingChange}
+            onMealTypeChange={this.handleMealTypeChange}
+            onCuisineTypeChange={this.handleCuisineTypeChange}
+            onPreparationTypeChange={this.handlePreparationTypeChange}
+            onProteinTypeChange={this.handleProteinTypeChange}
+            onUpdate={this.handleOnUpdate}
+            onDelete={this.handleOnDelete}
+            onAddToList={this.handleAddToList}
+            selectedList={selectedList}
+            onListChange={this.handleListChange}
+            errorMessage={errorMessage}
+            successMessage={successMessage}
+            currentRecipeList={recipeList}
+            onRemoveRecipeFromList={this.handleRemoveRecipeFromList}
+            onLinkChange={this.handleLinkChange}
+          />
+        </View>;
   }
 }
 

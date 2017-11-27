@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet, Alert, Linking } from 'react-native';
 import CheckBox from 'react-native-checkbox';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import type {
   Recipe,
   RecipeList,
@@ -13,10 +14,11 @@ import BadgeSelector from '../../../components/BadgeSelector';
 import Ratings from '../../../components/Ratings';
 import TypeDropDown from '../../../components/TypeDropDown';
 import WordButton from '../../../components/WordButton';
+import ImageButton from '../../../components/ImageButton';
+import wwwIcon from '../../../images/www_icon.png';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'column',
     margin: 15,
   },
@@ -24,7 +26,7 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 15,
+    marginBottom: 5,
   },
   detailsContainer: {
     flex: 1,
@@ -34,7 +36,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: 10,
-    marginVertical: 5,
+    marginTop: 5,
+  },
+  ratingsContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    marginHorizontal: 5,
+    marginBottom: 15,
+  },
+  linkContainer: {
+    flexDirection: 'row',
   },
   badgeContainer: {
     flexDirection: 'column',
@@ -43,10 +55,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonContainer: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     margin: 5,
-    marginTop: 0,
+    marginBottom: 45,
   },
   updateButton: {
     backgroundColor: '#29a709',
@@ -71,7 +84,7 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
   dropDownContainer: {
-    flex:3,
+    flex: 3,
   },
   addToList: {
     flexDirection: 'row',
@@ -126,6 +139,7 @@ const RecipeDetails = ({
   successMessage,
   currentRecipeList,
   onRemoveRecipeFromList,
+  onLinkChange,
 }: {
   recipe: Recipe,
   recipeLists: RecipeList[],
@@ -153,41 +167,101 @@ const RecipeDetails = ({
   successMessage: string,
   currentRecipeList?: RecipeList,
   onRemoveRecipeFromList?: Function,
+  onLinkChange: Function,
 }) =>
   <View style={styles.container}>
-    <View style={styles.infoWrapper}>
-      <View style={styles.detailsContainer}>
-        <TextRowInput
-          onChangeText={onNameChange}
-          headerText="Name"
-          contentText={recipe.name}
-        />
-        <TextRowInput
-          onChangeText={onSourceChange}
-          headerText="Source"
-          contentText={recipe.source}
-        />
-        <TextRowInput
-          onChangeText={onVolumeChange}
-          headerText="Volume"
-          contentText={recipe.volume}
-        />
-        <TextRowInput
-          onChangeText={onPageChange}
-          headerText="Page"
-          contentText={recipe.page ? recipe.page.toString() : ''}
-        />
-        <View style={styles.checkboxContainer}>
-          <CheckBox
-            label="New"
-            checked={recipe.newRecipe}
-            onChange={onNewRecipeCheckedChange}
+    <KeyboardAwareScrollView
+      resetScrollToCoords={{ x: 0, y: 0 }}
+      scrollEnabled={true}
+    >
+      <View style={styles.infoWrapper}>
+        <View style={styles.detailsContainer}>
+          <TextRowInput
+            onChangeText={onNameChange}
+            headerText="Name"
+            contentText={recipe.name}
           />
-          <CheckBox
-            label="Tried It"
-            checked={!recipe.newRecipe}
-            onChange={onTriedItCheckedChange}
+          <TextRowInput
+            onChangeText={onSourceChange}
+            headerText="Source"
+            contentText={recipe.source}
           />
+          <TextRowInput
+            onChangeText={onVolumeChange}
+            headerText="Volume"
+            contentText={recipe.volume}
+          />
+          <TextRowInput
+            onChangeText={onPageChange}
+            headerText="Page"
+            contentText={recipe.page ? recipe.page.toString() : ''}
+          />
+          <View style={styles.checkboxContainer}>
+            <CheckBox
+              label="New"
+              checked={recipe.newRecipe}
+              onChange={onNewRecipeCheckedChange}
+            />
+            <CheckBox
+              label="Tried It"
+              checked={!recipe.newRecipe}
+              onChange={onTriedItCheckedChange}
+            />
+          </View>
+        </View>
+        <View style={styles.badgeContainer}>
+          <BadgeSelector
+            searchCriterion={recipe.mealType}
+            backgroundColor="#6b7a8f"
+            defaultText="- Meal -"
+            onValueChange={onMealTypeChange}
+            options={mealTypes}
+          />
+          <BadgeSelector
+            searchCriterion={recipe.cuisineType}
+            backgroundColor="#f7882f"
+            defaultText="- Cuisine -"
+            onValueChange={onCuisineTypeChange}
+            options={cuisineTypes}
+          />
+          <BadgeSelector
+            searchCriterion={recipe.preparationType}
+            backgroundColor="#f7c331"
+            defaultText="- Prep -"
+            onValueChange={onPreparationTypeChange}
+            options={preparationTypes}
+          />
+          <BadgeSelector
+            searchCriterion={recipe.proteinType}
+            backgroundColor="#dcc7aa"
+            defaultText="- Protein -"
+            onValueChange={onProteinTypeChange}
+            options={proteinTypes}
+          />
+        </View>
+      </View>
+      <View style={styles.ratingsContainer}>
+        <View style={styles.linkContainer}>
+          <TextRowInput
+            containerStyle={{ width: '85%' }}
+            onChangeText={onLinkChange}
+            headerText="Link"
+            contentText={recipe.url}
+          />
+          {recipe.url
+            ? <ImageButton
+                icon={wwwIcon}
+                onPress={() => {
+                  Linking.canOpenURL(recipe.url).then(supported => {
+                    if (supported) {
+                      Linking.openURL(recipe.url);
+                    } else {
+                      console.warn("Don't know how to open URI: " + recipe.url);
+                    }
+                  });
+                }}
+              />
+            : null}
         </View>
         <Ratings
           maxRating={3}
@@ -195,37 +269,7 @@ const RecipeDetails = ({
           onRatingChange={onRatingChange}
         />
       </View>
-      <View style={styles.badgeContainer}>
-        <BadgeSelector
-          searchCriterion={recipe.mealType}
-          backgroundColor="#6b7a8f"
-          defaultText="- Meal -"
-          onValueChange={onMealTypeChange}
-          options={mealTypes}
-        />
-        <BadgeSelector
-          searchCriterion={recipe.cuisineType}
-          backgroundColor="#f7882f"
-          defaultText="- Cuisine -"
-          onValueChange={onCuisineTypeChange}
-          options={cuisineTypes}
-        />
-        <BadgeSelector
-          searchCriterion={recipe.preparationType}
-          backgroundColor="#f7c331"
-          defaultText="- Prep -"
-          onValueChange={onPreparationTypeChange}
-          options={preparationTypes}
-        />
-        <BadgeSelector
-          searchCriterion={recipe.proteinType}
-          backgroundColor="#dcc7aa"
-          defaultText="- Protein -"
-          onValueChange={onProteinTypeChange}
-          options={proteinTypes}
-        />
-      </View>
-    </View>
+    </KeyboardAwareScrollView>
     <View style={styles.buttonContainer}>
       <BlockButton
         style={styles.updateButton}
@@ -235,14 +279,15 @@ const RecipeDetails = ({
       <BlockButton
         style={styles.deleteButton}
         text="Delete"
-        onPress={() => Alert.alert(
-          'Warning',
-          'Are you sure you want to delete this recipe?',
-          [
-            {text: 'Cancel', onPress: () => {}},
-            {text: 'Yes', onPress: onDelete},
-          ]
-        )}
+        onPress={() =>
+          Alert.alert(
+            'Warning',
+            'Are you sure you want to delete this recipe?',
+            [
+              { text: 'Cancel', onPress: () => {} },
+              { text: 'Yes', onPress: onDelete },
+            ],
+          )}
       />
     </View>
     <Text style={styles.errorMessage}>
