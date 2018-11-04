@@ -2,7 +2,7 @@
 import { lookupUrl } from '../urls';
 import type { SearchCriterion } from './model';
 
-export const NETWORK_TIMEOUT = 5000;
+export const NETWORK_TIMEOUT = 60000;
 
 export const getMealTypes = (token: string): Promise<*> =>
   fetch(`${lookupUrl}/mealtypes`, {

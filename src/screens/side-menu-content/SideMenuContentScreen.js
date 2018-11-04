@@ -13,7 +13,7 @@ import adminIcon from '../../images/admin-icon.png';
 import usersIcon from '../../images/users_icon.png';
 import logoutIcon from '../../images/logout-icon.png';
 import { deleteToken } from '../../utils/storage';
-import { setLogout } from '../../store/actions';
+import {setLogout, setRecipe} from '../../store/actions';
 
 const styles = StyleSheet.create({
   outerContainerStyle: {
@@ -47,6 +47,8 @@ export class SideMenuContentScreen extends Component<any, Props, void> {
   };
 
   handleAddRecipePress = () => {
+    const { dispatch } = this.props;
+    dispatch(setRecipe(null));
     this.props.navigation.navigate('AddRecipe');
   };
 

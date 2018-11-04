@@ -1,6 +1,14 @@
 // @flow
 import React from 'react';
-import { View, Text, StyleSheet, Alert, Linking } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  Linking,
+  Image,
+  TouchableHighlight,
+} from 'react-native';
 import CheckBox from 'react-native-checkbox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import type {
@@ -8,6 +16,8 @@ import type {
   RecipeList,
   SearchCriterion,
 } from '../../../api/recipe/model';
+import { store } from '../../../store/store';
+import { showModal } from '../../../store/actions';
 import TextRowInput from '../../../components/TextRowInput';
 import BlockButton from '../../../components/BlockButton';
 import BadgeSelector from '../../../components/BadgeSelector';
@@ -16,6 +26,7 @@ import TypeDropDown from '../../../components/TypeDropDown';
 import WordButton from '../../../components/WordButton';
 import ImageButton from '../../../components/ImageButton';
 import wwwIcon from '../../../images/www_icon.png';
+import cameraIcon from '../../../images/camera-icon.png';
 
 const styles = StyleSheet.create({
   container: {
@@ -38,15 +49,30 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginTop: 5,
   },
-  ratingsContainer: {
+  ratingsLinkContainer: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-start',
     marginHorizontal: 5,
-    marginBottom: 15,
+    marginBottom: 5,
   },
+  ratingsImageContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  cameraContainerStyle: { flex: 0, padding: 0, marginHorizontal: 15 },
   linkContainer: {
     flexDirection: 'row',
+  },
+  cameraIconStyle: {
+    width: 55,
+    height: 55,
+  },
+  imageIconStyle: {
+    width: 55,
+    height: 55,
+
   },
   badgeContainer: {
     flexDirection: 'column',
@@ -59,7 +85,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     margin: 5,
-    marginBottom: 45,
+    marginTop: 10,
+    marginBottom: 25,
   },
   updateButton: {
     backgroundColor: '#29a709',
@@ -119,6 +146,7 @@ const RecipeDetails = ({
   cuisineTypes,
   proteinTypes,
   preparationTypes,
+  recipeImageUri,
   onNameChange,
   onSourceChange,
   onVolumeChange,
@@ -147,6 +175,7 @@ const RecipeDetails = ({
   cuisineTypes: SearchCriterion[],
   proteinTypes: SearchCriterion[],
   preparationTypes: SearchCriterion[],
+  recipeImageUri: string,
   onNameChange: Function,
   onSourceChange: Function,
   onVolumeChange: Function,
@@ -240,7 +269,7 @@ const RecipeDetails = ({
           />
         </View>
       </View>
-      <View style={styles.ratingsContainer}>
+      <View style={styles.ratingsLinkContainer}>
         <View style={styles.linkContainer}>
           <TextRowInput
             containerStyle={{ width: '85%' }}
@@ -263,11 +292,41 @@ const RecipeDetails = ({
               />
             : null}
         </View>
-        <Ratings
-          maxRating={3}
-          rating={recipe.stars ? recipe.stars : 0}
-          onRatingChange={onRatingChange}
-        />
+        <View style={styles.ratingsImageContainer}>
+          <Ratings
+            maxRating={3}
+            rating={recipe.stars ? recipe.stars : 0}
+            onRatingChange={onRatingChange}
+          />
+          {!!recipeImageUri
+            ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text>View Image:</Text>
+                <ImageButton
+                  containerStyle={styles.cameraContainerStyle}
+                  style={styles.imageIconStyle}
+                  imageUri={recipeImageUri}
+                  onPress={() => {
+                    // store.dispatch(
+                    //   showModal(['ImageCaptureScreen', { recipe }]),
+                    // );
+                    console.warn('View Image ', recipeImageUri);
+                  }}
+                />
+              </View>
+            : <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text>Add Image:</Text>
+                <ImageButton
+                  containerStyle={styles.cameraContainerStyle}
+                  style={styles.cameraIconStyle}
+                  icon={cameraIcon}
+                  onPress={() => {
+                    store.dispatch(
+                      showModal(['ImageCaptureScreen', { recipe }]),
+                    );
+                  }}
+                />
+              </View>}
+        </View>
       </View>
     </KeyboardAwareScrollView>
     <View style={styles.buttonContainer}>

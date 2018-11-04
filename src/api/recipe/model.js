@@ -10,10 +10,11 @@ export type Recipe = {
   url: string,
   stars: number,
   newRecipe: boolean,
-  mealType: SearchCriterion,
-  cuisineType: SearchCriterion,
-  preparationType: SearchCriterion,
-  proteinType: SearchCriterion,
+  mealType: SearchCriterion | null,
+  cuisineType: SearchCriterion | null,
+  preparationType: SearchCriterion | null,
+  proteinType: SearchCriterion | null,
+  imageFilename: string,
 };
 
 export type SearchCriterion = {

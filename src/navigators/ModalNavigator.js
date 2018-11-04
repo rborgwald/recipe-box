@@ -7,6 +7,7 @@ import _ from 'lodash';
 import type { State } from '../store/store';
 import SideMenuNavigator from './SideMenuNavigator';
 import RecipeDetailsScreen from '../screens/recipe-details/RecipeDetailsScreen';
+import ImageCaptureScreen from '../screens/image-capture/ImageCaptureScreen';
 
 export const ModalNav = StackNavigator(
   {
@@ -15,6 +16,9 @@ export const ModalNav = StackNavigator(
     },
     RecipeDetailsScreen: {
       screen: RecipeDetailsScreen,
+    },
+    ImageCaptureScreen: {
+      screen: ImageCaptureScreen,
     },
   },
   {

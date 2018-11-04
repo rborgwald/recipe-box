@@ -2,8 +2,11 @@
 import type { State as StoreState } from '../../store/store';
 import { recipeUrl } from '../urls';
 import type { Recipe } from './model';
+import { getPathOnly, getPathWithFilename } from '../../utils/directoryStorage';
+import RNFetchBlob from 'react-native-fetch-blob';
+const RNFS = require('react-native-fs');
 
-export const NETWORK_TIMEOUT = 5000;
+export const NETWORK_TIMEOUT = 60000;
 
 export const searchRecipes = (
   token: string,
@@ -163,6 +166,84 @@ export const createRecipe = (
     .catch(err => {
       throw Error(err);
     });
+};
+
+export const savePhoto = (
+  token: string,
+  id: string,
+  imageUri: string,
+): Promise<*> => {
+  const data = new FormData();
+  data.append(
+    'file',
+    ({ uri: imageUri, name: `${id}.jpg`, type: 'image/jpg' }: any),
+  );
+
+  return timeoutPromise(
+    NETWORK_TIMEOUT,
+    'Request timed out',
+    fetch(`${recipeUrl}/${id}/images`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: token,
+      },
+      body: data,
+    }),
+  )
+    .then(async response => {
+      const { status } = response;
+      const responseJson = await response.json();
+      if (status !== 200) throw Error(responseJson.message);
+      return responseJson;
+    })
+    .catch(err => {
+      throw Error(err);
+    });
+};
+
+export const downloadImage = async (
+  token: string,
+  recipeId: string,
+  filename: string,
+) => {
+  if (!!filename) {
+    const path = getPathWithFilename(recipeId, filename);
+
+    return await RNFS.exists(path)
+      .then(response => {
+        if (response) {
+          return path;
+        } else {
+          return RNFetchBlob.fetch('GET', `${recipeUrl}/${recipeId}/images`, {
+            Authorization: token,
+          })
+            .then(res => {
+              let base64Str = res.base64();
+              return RNFS.mkdir(getPathOnly(recipeId))
+                .then(() => {
+                  return RNFS.writeFile(path, base64Str, 'base64')
+                    .then(() => {
+                      return path;
+                    })
+                    .catch(error => {
+                      throw Error(error);
+                    });
+                })
+                .catch(error => {
+                  throw Error(error);
+                });
+            })
+            .catch(error => {
+              console.warn(error);
+              throw Error(error);
+            });
+        }
+      })
+      .catch(error => {
+        throw Error(error);
+      });
+  }
 };
 
 export const timeoutPromise = (

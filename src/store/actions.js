@@ -1,8 +1,10 @@
 // @flow
 import type { State } from './store';
+import type {Recipe} from "../api/recipe/model";
 
 export const SET_RECIPE: 'SET_RECIPE' = 'SET_RECIPE';
 export const SET_RECIPES: 'SET_RECIPES' = 'SET_RECIPES';
+export const SET_RECIPE_IN_RECIPES: 'SET_RECIPE_IN_RECIPES' = 'SET_RECIPE_IN_RECIPES';
 export const SET_MEAL_TYPES: 'SET_MEAL_TYPES' = 'SET_MEAL_TYPES';
 export const SET_CUISINE_TYPES: 'SET_CUISINE_TYPES' = 'SET_CUISINE_TYPES';
 export const SET_PROTEIN_TYPES: 'SET_PROTEIN_TYPES' = 'SET_PROTEIN_TYPES';
@@ -20,6 +22,7 @@ export const HIDE_MODAL: 'HIDE_MODAL' = 'HIDE_MODAL';
 export type Action =
   | SetRecipeAction
   | SetRecipesAction
+  | SetRecipeInRecipesAction
   | SetMealTypesAction
   | SetCuisineTypesAction
   | SetProteinTypesAction
@@ -49,6 +52,15 @@ type SetRecipesAction = {
 export const setRecipes = (recipes: $PropertyType<State, 'recipes'>) => ({
   type: SET_RECIPES,
   payload: recipes,
+});
+
+type SetRecipeInRecipesAction = {
+  type: typeof SET_RECIPE_IN_RECIPES,
+  payload: Recipe,
+};
+export const setRecipeInRecipes = (recipe: Recipe) => ({
+  type: SET_RECIPE_IN_RECIPES,
+  payload: recipe,
 });
 
 type SetMealTypesAction = {

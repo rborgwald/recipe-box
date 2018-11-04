@@ -1,5 +1,6 @@
 // @flow
 import { createStore } from 'redux';
+import _ from 'lodash';
 import * as actions from './actions';
 import type { Action } from './actions';
 import type {SearchCriterion, Recipe, RecipeList, User} from '../api/recipe/model';
@@ -71,6 +72,16 @@ export const reducer = (state: State = initialState, action: Action) => {
       return {
         ...state,
         recipes: payload,
+      };
+    }
+    case actions.SET_RECIPE_IN_RECIPES: {
+      const updatedRecipe = payload;
+      // $FlowFixMe
+      const updatedRecipes = _.remove(state.recipes, r => r.id !== updatedRecipe.id);
+      updatedRecipes.push(updatedRecipe);
+      return {
+        ...state,
+        recipes: updatedRecipes,
       };
     }
     case actions.SET_LOGIN: {

@@ -9,7 +9,7 @@ import backArrow from '../../images/back.png';
 import type { Store, State as StoreState } from '../../store/store';
 import ImageButton from '../../components/ImageButton';
 import RecipeListDetails from './components/RecipeListDetails';
-import { setRecipeLists, showModal } from '../../store/actions';
+import { setRecipe, setRecipeLists, showModal } from '../../store/actions';
 import { store } from '../../store/store';
 import RecipeListUserDetails from './components/RecipeListUserDetails';
 import {
@@ -19,6 +19,8 @@ import {
 } from '../../api/recipe/recipeLists';
 import type { User } from '../../api/recipe/model';
 import { capitalize } from '../../utils/strings';
+import { getPathWithFilename } from '../../utils/directoryStorage';
+import {downloadImage} from "../../api/recipe/recipes";
 
 const styles = StyleSheet.create({
   container: {
@@ -147,7 +149,14 @@ export class RecipeListDetailsScreen extends Component<any, Props, State> {
   };
 
   render() {
-    const { token, dispatch, recipeLists, users, username, navigation } = this.props;
+    const {
+      token,
+      dispatch,
+      recipeLists,
+      users,
+      username,
+      navigation,
+    } = this.props;
     const { navigation: { state: { params: { recipeList } } } } = this.props;
     const { selectedUser } = this.state;
 
@@ -156,56 +165,61 @@ export class RecipeListDetailsScreen extends Component<any, Props, State> {
       list => list.id === recipeList.id,
     );
 
-    const recipeData = currentRecipeList ? currentRecipeList.recipes.map(recipe => ({
-      key: recipe.id,
-      recipe,
-      currentRecipeList,
-      onViewRecipe: () => {
-        store.dispatch(
-          showModal([
-            'RecipeDetailsScreen',
-            { recipe, recipeList: currentRecipeList },
-          ]),
-        );
-      },
-    })) : [];
+    const recipeData = currentRecipeList
+      ? currentRecipeList.recipes.map(recipe => ({
+          key: recipe.id,
+          recipe,
+          currentRecipeList,
+          onViewRecipe: async () => {
+            store.dispatch(setRecipe(recipe));
+            await downloadImage(token, recipe.id, recipe.imageFilename);
+            store.dispatch(
+              showModal([
+                'RecipeDetailsScreen',
+                { recipeList: currentRecipeList },
+              ]),
+            );
+          },
+        }))
+      : [];
 
-    const userData = currentRecipeList ? currentRecipeList.users.map(user => ({
-      key: user.id,
-      name: user.username,
-      onDeletePress: () => {
-        removeUserFromRecipeList(token, user, recipeList)
-          .then(() => {
-            this.setState({
-              successMessage: 'Successfully removed user',
-              errorMessage: '',
-            });
-            if (user.username === username) {
-              _.remove(recipeLists, list => list.id === recipeList.id);
-              const newRecipeLists = _.cloneDeep(recipeLists);
+    const userData = currentRecipeList
+      ? currentRecipeList.users.map(user => ({
+          key: user.id,
+          name: user.username,
+          onDeletePress: () => {
+            removeUserFromRecipeList(token, user, recipeList)
+              .then(() => {
+                this.setState({
+                  successMessage: 'Successfully removed user',
+                  errorMessage: '',
+                });
+                if (user.username === username) {
+                  _.remove(recipeLists, list => list.id === recipeList.id);
+                  const newRecipeLists = _.cloneDeep(recipeLists);
 
-              navigation.goBack();
-              dispatch(setRecipeLists(newRecipeLists));
-            } else {
-              _.remove(currentRecipeList.users, u => user.id === u.id);
-              const newRecipeLists = _.filter(
-                recipeLists,
-                list => list.id !== currentRecipeList.id,
-              );
-              newRecipeLists.push(currentRecipeList);
-              dispatch(setRecipeLists(newRecipeLists));
-            }
-
-          })
-          .catch(error => {
-            this.setState({
-              successMessage: '',
-              errorMessage: error,
-            });
-          });
-      },
-      warningOnDeleteMsg: 'Are you sure you want to remove this user?',
-    })) : [];
+                  navigation.goBack();
+                  dispatch(setRecipeLists(newRecipeLists));
+                } else {
+                  _.remove(currentRecipeList.users, u => user.id === u.id);
+                  const newRecipeLists = _.filter(
+                    recipeLists,
+                    list => list.id !== currentRecipeList.id,
+                  );
+                  newRecipeLists.push(currentRecipeList);
+                  dispatch(setRecipeLists(newRecipeLists));
+                }
+              })
+              .catch(error => {
+                this.setState({
+                  successMessage: '',
+                  errorMessage: error,
+                });
+              });
+          },
+          warningOnDeleteMsg: 'Are you sure you want to remove this user?',
+        }))
+      : [];
 
     return currentRecipeList === undefined
       ? null

@@ -2,7 +2,7 @@
 import type { State as StoreState } from '../../store/store';
 import { loginUrl } from '../urls';
 
-export const NETWORK_TIMEOUT = 5000;
+export const NETWORK_TIMEOUT = 60000;
 
 export const login = (username: string, password: string): Promise<string> =>
   timeoutPromise(
@@ -26,7 +26,7 @@ export const login = (username: string, password: string): Promise<string> =>
         throw Error(responseJson.message);
       }
       const headers = await response.headers;
-      return headers.map.authorization;
+      return headers.map.authorization[0];
     })
     .catch(err => {
       throw Error(err);

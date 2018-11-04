@@ -31,7 +31,7 @@ const BadgeSelector = ({
   options,
   childRef,
 }: {
-  searchCriterion?: SearchCriterion,
+  searchCriterion?: SearchCriterion | null,
   backgroundColor: string,
   defaultText: string,
   style?: ModalDropdown.propTypes.style,

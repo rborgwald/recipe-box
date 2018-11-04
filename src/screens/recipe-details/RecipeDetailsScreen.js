@@ -14,14 +14,13 @@ import _ from 'lodash';
 // $FlowIssue
 import closeIcon from '../../images/close-icon.png';
 import type { Store, State as StoreState } from '../../store/store';
-import {
-  hideModal,
-  setRecipeLists,
-  setRecipes,
-} from '../../store/actions';
+import { hideModal, setRecipeLists, setRecipes } from '../../store/actions';
 import RecipeDetails from './components/RecipeDetails';
 import ImageButton from '../../components/ImageButton';
-import { updateRecipe, deleteRecipe } from '../../api/recipe/recipes';
+import {
+  updateRecipe,
+  deleteRecipe,
+} from '../../api/recipe/recipes';
 import type { Recipe, RecipeList } from '../../api/recipe/model';
 import { store } from '../../store/store';
 import { capitalize } from '../../utils/strings';
@@ -29,6 +28,7 @@ import {
   addRecipeToRecipeList,
   deleteRecipeFromRecipeList,
 } from '../../api/recipe/recipeLists';
+import { getPathWithFilename } from '../../utils/directoryStorage';
 
 const styles = StyleSheet.create({
   container: {
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 type State = {
   errorMessage: string,
   successMessage: string,
-  recipe: Recipe | null,
+  recipe: Recipe,
   selectedList: RecipeList | null,
   link: string,
 };
@@ -48,6 +48,7 @@ type State = {
 type Props = {
   dispatch: $PropertyType<Store, 'dispatch'>,
   navigation: NavigationScreenProp,
+  currentRecipe: Recipe,
   recipes: $PropertyType<StoreState, 'recipes'>,
   mealTypes: $PropertyType<StoreState, 'mealTypes'>,
   cuisineTypes: $PropertyType<StoreState, 'cuisineTypes'>,
@@ -73,64 +74,54 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
   state = {
     errorMessage: '',
     successMessage: '',
-    recipe: null,
+    recipe: this.props.currentRecipe,
     selectedList: null,
     link: '',
   };
 
-  handleNameChange = (newName: string) => {
-    const { navigation: { state: { params: { recipe } } } } = this.props;
-    recipe.name = newName;
-    this.setState({ recipe });
+  handleNameChange = (name: string) => {
+    const { recipe } = this.state;
+    this.setState({ recipe: { ...recipe, name } });
   };
 
-  handleSourceChange = (newSource: string) => {
-    const { navigation: { state: { params: { recipe } } } } = this.props;
-    recipe.source = newSource;
-    this.setState({ recipe });
+  handleSourceChange = (source: string) => {
+    const { recipe } = this.state;
+    this.setState({ recipe: { ...recipe, source } });
   };
 
-  handleVolumeChange = (newVolume: string) => {
-    const { navigation: { state: { params: { recipe } } } } = this.props;
-    recipe.volume = newVolume;
-    this.setState({ recipe });
+  handleVolumeChange = (volume: string) => {
+    const { recipe } = this.state;
+    this.setState({ recipe: { ...recipe, volume } });
   };
 
-  handlePageChange = (newPage: string) => {
-    const { navigation: { state: { params: { recipe } } } } = this.props;
-    recipe.page = newPage;
-    this.setState({ recipe });
+  handlePageChange = (page: string) => {
+    const { recipe } = this.state;
+    this.setState({ recipe: { ...recipe, page } });
   };
 
   handleNewRecipeCheckedChange = (checked: boolean) => {
-    const { navigation: { state: { params: { recipe } } } } = this.props;
-    recipe.newRecipe = !checked;
-    this.setState({ recipe });
+    const { recipe } = this.state;
+    this.setState({ recipe: { ...recipe, newRecipe: !checked } });
   };
 
   handleTriedItRecipeCheckedChange = (checked: boolean) => {
-    const { navigation: { state: { params: { recipe } } } } = this.props;
-    recipe.newRecipe = checked;
-    this.setState({ recipe });
+    const { recipe } = this.state;
+    this.setState({ recipe: { ...recipe, newRecipe: checked } });
   };
 
   handleRatingChange = (itemSelected: number) => {
-    const { navigation: { state: { params: { recipe } } } } = this.props;
-    recipe.stars = itemSelected;
-    this.setState({ recipe });
+    const { recipe } = this.state;
+    this.setState({ recipe: { ...recipe, stars: itemSelected } });
   };
 
   handleMealTypeChange = (itemValue: string) => {
-    const {
-      mealTypes,
-      navigation: { state: { params: { recipe } } },
-    } = this.props;
+    const { mealTypes } = this.props;
+    const { recipe } = this.state;
 
     recipe.mealType = null;
     if (parseInt(itemValue, 10) !== 0) {
       const selectedIdx = parseInt(itemValue, 10);
-      recipe.mealType = {};
-      const newType = mealTypes.find(type => type.idx === selectedIdx);
+      const newType = mealTypes.find(type => type.idx === selectedIdx) || null;
       recipe.mealType = newType;
     }
     console.log(`recipe: ${JSON.stringify(recipe)}`);
@@ -138,16 +129,14 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
   };
 
   handleCuisineTypeChange = (itemValue: string) => {
-    const {
-      cuisineTypes,
-      navigation: { state: { params: { recipe } } },
-    } = this.props;
+    const { cuisineTypes } = this.props;
+    const { recipe } = this.state;
 
     recipe.cuisineType = null;
     if (parseInt(itemValue, 10) !== 0) {
       const selectedIdx = parseInt(itemValue, 10);
-      recipe.cuisineType = {};
-      const newType = cuisineTypes.find(type => type.idx === selectedIdx);
+      const newType =
+        cuisineTypes.find(type => type.idx === selectedIdx) || null;
       recipe.cuisineType = newType;
     }
 
@@ -156,16 +145,14 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
   };
 
   handlePreparationTypeChange = (itemValue: string) => {
-    const {
-      preparationTypes,
-      navigation: { state: { params: { recipe } } },
-    } = this.props;
+    const { preparationTypes } = this.props;
+    const { recipe } = this.state;
 
     recipe.preparationType = null;
     if (parseInt(itemValue, 10) !== 0) {
       const selectedIdx = parseInt(itemValue, 10);
-      recipe.preparationType = {};
-      const newType = preparationTypes.find(type => type.idx === selectedIdx);
+      const newType =
+        preparationTypes.find(type => type.idx === selectedIdx) || null;
       recipe.preparationType = newType;
     }
 
@@ -174,16 +161,14 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
   };
 
   handleProteinTypeChange = (itemValue: string) => {
-    const {
-      proteinTypes,
-      navigation: { state: { params: { recipe } } },
-    } = this.props;
+    const { proteinTypes } = this.props;
+    const { recipe } = this.state;
 
     recipe.proteinType = null;
     if (parseInt(itemValue, 10) !== 0) {
       const selectedIdx = parseInt(itemValue, 10);
-      recipe.proteinType = {};
-      const newType = proteinTypes.find(type => type.idx === selectedIdx);
+      const newType =
+        proteinTypes.find(type => type.idx === selectedIdx) || null;
       recipe.proteinType = newType;
     }
 
@@ -192,12 +177,8 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
   };
 
   handleOnUpdate = () => {
-    const {
-      recipes,
-      dispatch,
-      token,
-      navigation: { state: { params: { recipe } } },
-    } = this.props;
+    const { recipes, dispatch, token } = this.props;
+    const { recipe } = this.state;
     if (recipe) {
       updateRecipe(token, recipe)
         .then(() => {
@@ -215,12 +196,8 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
   };
 
   handleOnDelete = () => {
-    const {
-      recipes,
-      dispatch,
-      token,
-      navigation: { state: { params: { recipe } } },
-    } = this.props;
+    const { recipes, dispatch, token } = this.props;
+    const { recipe } = this.state;
     if (recipe) {
       deleteRecipe(token, recipe)
         .then(() => {
@@ -237,12 +214,8 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
   };
 
   handleAddToList = () => {
-    const {
-      token,
-      dispatch,
-      recipeLists,
-      navigation: { state: { params: { recipe } } },
-    } = this.props;
+    const { token, dispatch, recipeLists } = this.props;
+    const { recipe } = this.state;
 
     if (recipe && this.state.selectedList) {
       addRecipeToRecipeList(token, recipe, this.state.selectedList)
@@ -295,8 +268,9 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
       token,
       dispatch,
       recipeLists,
-      navigation: { state: { params: { recipe, recipeList } } },
+      navigation: { state: { params: { recipeList } } },
     } = this.props;
+    const { recipe } = this.state;
     return recipeList
       ? deleteRecipeFromRecipeList(token, recipe, recipeList)
           .then(() => {
@@ -322,10 +296,9 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
       : null;
   };
 
-  handleLinkChange = (newLink: string) => {
-    const { navigation: { state: { params: { recipe } } } } = this.props;
-    recipe.url = newLink;
-    this.setState({ recipe });
+  handleLinkChange = (url: string) => {
+    const { recipe } = this.state;
+    this.setState({ recipe: { ...recipe, url } });
   };
 
   render() {
@@ -335,9 +308,15 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
       proteinTypes,
       preparationTypes,
       recipeLists,
-      navigation: { state: { params: { recipe, recipeList } } },
+      currentRecipe,
+      navigation: { state: { params: { recipeList } } },
     } = this.props;
-    const { errorMessage, successMessage, selectedList } = this.state;
+    const { errorMessage, successMessage, selectedList, recipe } = this.state;
+
+    const imageUri = currentRecipe.imageFilename
+      ? getPathWithFilename(currentRecipe.id, currentRecipe.imageFilename)
+      : '';
+
     return recipe === undefined
       ? null
       : <View style={styles.container}>
@@ -348,6 +327,7 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
             cuisineTypes={cuisineTypes}
             proteinTypes={proteinTypes}
             preparationTypes={preparationTypes}
+            recipeImageUri={imageUri}
             onNameChange={this.handleNameChange}
             onSourceChange={this.handleSourceChange}
             onVolumeChange={this.handleVolumeChange}
@@ -375,6 +355,7 @@ export class RecipeDetailsScreen extends Component<any, Props, State> {
 }
 
 const mapStateToProps = state => ({
+  currentRecipe: state.recipe,
   recipes: state.recipes,
   mealTypes: state.mealTypes,
   cuisineTypes: state.cuisineTypes,
@@ -382,6 +363,7 @@ const mapStateToProps = state => ({
   preparationTypes: state.preparationTypes,
   token: state.token,
   recipeLists: state.recipeLists,
+  recipeImageUri: state.recipeImageUri,
 });
 
 export default connect(mapStateToProps)(RecipeDetailsScreen);

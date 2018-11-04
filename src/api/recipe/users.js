@@ -1,7 +1,7 @@
 // @flow
 import { userUrl } from '../urls';
 
-export const NETWORK_TIMEOUT = 5000;
+export const NETWORK_TIMEOUT = 60000;
 
 export const getUsers = (token: string): Promise<*> =>
   timeoutPromise(

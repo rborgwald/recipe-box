@@ -6,9 +6,9 @@ import ModalDropdown from 'react-native-modal-dropdown';
 import { connect } from 'react-redux';
 import type { NavigationScreenProp } from 'react-navigation';
 import type { Store, State as StoreState } from '../../store/store';
-import { setRecipes, showModal } from '../../store/actions';
+import { setRecipe, setRecipes, showModal } from '../../store/actions';
 import Search from './components/Search';
-import { searchRecipes } from '../../api/recipe/recipes';
+import {downloadImage, searchRecipes} from '../../api/recipe/recipes';
 import type { SearchCriterion } from '../../api/recipe/model';
 import ImageButton from '../../components/ImageButton';
 import menuIcon from '../../images/hamburgerNav.png';
@@ -218,6 +218,7 @@ export class SearchScreen extends Component<any, Props, State> {
 
   render() {
     const {
+      token,
       mealTypes,
       cuisineTypes,
       preparationTypes,
@@ -261,8 +262,10 @@ export class SearchScreen extends Component<any, Props, State> {
     const data = results.map(recipe => ({
       key: recipe.id,
       recipe,
-      onViewRecipe: () => {
-        store.dispatch(showModal(['RecipeDetailsScreen', { recipe }]));
+      onViewRecipe: async () => {
+        store.dispatch(setRecipe(recipe));
+        await downloadImage(token, recipe.id, recipe.imageFilename);
+        store.dispatch(showModal(['RecipeDetailsScreen', {}]));
       },
     }));
 

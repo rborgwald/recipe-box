@@ -2,7 +2,7 @@
 import { recipeListsUrl } from '../urls';
 import type { Recipe, RecipeList, User } from './model';
 
-export const NETWORK_TIMEOUT = 5000;
+export const NETWORK_TIMEOUT = 60000;
 
 export const getRecipeListsForUser = (
   token: string,
