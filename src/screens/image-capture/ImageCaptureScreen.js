@@ -1,15 +1,5 @@
 /* @flow */
 import React, { Component } from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  StatusBar,
-  Dimensions,
-  TouchableOpacity,
-  Alert,
-  Image,
-} from 'react-native';
 import { connect } from 'react-redux';
 import type { NavigationScreenProp } from 'react-navigation';
 import { RNCamera } from 'react-native-camera';
@@ -21,14 +11,6 @@ import { store } from '../../store/store';
 import closeIcon from '../../images/close-icon.png';
 import ReviewPhoto from './components/ReviewPhoto';
 import { downloadImage, savePhoto } from '../../api/recipe/recipes';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'black',
-  },
-});
 
 type Props = { navigation: NavigationScreenProp, token: string };
 type State = {

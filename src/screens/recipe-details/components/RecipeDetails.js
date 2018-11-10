@@ -306,10 +306,9 @@ const RecipeDetails = ({
                   style={styles.imageIconStyle}
                   imageUri={recipeImageUri}
                   onPress={() => {
-                    // store.dispatch(
-                    //   showModal(['ImageCaptureScreen', { recipe }]),
-                    // );
-                    console.warn('View Image ', recipeImageUri);
+                    store.dispatch(
+                      showModal(['ImageViewScreen', { recipe, imageUri: recipeImageUri }]),
+                    );
                   }}
                 />
               </View>

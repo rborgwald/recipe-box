@@ -246,6 +246,50 @@ export const downloadImage = async (
   }
 };
 
+export const deletePhoto = (token: string, id: string): Promise<*> => {
+  return timeoutPromise(
+    NETWORK_TIMEOUT,
+    'Request timed out',
+    fetch(`${recipeUrl}/${id}/images`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+    }),
+  )
+    .then(async response => {
+      const { status } = response;
+      const responseJson = await response.json();
+      if (status !== 200) throw Error(responseJson.message);
+      return responseJson;
+    })
+    .catch(err => {
+      throw Error(err);
+    });
+};
+
+export const unlinkLocalImage = async (recipeId: string, imageUri: string) => {
+  if (!!imageUri) {
+
+    return await RNFS.exists(imageUri)
+      .then(async response => {
+        if (response) {
+          return await RNFS.unlink(imageUri)
+            .then(() => {
+              return Promise.resolve();
+            })
+            .catch(error => {
+              throw Error(error);
+            });
+        }
+      })
+      .catch(error => {
+        throw Error(error);
+      });
+  }
+};
+
 export const timeoutPromise = (
   timeout: number,
   err: string,

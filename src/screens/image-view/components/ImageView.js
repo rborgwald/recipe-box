@@ -1,11 +1,13 @@
 // @flow
 import React from 'react';
-import { StyleSheet, View, Image, Text } from 'react-native';
+import { StyleSheet, View, Image, Text, Alert } from 'react-native';
 import ImageButton from '../../../components/ImageButton';
 // $FlowIssue
-import checkMarkIcon from '../../../images/check_mark.png';
+import deleteIcon from '../../../images/delete_icon.png';
 // $FlowIssue
 import redoIcon from '../../../images/redo_icon.png';
+// $FlowIssue
+import checkIcon from '../../../images/check_mark.png';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,8 +23,9 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'contain',
   },
-  checkMarkImage: { height: 40, width: 40 },
-  redoImage: { height: 40, width: 40 },
+  deleteImage: { height: 40, width: 40 },
+  checkImage: { height: 40, width: 40 },
+  redoImage: { height: 37, width: 37 },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -43,33 +46,45 @@ const styles = StyleSheet.create({
 });
 
 const ReviewPhoto = ({
-  imageUri,
   errorMessage,
-  onRedoPhoto,
-  onSavePhoto,
+  imageUri,
+  onDeletePhoto,
+  onAccept,
+  onRetakePhoto,
 }: {
-  imageUri: string,
   errorMessage: string,
-  onRedoPhoto: Function,
-  onSavePhoto: Function,
+  imageUri: string,
+  onDeletePhoto: Function,
+  onAccept: Function,
+  onRetakePhoto: Function,
 }) =>
   <View style={styles.container}>
     <View style={styles.reviewContainer}>
       <Image style={styles.backgroundImage} source={{ uri: imageUri }} />
     </View>
     <View style={styles.buttonContainer}>
-      <View style={styles.placeholder} />
       <View>
         <ImageButton
-          style={styles.checkMarkImage}
-          onPress={onSavePhoto}
-          icon={checkMarkIcon}
+          style={styles.deleteImage}
+          onPress={() =>
+            Alert.alert('Warning', 'Are you sure you want to delete this image?', [
+              { text: 'Cancel', onPress: () => {} },
+              { text: 'Yes', onPress: onDeletePhoto },
+            ])}
+          icon={deleteIcon}
+        />
+      </View>
+      <View>
+        <ImageButton
+          style={styles.checkImage}
+          onPress={onAccept}
+          icon={checkIcon}
         />
       </View>
       <View>
         <ImageButton
           style={styles.redoImage}
-          onPress={onRedoPhoto}
+          onPress={onRetakePhoto}
           icon={redoIcon}
         />
       </View>
